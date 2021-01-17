@@ -2,4 +2,4 @@
 
 This file demonstrates some of the features of this package.
 
-## Foo
+We can refer to the chapter `introduction.md` with @sec:intro or [Chapter @sec:intro]
