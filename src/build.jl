@@ -6,7 +6,14 @@ export
 crossref = "--filter=pandoc-crossref"
 citeproc = "--filter=pandoc-citeproc"
 metadata = "--metadata-file=metadata.yml"
-extra_args = ["--number-sections", "--top-level-division=chapter"]
+extra_args = [
+    "--number-sections",
+    "--top-level-division=chapter"
+]
+inputs = [
+    "chapters/introduction.md",
+    "chapters/demo.md"
+]
 
 function pandoc(args) 
     cmd = `pandoc $args`
@@ -22,16 +29,12 @@ end
 
 function html()
     template = "--template pandoc/template.html"
-    inputs = [
-        "index.md",
-        "chapters/introduction.md",
-        "chapters/demo.md"
-    ]
     output_filename = "build/html/index.html"
     output = "--output=$output_filename"
+    html_inputs = ["index.md"; inputs]
 
     args = [
-        inputs;
+        html_inputs;
         crossref;
         citeproc;
         metadata;
@@ -42,7 +45,21 @@ function html()
 end
 
 function pdf()
-    "not implemented"
+    template = "--template pandoc/template.html"
+    pdf_dir = joinpath("build", "pdf")
+    output_filename = joinpath(pdf_dir, "book.pdf")
+    output = "--output=$output_filename"
+    if !isdir(pdf_dir); mkpath(pdf_dir); end
+
+    args = [
+        inputs;
+        crossref;
+        citeproc;
+        metadata;
+        extra_args;
+        output
+    ]
+    pandoc(args)
 end
 
 function book()
