@@ -1,0 +1,10 @@
+name = "Books"
+uuid = "939d5c6b-51ae-42e7-97ca-7564d0d4ad91"
+authors = ["Rik Huijzer <t.h.huijzer@rug.nl>"]
+version = "0.1.0"
+
+[deps]
+LiveServer = "16fef848-5104-11e9-1b77-fb7a48bbb589"
+
+[compat]
+LiveServer = "0.6"

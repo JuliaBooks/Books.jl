@@ -1,0 +1,18 @@
+---
+title: Books.jl
+subtitle: Subtitle
+book: true
+author: Rik Huijzer
+lang: en-US
+tags: [pandoc, book, my-book, etc]
+number-sections: true
+mainfont: DejaVu Sans
+title-prefix: Books
+titlepage: true
+linkReferences: true
+bibliography: bibliography.bib
+csl: pandoc/apa.csl
+link-citations: true
+toc: true
+toc-depth: 2
+---

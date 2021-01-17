@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2021 Rik Huijzer
+Copyright (c) 2021 Rik Huijzer and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+This package includes code from the following projects, which have their own licenses:
+
+- [Julia](https://github.com/JuliaLang/julia/blob/master/LICENSE.md).
+- [The Eisvogel LaTeX template](https://github.com/Wandmalfarbe/pandoc-latex-template/blob/master/LICENSE).
+- [A Pandoc book template](https://github.com/wikiti/pandoc-book-template/blob/master/LICENSE.md). 
+- The citation style is obtained via the [Citation Style Language (CSL) project](https://citationstyles.org/).
