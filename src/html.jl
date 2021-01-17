@@ -20,7 +20,7 @@ function split_html(h)
     (head = head, chapters = chapters, foot = foot)
 end
 
-function html_pages(chs=chapters, h=html())
+function html_pages(chs=chapters, h=pandoc_html())
     head, html_chapters, foot = split_html(h)
     pages = [head * c * foot for c in html_chapters]
     names = ["index"; chs]
@@ -70,12 +70,10 @@ function fix_links(pages=html_pages())
     pages
 end
 
-function write_html_pages(chapters, h)
+function write_html_pages(chs=chapters, h=pandoc_html())
     pages = fix_links(html_pages(chapters, h))
     for name in keys(pages)
         path = joinpath(build_dir, "$name.html")
         write(path, pages[name])
     end
 end
-
-write_html_pages() = write_html_pages(chapters, html())

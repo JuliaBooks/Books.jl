@@ -32,7 +32,7 @@ function pandoc(args)
     end
 end
 
-function html()
+function pandoc_html()
     template = "--template=pandoc/template.html"
     output_filename = joinpath(build_dir, "index.html")
     output = "--output=$output_filename"
@@ -48,6 +48,10 @@ function html()
         # output
     ]
     pandoc(args)
+end
+
+function html()
+    write_html_pages(chapters, pandoc_html())
 end
 
 function pdf()
