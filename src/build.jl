@@ -12,7 +12,8 @@ extra_args = [
 ]
 chapters = [
     "introduction",
-    "demo"
+    "demo",
+    "references"
 ]
 build_dir = "build"
 mkpath(build_dir)

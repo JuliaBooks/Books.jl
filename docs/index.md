@@ -19,3 +19,4 @@ menu:
 
 - [intro](/introduction.html)
 - [demo](/demo.html)
+- [references](/references.html)

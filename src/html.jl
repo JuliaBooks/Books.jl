@@ -53,15 +53,19 @@ end
 function fix_links(pages=html_pages())
     mapping = map_ids(pages)
     rx = r"href=\"([^\"]*)\""
+    uncapture(capture) = "href=\"$capture\""
     for name in keys(pages)
         html = pages[name]     
         function replace_match(s) 
             capture = first(match(rx, s).captures)
             if startswith(capture, "#sec:")
                 page_link = mapping[capture]
-                return "href=\"/$page_link.html$capture\"" 
+                return uncapture("/$page_link.html$capture")
+            elseif startswith(capture, "#ref-")
+                page_link = "references"
+                return uncapture("/$page_link.html$capture")
             else
-                return capture
+                return uncapture(capture)
             end
         end
         fixed = replace(html, rx => replace_match)
