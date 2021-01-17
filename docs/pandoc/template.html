@@ -46,21 +46,13 @@ $if(date)$
 <p class="date">$date$</p>
 $endif$
 </header>
+<!-- end head -->
 $endif$
-$if(toc)$
-<nav id="$idprefix$TOC" role="doc-toc">
-$if(toc-title)$
-<h2 id="$idprefix$toc-title">$toc-title$</h2>
-$endif$
-$table-of-contents$
-</nav>
-$endif$
-This site is also available as 
-<a href="/book.pdf" target="_blank">PDF</a>.
 $body$
 $for(include-after)$
 $include-after$
 $endfor$
+<!-- begin foot -->
 <div class="license">
   <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
   Rik Huijzer.

@@ -30,7 +30,7 @@ function default_simplewatcher()
     sw
 end
 
-function serve(simplewatcher=default_simplewatcher(); verbose=true, port=8001, dir="build/html")
+function serve(simplewatcher=default_simplewatcher(); verbose=true, port=8001, dir=build_dir)
     if !isdir(dir)
         mkpath(dir)
     end
