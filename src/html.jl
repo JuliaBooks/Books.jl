@@ -27,15 +27,24 @@ html_li(text) = """<li>$text</li>"""
 
 function section_infos(text)
     lines = split(text, '\n')
-    rx = r"data-number=\"([^\"]*)\" id=\"([^\"([^\"]*)\""
+    numbered_rx = r"data-number=\"([^\"]*)\" id=\"([^\"([^\"]*)\""
+    unnumbered_rx = r"class=\"unnumbered\" id=\"([^\"([^\"]*)\""
     tuples = []
     for line in lines
-        m = match(rx, line)
+        m = match(numbered_rx, line)
         if !isnothing(m)
             number, id = m.captures 
             line_end = split(line, " ")[end]
             text = line_end[1:end-5]
             tuple = (number, id, text)
+            push!(tuples, tuple)
+        end
+        m = match(unnumbered_rx, line)
+        if !isnothing(m)
+            id = m.captures[1]
+            interesting_region = split(line, '>')[end-1]
+            text = interesting_region[1:end-4]
+            tuple = ("", id, text)
             push!(tuples, tuple)
         end
     end
@@ -63,7 +72,8 @@ function add_menu(chs=chapters, splitted=split_html())
     
     names = html_page_names(chs)
     menu_items = []
-    for (name, body) in zip(names, bodies)
+    skip_homepage(z) = Iterators.peel(z)[2]
+    for (name, body) in skip_homepage(zip(names, bodies))
         tuples = section_infos(body)
         for section in tuples
             number, id, text = section
@@ -77,7 +87,7 @@ function add_menu(chs=chapters, splitted=split_html())
     menu = """
     <aside class="books-menu">
     <div class="books-title">
-    $title
+    <a href="/">$title</a>
     </div>
     $list
     </aside>
