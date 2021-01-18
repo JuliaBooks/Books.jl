@@ -8,17 +8,30 @@
 
 .books-outside {
   display: flex;
-  justify-content: center;
-  margin: auto;
 }
 
 .books-menu {
-  margin-top: 4rem;
+  margin-top: 0rem;
   flex: 0 0 200px;
+}
+
+.books-menu li {
+  list-style: none;
+  margin: 3px 0;
+}
+
+.books-menu a {
+  color: var(--gray) !important;
 }
 
 .books-content {
   width: 800px !important;
+}
+
+.books-title {
+  font-size: 1.4rem;
+  margin-bottom: 1.4rem;
+  color: var(--gray);
 }
 
 .subtitle {

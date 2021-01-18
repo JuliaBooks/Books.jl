@@ -42,6 +42,16 @@ function section_infos(text)
     tuples
 end
 
+function pandoc_title(metadata="metadata.yml")
+    meta = read(metadata, String)
+    lines = split(meta, '\n')
+    for line in lines
+        if startswith(line, "title: ")
+            return line[7:end]
+        end
+    end
+end
+
 """
     add_menu([chs, splitted])
 
@@ -49,6 +59,7 @@ Menu including numbered sections.
 """
 function add_menu(chs=chapters, splitted=split_html())
     head, bodies, foot = splitted
+    title = pandoc_title()
     
     names = html_page_names(chs)
     menu_items = []
@@ -65,6 +76,9 @@ function add_menu(chs=chapters, splitted=split_html())
     list = join(html_li.(menu_items), '\n')
     menu = """
     <aside class="books-menu">
+    <div class="books-title">
+    $title
+    </div>
     $list
     </aside>
     """
