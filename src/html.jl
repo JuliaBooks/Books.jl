@@ -64,9 +64,9 @@ function add_menu(chs=chapters, splitted=split_html())
     end
     list = join(html_li.(menu_items), '\n')
     menu = """
-    <div class="menu">
+    <aside class="books-menu">
     $list
-    </div>
+    </aside>
     """
 
     (head = head, menu = menu, bodies = bodies, foot = foot)
@@ -74,7 +74,16 @@ end
 
 function html_pages(chs=chapters, h=pandoc_html())
     head, menu, bodies, foot = add_menu(chs, split_html(h))
-    pages = [head * menu * body * foot for body in bodies]
+    create_page(body) = """
+    $head 
+    <div class="books-outside">
+    $menu 
+    <div class="books-content"> 
+    $body $foot
+    </div>
+    </div>
+    """
+    pages = create_page.(bodies)
     names = html_page_names(chs)
     Dict(zip(names, pages))
 end
