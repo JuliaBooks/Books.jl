@@ -37,11 +37,6 @@ function pandoc_html()
     output_filename = joinpath(build_dir, "index.html")
     output = "--output=$output_filename"
     html_inputs = ["index.md"; inputs()]
-    joined_chapters = join(
-        ["""<li><a href="/$c.html">$c</a></li>""" for c in chapters], 
-        " "
-    )
-    menu_items_arg = ["-V", "menu-items=$joined_chapters"]
 
     args = [
         html_inputs;
@@ -50,7 +45,6 @@ function pandoc_html()
         metadata;
         template;
         extra_args;
-        menu_items_arg;
         # output
     ]
     pandoc(args)

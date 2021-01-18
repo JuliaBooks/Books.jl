@@ -53,21 +53,28 @@ function add_menu(chs=chapters, splitted=split_html())
     names = html_page_names(chs)
     menu_items = []
     for (name, body) in zip(names, bodies)
-        for m in eachmatch(rx, body)
-            data_number, id = m.captures
-            text = "
+        tuples = section_infos(body)
+        for section in tuples
+            number, id, text = section
             link = "$name.html#$id"
-            @show data_number, id
+            link_text = "<b>$number</b> $text"
+            item = html_href(link_text, link)
+            push!(menu_items, item)
         end
     end
-    menu = join(menu_items, '\n')
+    list = join(html_li.(menu_items), '\n')
+    menu = """
+    <div class="menu">
+    $list
+    </div>
+    """
 
     (head = head, menu = menu, bodies = bodies, foot = foot)
 end
 
 function html_pages(chs=chapters, h=pandoc_html())
-    head, menu, bodies, foot = add_menu(split_html(h))
-    pages = [head * body * foot for body in bodies]
+    head, menu, bodies, foot = add_menu(chs, split_html(h))
+    pages = [head * menu * body * foot for body in bodies]
     names = html_page_names(chs)
     Dict(zip(names, pages))
 end
