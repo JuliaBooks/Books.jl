@@ -8,22 +8,67 @@ We need this function because Pandoc needs all the files at the same time to all
 
     This function assumes that every chapter starts with a `h1` heading like `# Introduction`.
 """
-function split_html(h)
+function split_html(h=pandoc_html())
     head_pattern = "<!-- end head -->"
     head, after_head = split(h, head_pattern)
     foot_pattern = "<!-- begin foot -->"
     body, foot = split(after_head, foot_pattern)
 
     start = "<h1"
-    chapters = split(body, start)
-    chapters = [start*c for c in chapters[2:end]]
-    (head = head, chapters = chapters, foot = foot)
+    bodies = split(body, start)
+    bodies = [start*c for c in bodies[2:end]]
+    (head = head, bodies = bodies, foot = foot)
+end
+
+html_page_names(chs=chapters) = ["index"; chs]
+
+html_href(text, link) = """<a href="$link">$text</a>"""
+html_li(text) = """<li>$text</li>"""
+
+function section_infos(text)
+    lines = split(text, '\n')
+    rx = r"data-number=\"([^\"]*)\" id=\"([^\"([^\"]*)\""
+    tuples = []
+    for line in lines
+        m = match(rx, line)
+        if !isnothing(m)
+            number, id = m.captures 
+            line_end = split(line, " ")[end]
+            text = line_end[1:end-5]
+            tuple = (number, id, text)
+            push!(tuples, tuple)
+        end
+    end
+    tuples
+end
+
+"""
+    add_menu([chs, splitted])
+
+Menu including numbered sections.
+"""
+function add_menu(chs=chapters, splitted=split_html())
+    head, bodies, foot = splitted
+    
+    names = html_page_names(chs)
+    menu_items = []
+    for (name, body) in zip(names, bodies)
+        for m in eachmatch(rx, body)
+            data_number, id = m.captures
+            text = "
+            link = "$name.html#$id"
+            @show data_number, id
+        end
+    end
+    menu = join(menu_items, '\n')
+
+    (head = head, menu = menu, bodies = bodies, foot = foot)
 end
 
 function html_pages(chs=chapters, h=pandoc_html())
-    head, html_chapters, foot = split_html(h)
-    pages = [head * c * foot for c in html_chapters]
-    names = ["index"; chs]
+    head, menu, bodies, foot = add_menu(split_html(h))
+    pages = [head * body * foot for body in bodies]
+    names = html_page_names(chs)
     Dict(zip(names, pages))
 end
 

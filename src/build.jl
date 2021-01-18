@@ -22,7 +22,6 @@ inputs() = [joinpath("chapters", "$chapter.md") for chapter in chapters]
 
 function pandoc(args) 
     cmd = `pandoc $args`
-    @show cmd
     try 
         stdout = IOBuffer()
         run(pipeline(cmd; stdout))
