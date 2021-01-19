@@ -1,7 +1,7 @@
 import TOML
 
 export
-    book,
+    build,
     html,
     pdf
 
@@ -76,7 +76,7 @@ function pdf()
     nothing
 end
 
-function book()
+function build()
     html()
     pdf()
 end

@@ -161,6 +161,7 @@ end
 
 function write_html_pages(chs=chapters(), h=pandoc_html())
     pages = fix_links(html_pages(chs, h))
+    mkpath(build_dir) # For some reason, this is necessary in CI.
     for name in keys(pages)
         path = joinpath(build_dir, "$name.html")
         write(path, pages[name])
