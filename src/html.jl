@@ -36,15 +36,15 @@ function section_infos(text)
             number, id = m.captures 
             line_end = split(line, '>')[end-1]
             text = line_end[2:end-4]
-            tuple = (number, id, text)
+            tuple = (number, id, lstrip(text))
             push!(tuples, tuple)
         end
         m = match(unnumbered_rx, line)
         if !isnothing(m)
             id = m.captures[1]
             interesting_region = split(line, '>')[end-1]
-            text = interesting_region[2:end-4]
-            tuple = ("", id, text)
+            text = interesting_region[1:end-4]
+            tuple = ("", id, lstrip(text))
             push!(tuples, tuple)
         end
     end

@@ -15,4 +15,8 @@ csl: pandoc/apa.csl
 link-citations: true
 toc: true
 toc-depth: 2
+eqnPrefix: Eq.
+figPrefix: Fig.
+tblPrefix: Table
+secPrefix: Section
 ---
