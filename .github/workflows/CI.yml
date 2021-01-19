@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Install dependencies via tar
+        run: |
+          wget https://github.com/jgm/pandoc/releases/download/$PANDOC_VERSION/pandoc-$PANDOC_VERSION-1-amd64.deb
+          sudo dpkg -i pandoc-$PANDOC_VERSION-1-amd64.deb
+          wget https://github.com/lierdakil/pandoc-crossref/releases/download/v$CROSSREF_VERSION/pandoc-crossref-Linux.tar.xz
+          tar -xf pandoc-crossref-Linux.tar.xz
+        env:
+          PANDOC_VERSION: 2.10.1
+          CROSSREF_VERSION: 0.3.8.1
+
+      - name: Install dependencies via Ubuntu package manager
+        run: |
+          sudo apt-get -qq update
+          # Don't make this a fancy multiline thing which is hard to debug on the runner.
+          sudo apt-get install -y make
+          sudo apt-get install -y pdf2svg
+          sudo apt-get install -y texlive-fonts-recommended
+          sudo apt-get install -y texlive-latex-base
+          sudo apt-get install -y texlive-binaries
+          sudo apt-get install -y texlive-xetex
+
+      - uses: julia-actions/setup-julia@v1
+      - uses: julia-actions/julia-buildpkg@master
+      - run: julia --project -e 'cd("docs"); using Books; build()'
+
+      - name: Deploy to secondary branch
+        if: ${{ github.event_name == 'push' }}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/

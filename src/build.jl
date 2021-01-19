@@ -76,7 +76,7 @@ function pdf()
     nothing
 end
 
-function book()
+function build()
     html()
     pdf()
 end
