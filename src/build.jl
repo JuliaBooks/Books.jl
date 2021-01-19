@@ -1,7 +1,7 @@
 import TOML
 
 export
-    book,
+    build,
     html,
     pdf
 
