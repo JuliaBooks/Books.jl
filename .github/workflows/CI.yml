@@ -34,6 +34,7 @@ jobs:
           sudo apt-get install -y make
           sudo apt-get install -y pdf2svg
           sudo apt-get install -y texlive-fonts-recommended
+          sudo apt-get install -y texlive-fonts-extra
           sudo apt-get install -y texlive-latex-base
           sudo apt-get install -y texlive-binaries
           sudo apt-get install -y texlive-xetex
@@ -44,12 +45,12 @@ jobs:
 
       - run: julia --project -e 'cd("docs"); using Books; build()'
 
-      - run: ls build
+      - run: ls docs/build
 
       - name: Deploy to secondary branch
         if: ${{ github.event_name == 'push' }}
         uses: peaceiris/actions-gh-pages@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/
+          publish_dir: ./docs/build/
           cname: books.huijzer.xyz
