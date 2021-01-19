@@ -20,7 +20,7 @@ function split_html(h=pandoc_html())
     (head = head, bodies = bodies, foot = foot)
 end
 
-html_page_names(chs=chapters) = ["index"; chs]
+html_page_names(chs=chapters()) = ["index"; chs]
 
 html_href(text, link) = """<a href="$link">$text</a>"""
 html_li(text) = """<li>$text</li>"""
@@ -34,8 +34,8 @@ function section_infos(text)
         m = match(numbered_rx, line)
         if !isnothing(m)
             number, id = m.captures 
-            line_end = split(line, " ")[end]
-            text = line_end[1:end-5]
+            line_end = split(line, '>')[end-1]
+            text = line_end[2:end-4]
             tuple = (number, id, text)
             push!(tuples, tuple)
         end
@@ -43,7 +43,7 @@ function section_infos(text)
         if !isnothing(m)
             id = m.captures[1]
             interesting_region = split(line, '>')[end-1]
-            text = interesting_region[1:end-4]
+            text = interesting_region[2:end-4]
             tuple = ("", id, text)
             push!(tuples, tuple)
         end
@@ -66,7 +66,7 @@ end
 
 Menu including numbered sections.
 """
-function add_menu(chs=chapters, splitted=split_html())
+function add_menu(chs=chapters(), splitted=split_html())
     head, bodies, foot = splitted
     title = pandoc_title()
     
@@ -96,7 +96,7 @@ function add_menu(chs=chapters, splitted=split_html())
     (head = head, menu = menu, bodies = bodies, foot = foot)
 end
 
-function html_pages(chs=chapters, h=pandoc_html())
+function html_pages(chs=chapters(), h=pandoc_html())
     head, menu, bodies, foot = add_menu(chs, split_html(h))
     create_page(body) = """
     $head 
@@ -159,8 +159,8 @@ function fix_links(pages=html_pages())
     pages
 end
 
-function write_html_pages(chs=chapters, h=pandoc_html())
-    pages = fix_links(html_pages(chapters, h))
+function write_html_pages(chs=chapters(), h=pandoc_html())
+    pages = fix_links(html_pages(chs, h))
     for name in keys(pages)
         path = joinpath(build_dir, "$name.html")
         write(path, pages[name])

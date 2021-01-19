@@ -1,3 +1,5 @@
+import TOML
+
 export
     book,
     html,
@@ -10,15 +12,16 @@ extra_args = [
     "--number-sections",
     "--top-level-division=chapter"
 ]
-chapters = [
-    "introduction",
-    "demo",
-    "references"
-]
+function chapters()
+    content = read("config.toml", String)    
+    t = TOML.parse(content)
+    t["chapters"]
+end
+
 build_dir = "build"
 mkpath(build_dir)
 
-inputs() = [joinpath("chapters", "$chapter.md") for chapter in chapters]
+inputs() = [joinpath("chapters", "$chapter.md") for chapter in chapters()]
 
 function pandoc(args) 
     cmd = `pandoc $args`
@@ -51,7 +54,7 @@ function pandoc_html()
 end
 
 function html()
-    write_html_pages(chapters, pandoc_html())
+    write_html_pages(chapters(), pandoc_html())
 end
 
 function pdf()
