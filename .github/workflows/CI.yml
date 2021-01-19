@@ -20,6 +20,9 @@ jobs:
           sudo dpkg -i pandoc-$PANDOC_VERSION-1-amd64.deb
           wget https://github.com/lierdakil/pandoc-crossref/releases/download/v$CROSSREF_VERSION/pandoc-crossref-Linux.tar.xz
           tar -xf pandoc-crossref-Linux.tar.xz
+          mkdir ~/bin
+          mv pandoc-crossref ~/bin/
+          echo "$HOME/bin" >> $GITHUB_PATH
         env:
           PANDOC_VERSION: 2.10.1
           CROSSREF_VERSION: 0.3.8.1
