@@ -5,7 +5,7 @@
 This website introduces and demonstrates `Books.jl` and is available as [PDF](/book.pdf){target="_blank"}.
 
 Basically, this package is a wrapper around [Pandoc](https://pandoc.org/){target="_blank"}; similar to [Bookdown](https://bookdown.org){target="_blank"}.
-Creating EPUBs and PDFs with Pandoc is easy.
+Note that Pandoc does the heavy lifting and this package only adds a few features.
 For html, this package allows:
 
 - Building a website spanning multiple pages,
