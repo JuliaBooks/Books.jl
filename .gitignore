@@ -20,3 +20,4 @@ Manifest.toml
 
 build/
 docs/build/
+dcos/Manifest.toml
