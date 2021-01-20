@@ -15,9 +15,30 @@
   flex: 0 0 200px;
 }
 
+.books-menu label {
+  cursor: pointer;
+}
+
+.books-menu label {
+  font-size: 30px;
+}
+
+input#menu {
+  display: none;
+}
+
 .books-menu li {
   list-style: none;
   margin: 3px 0;
+}
+
+.books-menu-content {
+  max-height: 0;
+  overflow: hidden;
+}
+
+input:checked ~ .books-menu-content {
+    max-height: 100%;
 }
 
 .books-menu a {

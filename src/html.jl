@@ -89,7 +89,11 @@ function add_menu(chs=chapters(), splitted=split_html())
     <div class="books-title">
     <a href="/">$title</a>
     </div>
+    <input type="checkbox" id="menu">
+    <label for="menu">☰</label>
+    <div class="books-menu-content">
     $list
+    </div>
     </aside>
     """
 
