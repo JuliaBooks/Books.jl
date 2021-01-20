@@ -2,7 +2,7 @@
 
 [//]: # (This file is only included on the website.)
 
-This website introduces and demonstrates `Books.jl` and is available as [PDF](/book.pdf){target="_blank"}.
+This website introduces and demonstrates [Books.jl](https://github.com/rikhuijzer/Books.jl){target="_blank"} and is available as [PDF](/book.pdf){target="_blank"}.
 
 Basically, this package is a wrapper around [Pandoc](https://pandoc.org/){target="_blank"}; similar to [Bookdown](https://bookdown.org){target="_blank"}.
 Note that Pandoc does the heavy lifting and this package only adds a few features.

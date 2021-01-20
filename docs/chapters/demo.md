@@ -6,5 +6,25 @@ We can refer to citations such as @orwell1945animal and [@orwell1945animal] or t
 
 $$ y = sin(x) $$ {#eq:sin}
 
+## Embedding code
 
+For embedding code, you can use the `include-files` Lua filter.
+For example, generate a Markdown file `sum.md` with Julia and include it with
 
+<pre>
+```{.include}
+build/sum.md
+```
+</pre>
+
+So, to eval some code and write it aforementioned file, you could use
+
+```{.include}
+build/sum-definition.md
+```
+
+which gives
+
+```{.include}
+build/sum.md
+```

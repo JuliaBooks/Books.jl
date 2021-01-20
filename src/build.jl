@@ -1,10 +1,12 @@
 import TOML
 
 export
-    build,
+    build_all,
     html,
     pdf
 
+include_files_lua = joinpath(dirname(pathof(Books)), "include-files.lua")
+include_files = "--lua-filter=$include_files_lua"
 crossref = "--filter=pandoc-crossref"
 citeproc = "--filter=pandoc-citeproc"
 metadata = "--metadata-file=metadata.yml"
@@ -43,6 +45,7 @@ function pandoc_html()
 
     args = [
         html_inputs;
+        include_files;
         crossref;
         citeproc;
         metadata;
@@ -64,6 +67,7 @@ function pdf()
 
     args = [
         inputs();
+        include_files;
         crossref;
         citeproc;
         template;
@@ -76,7 +80,7 @@ function pdf()
     nothing
 end
 
-function build()
+function build_all()
     html()
     pdf()
 end
