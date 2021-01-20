@@ -4,6 +4,8 @@
   --normal-size: 19px;
   --small-size: 15px;
   --block-background: hsl(0, 0%, 97%);
+  --menu-width: 220px;
+  --content-width: 800px;
 }
 
 .books-menu-content {
@@ -11,13 +13,13 @@
   overflow: hidden;
 }
 
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: calc(220px + 800px)) {
   .books-outside {
     display: flex;
   }
 
   .books-menu {
-    flex: 0 0 200px;
+    flex: 0 0 var(--menu-width);
   }
 
   .books-menu label {
@@ -70,7 +72,7 @@ input:checked ~ .books-menu-content {
 
 @media only screen and (min-width: 900px) {
   .books-content {
-    width: 800px !important;
+    width: var(--content-width) !important;
   }
 }
 
