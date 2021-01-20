@@ -5,11 +5,21 @@ export
     html,
     pdf
 
-include_files_lua = joinpath(dirname(pathof(Books)), "include-files.lua")
+const project_root = dirname(dirname(pathof(Books)))
+function pandoc_file(filename)
+    user_path = joinpath("pandoc", filename)
+    fallback_path = joinpath(project_root, "pandoc", filename)
+    isfile(user_path) ? user_path : fallback_path
+end
+
+include_files_lua = joinpath(project_root, "src", "include-files.lua")
 include_files = "--lua-filter=$include_files_lua"
 crossref = "--filter=pandoc-crossref"
 citeproc = "--filter=pandoc-citeproc"
 metadata = "--metadata-file=metadata.yml"
+csl_path = pandoc_file("style.csl")
+csl = "--csl=$csl_path"
+
 extra_args = [
     "--number-sections",
     "--top-level-division=chapter"
@@ -38,18 +48,21 @@ function pandoc(args)
 end
 
 function pandoc_html()
-    template = "--template=pandoc/template.html"
+    html_template_path = pandoc_file("template.html")
+    template = "--template=$html_template_path"
     output_filename = joinpath(build_dir, "index.html")
     output = "--output=$output_filename"
     html_inputs = ["index.md"; inputs()]
     filename = "style.css"
-    cp(joinpath("pandoc", filename), joinpath(build_dir, filename); force=true)
+    css_path = pandoc_file(filename)
+    cp(css_path, joinpath(build_dir, filename); force=true)
 
     args = [
         html_inputs;
         include_files;
         crossref;
         citeproc;
+        csl;
         metadata;
         template;
         extra_args;
@@ -63,8 +76,8 @@ function html()
 end
 
 function pdf()
-    eisvogel_path = joinpath("pandoc", "eisvogel.tex")
-    template = "--template=$eisvogel_path"
+    latex_template_path = pandoc_file("template.tex")
+    template = "--template=$latex_template_path"
     output_filename = joinpath(build_dir, "book.pdf")
     output = "--output=$output_filename"
 
@@ -73,8 +86,9 @@ function pdf()
         include_files;
         crossref;
         citeproc;
-        template;
+        csl;
         metadata;
+        template;
         extra_args;
         output
     ]

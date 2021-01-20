@@ -11,7 +11,6 @@ title-prefix: Books
 titlepage: true
 linkReferences: true
 bibliography: bibliography.bib
-csl: pandoc/apa.csl
 link-citations: true
 toc: true
 toc-depth: 2
