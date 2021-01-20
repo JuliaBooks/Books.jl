@@ -86,11 +86,11 @@ function add_menu(chs=chapters(), splitted=split_html())
     list = join(html_li.(menu_items), '\n')
     menu = """
     <aside class="books-menu">
+    <input type="checkbox" id="menu">
+    <label for="menu">☰</label>
     <div class="books-title">
     <a href="/">$title</a>
     </div>
-    <input type="checkbox" id="menu">
-    <label for="menu">☰</label>
     <div class="books-menu-content">
     $list
     </div>
