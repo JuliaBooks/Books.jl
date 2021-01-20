@@ -43,7 +43,7 @@ jobs:
       - uses: julia-actions/julia-buildpkg@master
       - uses: julia-actions/julia-runtest@latest
 
-      - name: Install dependencies
+      - name: Install BooksDocs dependencies
         run: julia --project=docs/ -e '
           using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
 
