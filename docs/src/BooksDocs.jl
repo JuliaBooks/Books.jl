@@ -1,5 +1,6 @@
 module BooksDocs
 
+import Books
 import CodeTracking
 
 build_dir = "build"
@@ -28,6 +29,7 @@ function write_sum()
     """
 
     path = joinpath(build_dir, "sum.md")
+    println("Writing $path")
     write(path, text)
     path
 end
@@ -43,14 +45,17 @@ function write_sum_definition()
     ```
     """
     path = joinpath(build_dir, "sum-definition.md")
+    println("Writing $path")
     write(path, code)
     path
 end
 
 function build()
+    rm(build_dir; force=true, recursive=true)
+    mkpath(build_dir)
     write_sum()
     write_sum_definition()
-    nothing
+    Books.build()
 end
 
 end # module

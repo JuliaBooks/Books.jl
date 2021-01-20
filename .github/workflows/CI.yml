@@ -43,9 +43,12 @@ jobs:
       - uses: julia-actions/julia-buildpkg@master
       - uses: julia-actions/julia-runtest@latest
 
-      - run: julia --project -e 'cd("docs"); using Books; build()'
+      - name: Install dependencies
+        run: julia --project=docs/ -e '
+          using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
 
-      - run: ls docs/build
+      - name: Build docs
+        run: julia --project=docs/ -e 'using BooksDocs; build()'
 
       - name: Deploy to secondary branch
         if: ${{ github.event_name == 'push' }}
