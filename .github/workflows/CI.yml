@@ -48,7 +48,7 @@ jobs:
           using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
 
       - name: Build docs
-        run: julia --project=docs/ -e 'using BooksDocs; build()'
+        run: julia --project=docs/ -e 'using BooksDocs; BooksDocs.build_all()'
 
       - name: Deploy to secondary branch
         if: ${{ github.event_name == 'push' }}

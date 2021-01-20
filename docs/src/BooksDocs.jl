@@ -50,12 +50,12 @@ function write_sum_definition()
     path
 end
 
-function build()
+function build_all()
     rm(build_dir; force=true, recursive=true)
     mkpath(build_dir)
     write_sum()
     write_sum_definition()
-    Books.build()
+    Books.build_all()
 end
 
 end # module
