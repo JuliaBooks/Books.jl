@@ -84,6 +84,10 @@ function pdf()
 end
 
 function build_all()
+    rm(build_dir; force=true, recursive=true)
+    mkpath(build_dir)
+    filename = "favicon.png"
+    cp(joinpath("pandoc", filename), joinpath(build_dir, filename))
     html()
     pdf()
 end
