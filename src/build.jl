@@ -42,6 +42,8 @@ function pandoc_html()
     output_filename = joinpath(build_dir, "index.html")
     output = "--output=$output_filename"
     html_inputs = ["index.md"; inputs()]
+    filename = "style.css"
+    cp(joinpath("pandoc", filename), joinpath(build_dir, filename); force=true)
 
     args = [
         html_inputs;
@@ -61,7 +63,8 @@ function html()
 end
 
 function pdf()
-    template = "--template=pandoc/eisvogel.tex"
+    eisvogel_path = joinpath("pandoc", "eisvogel.tex")
+    template = "--template=$eisvogel_path"
     output_filename = joinpath(build_dir, "book.pdf")
     output = "--output=$output_filename"
 

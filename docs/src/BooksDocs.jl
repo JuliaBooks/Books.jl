@@ -39,7 +39,7 @@ function write_sum_definition()
     ```
     $(CodeTracking.@code_string write_sum())
 
-    function build()
+    function build_all()
         write_sum()
     end
     ```

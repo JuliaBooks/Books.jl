@@ -23,10 +23,3 @@ For text (including tables), use the `include-files` [lua filter](https://github
 
 There is something to say for both approaches.
 I like this decoupling of code from the pages because it is more flexible and interacts better with Julia's testing module, the REPL and [Revise.jl](https://github.com/timholy/Revise.jl).
-
-## Developer information
-
-To build the docs, use
-```
-julia --project -e 'cd("docs"); using Books; serve()'
-```

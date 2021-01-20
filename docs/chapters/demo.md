@@ -17,7 +17,7 @@ build/sum.md
 ```
 </pre>
 
-So, to eval some code and write it aforementioned file, you could use
+So, to eval some code and write it to aforementioned file, you could use
 
 ```{.include}
 build/sum-definition.md
