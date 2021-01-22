@@ -5,17 +5,16 @@
   --small-size: 15px;
   --block-background: hsl(0, 0%, 97%);
   --menu-width: 220px;
-  --content-width: 800px;
-  --content-left-margin: 29px;
+  --max-body-width: 960px;
+  --content-left-margin: 70px;
 }
 
 .books-menu-content {
-  margin-left: 20px;
   max-height: 0;
   overflow: hidden;
 }
 
-@media only screen and (min-width: calc(220px + 29px + 800px)) {
+@media only screen and (min-width: calc(720px)) {
   .books-outside {
     display: flex;
   }
@@ -74,7 +73,6 @@ input:checked ~ .books-menu-content {
 
 @media only screen and (min-width: 900px) {
   .books-content {
-    width: var(--content-width) !important;
     margin-left: var(--content-left-margin);
   }
 }
@@ -115,7 +113,7 @@ body {
   line-height: 1.7;
   padding: 1em;
   margin: auto;
-  max-width: 42em;
+  max-width: var(--max-body-width);
 }
 
 a {
@@ -346,6 +344,10 @@ table td {
 .author {
   font-size: 1.2em;
   text-align: center;
+}
+
+html {
+  text-rendering: optimizeLegibility;
 }
 
 @media print {
