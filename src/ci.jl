@@ -9,8 +9,9 @@ function install_via_tar()
     download("https://github.com/jgm/pandoc/releases/download/$PANDOC_VERSION/$filename", filename)
     run(`sudo dpkg -i $filename`)
 
-    download("https://github.com/lierdakil/pandoc-crossref/releases/download/v$CROSSREF_VERSION/pandoc-crossref-Linux.tar.xz")
-    run(`tar -xf pandoc-crossref-Linux.tar.xz`)
+    filename = "pandoc-crossref-Linux.tar.xz"
+    download("https://github.com/lierdakil/pandoc-crossref/releases/download/v$CROSSREF_VERSION/$filename")
+    run(`tar -xf $filename`)
     bin_dir = joinpath(homedir(), "bin")
     mkdir(bin_dir)
     name = "pandoc-crossref"
