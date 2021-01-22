@@ -3,9 +3,16 @@ export
 
 import LiveServer
 
-ignored_folder = "build"
+ignored_folders = [
+    "build",
+    ".git",
+    ".github"
+]
 
-ignore(path)::Bool = startswith(path, ignored_folder) || startswith(path, "./$ignored_folder")
+function ignore(path)::Bool 
+    path_startswith(folder) = startswith(path, "./$folder") || startswith(path, folder)
+    any(path_startswith.(ignored_folders))
+end
 
 function custom_callback(file::AbstractString) 
     if !ignore(file)
@@ -20,8 +27,8 @@ function default_simplewatcher()
 
     for (root, dirs, files) in walkdir(".")
         for file in files
-            if !ignore(file)
-                file_path = joinpath(root, file)
+            file_path = joinpath(root, file)
+            if !ignore(file_path)
                 println("Watching $file_path")
                 LiveServer.watch_file!(sw, file_path)
             end
