@@ -5,8 +5,9 @@ function install_via_tar()
     PANDOC_VERSION = "2.10.1"
     CROSSREF_VERSION = "0.3.8.1"
 
-    download("https://github.com/jgm/pandoc/releases/download/$PANDOC_VERSION/pandoc-$PANDOC_VERSION-1-amd64.deb")
-    run(`sudo dpkg -i pandoc-$PANDOC_VERSION-1-amd64.deb`)
+    filename = "pandoc-$PANDOC_VERSION-1-amd64.deb"
+    download("https://github.com/jgm/pandoc/releases/download/$PANDOC_VERSION/$filename", filename)
+    run(`sudo dpkg -i $filename`)
 
     download("https://github.com/lierdakil/pandoc-crossref/releases/download/v$CROSSREF_VERSION/pandoc-crossref-Linux.tar.xz")
     run(`tar -xf pandoc-crossref-Linux.tar.xz`)
@@ -33,6 +34,7 @@ function install_apt_packages()
 
     run(`sudo apt-get -qq update`)
     for package in packages
+        println("Installing $package via apt")
         run(`sudo apt-get install -y $package`)
     end
 end
