@@ -6,14 +6,16 @@
   --block-background: hsl(0, 0%, 97%);
   --menu-width: 220px;
   --content-width: 800px;
+  --content-left-margin: 29px;
 }
 
 .books-menu-content {
+  margin-left: 20px;
   max-height: 0;
   overflow: hidden;
 }
 
-@media only screen and (min-width: calc(220px + 800px)) {
+@media only screen and (min-width: calc(220px + 29px; 800px)) {
   .books-outside {
     display: flex;
   }
@@ -73,6 +75,7 @@ input:checked ~ .books-menu-content {
 @media only screen and (min-width: 900px) {
   .books-content {
     width: var(--content-width) !important;
+    margin-left: var(--content-left-margin);
   }
 }
 
