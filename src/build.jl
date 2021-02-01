@@ -17,8 +17,11 @@ include_files = "--lua-filter=$include_files_lua"
 crossref = "--filter=pandoc-crossref"
 citeproc = "--filter=pandoc-citeproc"
 metadata = "--metadata-file=metadata.yml"
-csl_path = pandoc_file("style.csl")
-csl = "--csl=$csl_path"
+
+function csl()
+    csl_path = pandoc_file("style.csl")
+    csl = "--csl=$csl_path"
+end
 
 extra_args = [
     "--number-sections",
@@ -62,7 +65,7 @@ function pandoc_html()
         include_files;
         crossref;
         citeproc;
-        csl;
+        csl();
         metadata;
         template;
         extra_args;
@@ -86,7 +89,7 @@ function pdf()
         include_files;
         crossref;
         citeproc;
-        csl;
+        csl();
         metadata;
         template;
         extra_args;

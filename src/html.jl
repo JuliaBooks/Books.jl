@@ -1,26 +1,46 @@
 """
-    split_html(html)
+    split_keepdelim(str::AbstractString, dlm::Regex)
+
+Split on regex while keeping the matches.
+Based on https://github.com/JuliaLang/julia/issues/20625#issuecomment-581585151.
+"""
+function split_keepdelim(str::AbstractString, dlm::Regex)
+    dlm = string(dlm)[3:end-1]
+    rx = Regex("(?=$dlm)")
+    split(str, rx)
+end
+
+"""
+    split_html(h::AbstractString=pandoc_html())
 
 Split `html` into chapters.
 We need this function because Pandoc needs all the files at the same time to allow for cross-references.
-
-!!! warning
-
-    This function assumes that every chapter starts with a `h1` heading like `# Introduction`.
 """
-function split_html(h=pandoc_html())
+function split_html(h::AbstractString=pandoc_html())
     head_pattern = "<!-- end head -->"
     head, after_head = split(h, head_pattern)
     foot_pattern = "<!-- begin foot -->"
     body, foot = split(after_head, foot_pattern)
 
-    start = "<h1"
-    bodies = split(body, start)
-    bodies = [start*c for c in bodies[2:end]]
+    start = r"<h[1|2]"
+    bodies = split_keepdelim(body, start)[2:end]
     (head = head, bodies = bodies, foot = foot)
 end
 
-html_page_names(chs=chapters()) = ["index"; chs]
+function html_page_name(html)
+    lines = split(html, '\n')
+    rx = r"""id="([^"]*)">"""
+end
+
+"""
+    html_page_names(bodies)
+
+Give the page names for the html bodies.
+"""
+function html_page_names(bodies) 
+    chs = 
+    ["index"; chs]
+end
 
 html_href(text, link) = """<a href="$link">$text</a>"""
 html_li(text) = """<li>$text</li>"""
