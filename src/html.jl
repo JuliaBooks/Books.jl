@@ -76,7 +76,6 @@ end
 html_href(text, link) = """<a href="$link">$text</a>"""
 html_li(text) = """<li>$text</li>"""
 
-
 function pandoc_title(metadata="metadata.yml")
     meta = read(metadata, String)
     lines = split(meta, '\n')
@@ -88,15 +87,15 @@ function pandoc_title(metadata="metadata.yml")
 end
 
 """
-    add_menu([chs, splitted])
+    add_menu([splitted])
 
 Menu including numbered sections.
 """
-function add_menu(chs=chapters(), splitted=split_html())
+function add_menu(splitted=split_html())
     head, bodies, foot = splitted
     title = pandoc_title()
     
-    names = html_page_names(chs)
+    names = html_page_names(bodies)
     menu_items = []
     skip_homepage(z) = Iterators.peel(z)[2]
     for (name, body) in skip_homepage(zip(names, bodies))
@@ -127,7 +126,7 @@ function add_menu(chs=chapters(), splitted=split_html())
 end
 
 function html_pages(chs=chapters(), h=pandoc_html())
-    head, menu, bodies, foot = add_menu(chs, split_html(h))
+    head, menu, bodies, foot = add_menu(split_html(h))
     create_page(body) = """
     $head 
     <div class="books-outside">
@@ -138,7 +137,7 @@ function html_pages(chs=chapters(), h=pandoc_html())
     </div>
     """
     pages = create_page.(bodies)
-    names = html_page_names(chs)
+    names = html_page_names(bodies)
     Dict(zip(names, pages))
 end
 

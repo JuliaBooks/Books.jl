@@ -103,7 +103,7 @@ end
 function build_all()
     mkpath(build_dir)
     filename = "favicon.png"
-    cp(joinpath("pandoc", filename), joinpath(build_dir, filename))
+    cp(joinpath("pandoc", filename), joinpath(build_dir, filename); force=true)
     html()
     pdf()
 end
