@@ -29,9 +29,12 @@
     <h1 class="unnumbered" id="id"> Getting Started</h1>
     """
     tuples = B.section_infos(text)
-    @test tuples[1] == ("1", "sec:intro", "Introduction")
-    @test tuples[2] == ("1.1", "subsection", "Subsection")
-    @test tuples[3] == ("", "references", "References")
-    @test tuples[4] == ("3", "id", "Getting Started")
-    @test tuples[5] == ("", "id", "Getting Started")
+    @test tuples[1] == (num = "1", id = "sec:intro", text = "Introduction")
+    @test tuples[2] == (num = "1.1", id = "subsection", text = "Subsection")
+    @test tuples[3] == (num = "", id = "references", text = "References")
+    @test tuples[4] == (num = "3", id = "id", text = "Getting Started")
+    @test tuples[5] == (num = "", id = "id", text = "Getting Started")
+
+    names = B.html_page_names(bodies)
+    @test names == ["index", "welcome", "getting-started", "something", "embedding-code"]
 end

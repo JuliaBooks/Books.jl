@@ -27,24 +27,6 @@ function split_html(h::AbstractString=pandoc_html())
     (head = head, bodies = bodies, foot = foot)
 end
 
-function html_page_name(html)
-    lines = split(html, '\n')
-    rx = r"""id="([^"]*)">"""
-end
-
-"""
-    html_page_names(bodies)
-
-Give the page names for the html bodies.
-"""
-function html_page_names(bodies) 
-    chs = 
-    ["index"; chs]
-end
-
-html_href(text, link) = """<a href="$link">$text</a>"""
-html_li(text) = """<li>$text</li>"""
-
 function section_infos(text)
     lines = split(text, '\n')
     numbered_rx = r"data-number=\"([^\"]*)\" id=\"([^\"([^\"]*)\""
@@ -56,7 +38,7 @@ function section_infos(text)
             number, id = m.captures 
             line_end = split(line, '>')[end-1]
             text = line_end[2:end-4]
-            tuple = (number, id, lstrip(text))
+            tuple = (num = number, id = id, text = lstrip(text))
             push!(tuples, tuple)
         end
         m = match(unnumbered_rx, line)
@@ -64,12 +46,36 @@ function section_infos(text)
             id = m.captures[1]
             interesting_region = split(line, '>')[end-1]
             text = interesting_region[1:end-4]
-            tuple = ("", id, lstrip(text))
+            tuple = (num = "", id = id, text = lstrip(text))
             push!(tuples, tuple)
         end
     end
     tuples
 end
+
+function html_page_name(html)
+    sections = section_infos(html)
+    id = first(sections).id
+    if contains(id, ':')
+        start = findfirst(':', id) + 1
+        id = id[start:end]
+    end
+    id
+end
+
+"""
+    html_page_names(bodies)
+
+Give the page names for the html bodies.
+"""
+function html_page_names(bodies) 
+    names = html_page_name.(bodies)
+    ["index"; names]
+end
+
+html_href(text, link) = """<a href="$link">$text</a>"""
+html_li(text) = """<li>$text</li>"""
+
 
 function pandoc_title(metadata="metadata.yml")
     meta = read(metadata, String)
