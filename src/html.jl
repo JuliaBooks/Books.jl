@@ -73,7 +73,7 @@ function html_page_names(bodies)
     ["index"; names]
 end
 
-html_href(text, link) = """<a href="$link">$text</a>"""
+html_href(text, link; prefix="") = """$prefix<a href="$link">$text</a>"""
 html_li(text) = """<li>$text</li>"""
 
 function pandoc_title(metadata="metadata.yml")
@@ -101,10 +101,11 @@ function add_menu(splitted=split_html())
     for (name, body) in skip_homepage(zip(names, bodies))
         tuples = section_infos(body)
         for section in tuples
-            number, id, text = section
+            num, id, text = section
             link = "$name.html#$id"
-            link_text = "<b>$number</b> $text"
-            item = html_href(link_text, link)
+            link_text = "<b>$num</b> $text"
+            prefix = contains(num, '.') ? "&nbsp;&nbsp;&nbsp;&nbsp;" : ""
+            item = html_href(link_text, link; prefix)
             push!(menu_items, item)
         end
     end
