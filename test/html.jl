@@ -36,5 +36,5 @@
     @test tuples[5] == (num = "", id = "id", text = "Getting Started")
 
     names = B.html_page_names(bodies)
-    @test names == ["index", "welcome", "getting-started", "something", "embedding-code"]
+    @test names == ["welcome", "getting-started", "something", "embedding-code"]
 end
