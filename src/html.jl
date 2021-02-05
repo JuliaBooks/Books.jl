@@ -68,12 +68,9 @@ end
 
 Give the page names for the html bodies.
 """
-function html_page_names(bodies) 
-    names = html_page_name.(bodies)
-    ["index"; names]
-end
+html_page_names(bodies) = html_page_name.(bodies)
 
-html_href(text, link; prefix="") = """$prefix<a href="$link">$text</a>"""
+html_href(text, link, level) = """<a class="menu-level-$level" href="$link">$text</a>"""
 html_li(text) = """<li>$text</li>"""
 
 function pandoc_title(metadata="metadata.yml")
@@ -102,10 +99,10 @@ function add_menu(splitted=split_html())
         tuples = section_infos(body)
         for section in tuples
             num, id, text = section
-            link = "$name.html#$id"
+            link = "$name.html"
             link_text = "<b>$num</b> $text"
-            prefix = contains(num, '.') ? "&nbsp;&nbsp;&nbsp;&nbsp;" : ""
-            item = html_href(link_text, link; prefix)
+            level = contains(num, '.') ? 2 : 1
+            item = html_href(link_text, link, level)
             push!(menu_items, item)
         end
     end
@@ -139,20 +136,20 @@ function html_pages(chs=chapters(), h=pandoc_html())
     """
     pages = create_page.(bodies)
     names = html_page_names(bodies)
-    Dict(zip(names, pages))
+    (names = names, pages = pages)
 end
 
 """
-    map_ids(pages=html_pages())
+    map_ids(names, pages)
 
 Returns a mapping from `id` to `page_name`.
 This is used to allow one page to link to elements on another page.
 """
-function map_ids(pages=html_pages())
+function map_ids(names, pages)
     mapping = Dict()
     rx = r"id=\"([^\"]*)\""
-    for name in keys(pages)
-        html = pages[name]     
+    for (name, page) in zip(names, pages)
+        html = page
         matches = eachmatch(rx, html)
         for m in matches
             capture = first(m.captures)
@@ -165,12 +162,12 @@ function map_ids(pages=html_pages())
     mapping
 end
 
-function fix_links(pages=html_pages())
-    mapping = map_ids(pages)
+function fix_links(names, pages)
+    mapping = map_ids(names, pages)
     rx = r"href=\"([^\"]*)\""
     uncapture(capture) = "href=\"$capture\""
-    for name in keys(pages)
-        html = pages[name]     
+    updated_pages = []
+    function fix_page(name, page)
         function replace_match(s) 
             capture = first(match(rx, s).captures)
             if startswith(capture, "#sec:")
@@ -183,17 +180,19 @@ function fix_links(pages=html_pages())
                 return uncapture(capture)
             end
         end
-        fixed = replace(html, rx => replace_match)
-        pages[name] = fixed
+        fixed = replace(page, rx => replace_match)
+        return fixed
     end
-    pages
+
+    fixed_pages = [fix_page(name, page) for (name, page) in zip(names, pages)]
+    (names, fixed_pages)
 end
 
 function write_html_pages(chs=chapters(), h=pandoc_html())
-    pages = fix_links(html_pages(chs, h))
-    mkpath(build_dir) # For some reason, this is necessary in CI.
-    for name in keys(pages)
+    names, pages = fix_links(html_pages(chs, h)...)
+    for (i, (name, page)) in enumerate(zip(names, pages))
+        name = i == 1 ? "index" : name
         path = joinpath(build_dir, "$name.html")
-        write(path, pages[name])
+        write(path, page)
     end
 end

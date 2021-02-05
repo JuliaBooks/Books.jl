@@ -9,6 +9,10 @@
   --content-left-margin: 70px;
 }
 
+.menu-level-2 {
+  margin-left: 1.2rem;
+}
+
 .books-menu-content {
   max-height: 0;
   overflow: hidden;

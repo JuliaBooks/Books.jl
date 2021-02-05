@@ -75,6 +75,8 @@ function pandoc_html()
 end
 
 function html()
+    # rm(build_dir; force = true, recursive = true)
+    # mkpath(build_dir)
     write_html_pages(chapters(), pandoc_html())
 end
 
