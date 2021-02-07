@@ -53,7 +53,7 @@ end
 function pandoc_html()
     html_template_path = pandoc_file("template.html")
     template = "--template=$html_template_path"
-    engine = "pdf-engine=xelatex"
+    engine = "--pdf-engine=xelatex"
     output_filename = joinpath(build_dir, "index.html")
     output = "--output=$output_filename"
     html_inputs = ["index.md"; inputs()]
