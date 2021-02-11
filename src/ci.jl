@@ -56,13 +56,8 @@ function install_via_tar()
     filename = "pandoc-crossref-Linux.tar.xz"
     download("https://github.com/lierdakil/pandoc-crossref/releases/download/v$CROSSREF_VERSION/$filename", filename)
     run(`tar -xf $filename`)
-    bin_dir = joinpath(homedir(), "bin")
-    mkdir(bin_dir)
     name = "pandoc-crossref"
-    mv(name, joinpath(bin_dir, name))
-    open(ENV["GITHUB_PATH"], "a") do io
-        write(io, bin_dir)
-    end
+    symlink(joinpath(pwd(), "$name"), "/usr/local/bin/$name")
 end
 
 function install_dependencies()
