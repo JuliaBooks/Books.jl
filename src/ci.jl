@@ -1,13 +1,29 @@
 is_github_ci() = "CI" in keys(ENV)
+"""
+    is_sudo_env()
+
+Check whether we need sudo.
+This differs between GitHub and GitLab CI.
+"""
+function is_sudo_env()
+    try 
+        run(`sudo echo foo`)
+        return true
+    catch
+        return false
+    end
+end
+sudo_prefix() = is_sudo_env() ? "sudo" : ""
 
 function install_via_tar()
     @assert is_github_ci()
+    sudo = sudo_prefix()
     PANDOC_VERSION = "2.10.1"
     CROSSREF_VERSION = "0.3.8.1"
 
     filename = "pandoc-$PANDOC_VERSION-1-amd64.deb"
     download("https://github.com/jgm/pandoc/releases/download/$PANDOC_VERSION/$filename", filename)
-    run(`sudo dpkg -i $filename`)
+    run(`$sudo dpkg -i $filename`)
 
     filename = "pandoc-crossref-Linux.tar.xz"
     download("https://github.com/lierdakil/pandoc-crossref/releases/download/v$CROSSREF_VERSION/$filename", filename)
@@ -33,10 +49,11 @@ function install_apt_packages()
         "texlive-xetex"
     ]
 
-    run(`sudo apt-get -qq update`)
+    sudo = sudo_prefix()
+    run(`$sudo apt-get -qq update`)
     for package in packages
         println("Installing $package via apt")
-        run(`sudo apt-get install -y $package`)
+        run(`$sudo apt-get install -y $package`)
     end
 end
 
