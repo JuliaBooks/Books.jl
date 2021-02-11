@@ -14,6 +14,10 @@ function is_sudo_env()
     end
 end
 sudo_prefix() = is_sudo_env() ? "sudo" : ""
+function nonempty_run(args::Vector)
+    filter!(!=(""), args)
+    run(`$args`)
+end
 
 function install_via_tar()
     @assert is_github_ci()
@@ -24,7 +28,7 @@ function install_via_tar()
     filename = "pandoc-$PANDOC_VERSION-1-amd64.deb"
     download("https://github.com/jgm/pandoc/releases/download/$PANDOC_VERSION/$filename", filename)
     args = [sudo, "dpkg", "-i", filename]
-    run(`$args`)
+    nonempty_run(args)
 
     filename = "pandoc-crossref-Linux.tar.xz"
     download("https://github.com/lierdakil/pandoc-crossref/releases/download/v$CROSSREF_VERSION/$filename", filename)
@@ -52,11 +56,11 @@ function install_apt_packages()
 
     sudo = sudo_prefix()
     args = [sudo, "apt-get", "-qq", "update"]
-    run(`$args`)
+    nonempty_run(args)
     for package in packages
         println("Installing $package via apt")
         args = [sudo, "apt-get", "install", "-y", package]
-        run(`$args`)
+        nonempty_run(args)
     end
 end
 
