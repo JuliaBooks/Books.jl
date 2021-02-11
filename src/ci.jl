@@ -19,6 +19,29 @@ function nonempty_run(args::Vector)
     run(`$args`)
 end
 
+function install_apt_packages()
+    @assert is_github_ci()
+    packages = [
+        "make", 
+        "pdf2svg", 
+        "texlive-fonts-recommended", 
+        "texlive-fonts-extra",
+        "texlive-latex-base",
+        "texlive-binaries",
+        "texlive-xetex",
+        "xz-utils" # Required by tar.
+    ]
+
+    sudo = sudo_prefix()
+    args = [sudo, "apt-get", "-qq", "update"]
+    nonempty_run(args)
+    for package in packages
+        println("Installing $package via apt")
+        args = [sudo, "apt-get", "install", "-y", package]
+        nonempty_run(args)
+    end
+end
+
 function install_via_tar()
     @assert is_github_ci()
     sudo = sudo_prefix()
@@ -42,29 +65,7 @@ function install_via_tar()
     end
 end
 
-function install_apt_packages()
-    @assert is_github_ci()
-    packages = [
-        "make", 
-        "pdf2svg", 
-        "texlive-fonts-recommended", 
-        "texlive-fonts-extra",
-        "texlive-latex-base",
-        "texlive-binaries",
-        "texlive-xetex"
-    ]
-
-    sudo = sudo_prefix()
-    args = [sudo, "apt-get", "-qq", "update"]
-    nonempty_run(args)
-    for package in packages
-        println("Installing $package via apt")
-        args = [sudo, "apt-get", "install", "-y", package]
-        nonempty_run(args)
-    end
-end
-
 function install_dependencies()
-    install_via_tar()
     install_apt_packages()
+    install_via_tar()
 end
