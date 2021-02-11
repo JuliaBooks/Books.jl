@@ -23,7 +23,8 @@ function install_via_tar()
 
     filename = "pandoc-$PANDOC_VERSION-1-amd64.deb"
     download("https://github.com/jgm/pandoc/releases/download/$PANDOC_VERSION/$filename", filename)
-    run(`$sudo dpkg -i $filename`)
+    args = [sudo, "dpkg", "-i", filename]
+    run(`$args`)
 
     filename = "pandoc-crossref-Linux.tar.xz"
     download("https://github.com/lierdakil/pandoc-crossref/releases/download/v$CROSSREF_VERSION/$filename", filename)
@@ -50,10 +51,12 @@ function install_apt_packages()
     ]
 
     sudo = sudo_prefix()
-    run(`$sudo apt-get -qq update`)
+    args = [sudo, "apt-get", "-qq", "update"]
+    run(`$args`)
     for package in packages
         println("Installing $package via apt")
-        run(`$sudo apt-get install -y $package`)
+        args = [sudo, "apt-get", "install", "-y", package]
+        run(`$args`)
     end
 end
 
