@@ -57,7 +57,13 @@ function install_via_tar()
     download("https://github.com/lierdakil/pandoc-crossref/releases/download/v$CROSSREF_VERSION/$filename", filename)
     run(`tar -xf $filename`)
     name = "pandoc-crossref"
-    symlink(joinpath(pwd(), "$name"), "/usr/local/bin/$name")
+    target = joinpath(pwd(), "$name")
+    source = "/usr/local/bin/$name"
+    try
+        run(`ln -s $target $source`)
+    catch # In this case, GitHub needs sudo privileges.
+        run(`sudo ln -s $target $source`)
+    end
 end
 
 function install_dependencies()
