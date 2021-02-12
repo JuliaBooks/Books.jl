@@ -1,3 +1,5 @@
+import YAML
+
 """
     split_keepdelim(str::AbstractString, dlm::Regex)
 
@@ -73,14 +75,8 @@ html_page_names(bodies) = html_page_name.(bodies)
 html_href(text, link, level) = """<a class="menu-level-$level" href="$link">$text</a>"""
 html_li(text) = """<li>$text</li>"""
 
-function pandoc_title(metadata="metadata.yml")
-    meta = read(metadata, String)
-    lines = split(meta, '\n')
-    for line in lines
-        if startswith(line, "title: ")
-            return line[7:end]
-        end
-    end
+function pandoc_metadata(file="metadata.yml")::Dict
+    data = YAML.load_file(file)
 end
 
 function section_level(num::AbstractString)
@@ -97,7 +93,9 @@ Menu including numbered sections.
 """
 function add_menu(splitted=split_html())
     head, bodies, foot = splitted
-    title = pandoc_title()
+    data = pandoc_metadata()
+    title = data["title"]
+    subtitle = "subtitle" in keys(data) ? data["subtitle"] : ""
     
     names = html_page_names(bodies)
     menu_items = []
@@ -122,7 +120,10 @@ function add_menu(splitted=split_html())
     <label for="menu">☰</label>
     <div class="books-title">
     <a href="/">$title</a>
-    </div>
+    </div><br />
+    <span class="books-subtitle">
+    $subtitle
+    </span>
     <div class="books-menu-content">
     $list
     </div>

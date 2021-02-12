@@ -15,6 +15,9 @@ jobs:
           persist-credentials: false
 
       - uses: julia-actions/setup-julia@v1
+        with:
+          version: "^1.6.0-0"
+
       - uses: julia-actions/julia-buildpkg@master
       - uses: julia-actions/julia-runtest@latest
 

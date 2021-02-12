@@ -34,14 +34,18 @@
   .books-menu-content {
     max-height: 100%;
   }
-
-  .books-title {
-    margin-bottom: 1.4rem;
-  }
 }
 
 .books-title {
   display: inline-block;
+  margin-bottom: 0px;
+}
+
+.books-subtitle {
+  color: var(--gray);
+  display: inline-block;
+  font-style: italic;
+  margin-bottom: 1.4rem;
 }
 
 .books-menu {
