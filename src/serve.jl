@@ -14,10 +14,23 @@ function ignore(path)::Bool
     any(path_startswith.(ignored_folders))
 end
 
+"""
+    rebuild_neccesary(file)::Bool
+
+Avoid rebuilds if possible.
+For example, calling Pandoc is not neccesary for svg images.
+"""
+function rebuild_neccesary(file::AbstractString)::Bool
+    _, extension = splitext(file)
+    extension != ".svg"
+end
+
 function custom_callback(file::AbstractString) 
     if !ignore(file)
-        println("Running `html()`")
-        html()
+        if rebuild_neccesary(file)
+            println("Running `html()`")
+            html()
+        end
     end
     LiveServer.file_changed_callback(file)
 end
