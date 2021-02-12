@@ -83,6 +83,13 @@ function pandoc_title(metadata="metadata.yml")
     end
 end
 
+function section_level(num::AbstractString)
+    rx = r"\."
+    matches = eachmatch(rx, num)
+    n_dots = length(collect(matches))
+    n_dots + 1
+end
+
 """
     add_menu([splitted])
 
@@ -101,9 +108,11 @@ function add_menu(splitted=split_html())
             num, id, text = section
             link = "$name.html"
             link_text = "<b>$num</b> $text"
-            level = contains(num, '.') ? 2 : 1
-            item = html_href(link_text, link, level)
-            push!(menu_items, item)
+            level = section_level(num)
+            if level < 3
+                item = html_href(link_text, link, level)
+                push!(menu_items, item)
+            end
         end
     end
     list = join(html_li.(menu_items), '\n')

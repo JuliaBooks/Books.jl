@@ -28,3 +28,7 @@ which gives
 ```{.include}
 build/sum.md
 ```
+
+### Level 3 headings
+
+These are hidden from the menu.
