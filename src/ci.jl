@@ -22,9 +22,9 @@ end
 function install_apt_packages()
     @assert is_github_ci()
     packages = [
+        "librsvg2-bin", # rsvg-convert
         "make", 
-        "pdf2svg", 
-        "rsvg-convert",
+        "pdf2svg",
         "texlive-fonts-recommended", 
         "texlive-fonts-extra",
         "texlive-latex-base",
