@@ -24,6 +24,7 @@ function install_apt_packages()
     packages = [
         "make", 
         "pdf2svg", 
+        "rsvg-convert",
         "texlive-fonts-recommended", 
         "texlive-fonts-extra",
         "texlive-latex-base",
