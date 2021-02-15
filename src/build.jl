@@ -100,11 +100,8 @@ function pdf()
         extra_args;
         output
     ]
-    process, out = pandoc(args)
-
-    if process.exitcode != 0
-        throw(TaskFailedException("Failed to create PDF"))
-    end
+    pandoc(args)
+    
     println("Built $output_filename")
     nothing
 end
