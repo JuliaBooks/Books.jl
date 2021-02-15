@@ -1,4 +1,13 @@
+export 
+    code_block
+
 include_regex = r"```{\.include}([\w\W]*?)```"
+
+code_block(s) = """
+```
+$s
+```
+"""
 
 """
     include_filenames(s::AbstractString)::Vector
@@ -37,6 +46,7 @@ end
 function evaluate_and_write(M::Module, method, path)
     func = getproperty(M, Symbol(method))
     out = func()
+    out = convert_output(out)
     write(path, out)
 end
 
