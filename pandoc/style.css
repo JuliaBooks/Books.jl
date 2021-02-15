@@ -16,6 +16,7 @@
 .books-menu-content {
   max-height: 0;
   overflow: hidden;
+  font-size: var(--small-size);
 }
 
 @media only screen and (min-width: calc(720px)) {
