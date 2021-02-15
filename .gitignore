@@ -20,4 +20,5 @@ Manifest.toml
 
 build/
 docs/build/
+docs/_generated/
 dcos/Manifest.toml

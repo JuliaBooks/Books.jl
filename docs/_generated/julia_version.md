@@ -1,1 +1,0 @@
-This method is defined to work around a bug in the regex.

@@ -7,6 +7,9 @@ If you copy over the files in `docs/` to somewhere on your pc and set up a Julia
 julia --project -e 'using Books; serve()'
 ```
 
+Otherwise, take a look at the `docs` folder in the [GitHub repository](https://github.com/rikhuijzer/Books.jl/tree/main/docs).
+That folder contains a full example project.
+
 ## Pandoc files
 
 This project includes some default templates and styles.
