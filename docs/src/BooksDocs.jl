@@ -55,8 +55,15 @@ function build_all()
     mkpath(build_dir)
     write_sum()
     write_sum_definition()
-    Books.generate_dynamic_content()
+    Books.generate_dynamic_content(; fail_on_error=true)
     Books.build_all()
 end
+
+julia_version() = "This method is defined to work around a bug in the regex."
+
+julia_version_example() = """
+```
+This book is built with Julia $VERSION.
+```"""
 
 end # module

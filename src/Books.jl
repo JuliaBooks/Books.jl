@@ -1,6 +1,5 @@
 module Books
 
-include("demo.jl")
 include("html.jl")
 include("build.jl")
 include("serve.jl")
