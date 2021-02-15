@@ -12,41 +12,79 @@ function include_filenames(s::AbstractString)::Vector
 end
 
 """
-    caller_module(i::Int)
+    caller_module()
 
-Module of the `i`-th caller.
+Walks up the stacktrace to find the first module which is not Books.
 Thanks to https://discourse.julialang.org/t/get-module-of-a-caller/11445/3
 """
-function caller_module(i::Int)
+function caller_module()
     s = stacktrace()
-    s[i].linfo.linetable[1].module
+    for i in 1:10
+        try
+            M = s[i].linfo.linetable[1].module
+            return M
+        catch
+        end
+    end
+    throw(ErrorException("Couldn't determine the module of the caller"))
 end
 
 function method_name(path)
     name, _ = splitext(basename(path))
-    replace(name, '-' => '_')
+    name
 end
 
-function evaluate_include(path)
+function evaluate_and_write(M::Module, method, path)
+    func = getproperty(M, Symbol(method))
+    out = func()
+    write(path, out)
+end
+
+"""
+    evaluate_include(path, fail_on_error)
+
+For a `path` included in a chapter file, run the corresponding function and write the output to `path`.
+This way, the user can easily test/develop their `func` by calling `func()` in the REPL.
+"""
+function evaluate_include(path, M, fail_on_error)
     dir = "_generated"
     if dirname(path) != dir
+        println("Not running code for $path")
         return nothing
     end
     method = method_name(path)
     println("Running $method for $path")
-    M = caller_module(3)
-    func = getproperty(M, Symbol(method))
-    func(path) 
+    if isnothing(M)
+        M = caller_module()
+    end
+    mkpath(dirname(path))
+    if fail_on_error
+        evaluate_and_write(M, method, path)
+    else
+        try
+            evaluate_and_write(M, method, path)
+        catch e
+            @error "Failed to run code for $path:\n $e"
+            write(path, """
+            ```
+            $(string(e))
+            ```""")
+        end
+    end
 end
 
 """
-    generate_dynamic_content(M::Module)
+    generate_dynamic_content(; M=nothing, fail_on_error=false)
 
 Populate the files in `_generated/` by calling the required methods.
 These methods are specified by the filename and will output to that filename.
 This allows the user to easily link code blocks to code.
+The methods are assumed to be in the module `M` of the caller.
+Otherwise, specify another module `M`.
 """
-function generate_dynamic_content(M::Module)
+function generate_dynamic_content(; M=nothing, fail_on_error=false)
     ins = inputs()
-    evaluate_include.(ins)
+    included_paths = vcat([include_filenames(read(x, String)) for x in ins]...)
+    f(path) = evaluate_include(path, M, fail_on_error)
+    foreach(f, included_paths)
 end

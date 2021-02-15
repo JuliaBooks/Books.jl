@@ -1,8 +1,9 @@
 @testset "generate" begin
+    dir = "_generated"
     paths = [
-        joinpath("_generated", "example.md"),
-        joinpath("_generated", "example2.md"),
-        joinpath("_generated", "example3.md")
+        joinpath(dir, "example.md"),
+        joinpath(dir, "example2.md"),
+        joinpath(dir, "example3.md")
     ]
     include_text = """
     ```{.include}
@@ -16,19 +17,21 @@
     """
     @test B.include_filenames(include_text) == paths
 
+    @test B.method_name(joinpath(dir, "foo.md")) == "foo"
 end
 
 module Foo
     using Books
     using Test
 
+    @test Books.caller_module() == Main.Foo
+
     dir = "_generated"
-    function foo(path)
-        mkpath(dirname(path))
-        write(path, "lorem")
+    function foo()
+        "lorem"
     end
     path = joinpath(dir, "foo.md")
-    Books.evaluate_include(path)
+    Books.evaluate_include(path, true)
     @test read(path, String) == "lorem"
     rm(dir; force = true, recursive = true)
 end

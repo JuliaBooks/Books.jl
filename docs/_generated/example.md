@@ -1,0 +1,3 @@
+```
+UndefVarError(:example)
+```

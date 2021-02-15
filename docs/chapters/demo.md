@@ -9,31 +9,32 @@ $$ y = sin(x) $$ {#eq:sin}
 ## Embedding code
 
 For embedding code, you can use the `include-files` Lua filter.
+This package can automatically run methods based on the included filenames.
 For example, generate a Markdown file `sum.md` with Julia and include it with
 
 <pre>
 ```{.include}
-build/sum.md
+_generated/julia_version.md
 ```
 </pre>
 
-So, to eval some code and write it to aforementioned file, you could use
-
-```{.include}
-build/sum-definition.md
+Then, in your package, define the method `julia_version`:
+```
+julia_version() = "This book is built with Julia $VERSION."
 ```
 
-which gives
+Next, ensure that you call `Books.generate_dynamic_content()`.
+This will place the text 
 
 ```{.include}
-build/sum.md
+_generated/julia_version_example.md
 ```
+
+at the aforementioned path so that it is included by Pandoc.
+Note that it doesn't matter where you define the function `julia_version`, as long as it is in your module.
 
 ## Embedding images
 
-```{.include}
-_generated/example.md
-```
 
 ## Other notes
 
