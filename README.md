@@ -40,9 +40,10 @@ To generate parts of the output, write plots and text to files and pick them up 
 For images, use `![caption](build/files/image.md)`.
 For text (including tables), use the `include-files` [lua filter](https://github.com/pandoc/lua-filters).
 
-  ```{.include}
-  build/files/table.md
-  ```
+```{.include}
+build/files/table.md
+```
 
 There is something to say for both approaches.
-I like this decoupling of code from the pages because it is more flexible and interacts better with Julia's testing module, the REPL and [Revise.jl](https://github.com/timholy/Revise.jl).
+I like this decoupling of code from the pages because it is more flexible, stable and quick, and interacts better with Julia's testing module, the REPL and [Revise.jl](https://github.com/timholy/Revise.jl).
+The drawback of this approach is that it requires more file and session management.

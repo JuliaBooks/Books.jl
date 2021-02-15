@@ -29,6 +29,14 @@ which gives
 build/sum.md
 ```
 
+## Embedding images
+
+```{.include}
+_generated/example.md
+```
+
+## Other notes
+
 ### Level 3 headings
 
 These are hidden from the menu.

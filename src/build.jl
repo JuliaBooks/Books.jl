@@ -42,9 +42,9 @@ function pandoc(args)
     cmd = `pandoc $args`
     try 
         stdout = IOBuffer()
-        run(pipeline(cmd; stdout))
+        p = run(pipeline(cmd; stdout))
         out = String(take!(stdout))
-        return out
+        return (p, out)
     catch e
         println(e)
     end
@@ -71,7 +71,8 @@ function pandoc_html()
         extra_args;
         # output
     ]
-    pandoc(args)
+    _, out = pandoc(args)
+    out
 end
 
 function html()
@@ -99,7 +100,11 @@ function pdf()
         extra_args;
         output
     ]
-    pandoc(args)
+    process, out = pandoc(args)
+
+    if process.exitcode != 0
+        throw(TaskFailedException("Failed to create PDF"))
+    end
     println("Built $output_filename")
     nothing
 end
