@@ -62,8 +62,13 @@ function install_via_tar()
     source = "/usr/local/bin/$name"
     try
         run(`ln -s $target $source`)
-    catch # In this case, GitHub needs sudo privileges.
-        run(`sudo ln -s $target $source`)
+    catch
+        bin_dir = joinpath(homedir(), "bin")
+        mkdir(bin_dir)
+        mv(name, joinpath(bin_dir, name))
+        open(ENV["GITHUB_PATH"], "a") do io
+            write(io, bin_dir)
+        end
     end
 end
 
