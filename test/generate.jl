@@ -31,7 +31,7 @@ module Foo
         "lorem"
     end
     path = joinpath(dir, "foo.md")
-    Books.evaluate_include(path, true)
+    Books.evaluate_include(path, nothing, true)
     @test read(path, String) == "lorem"
     rm(dir; force = true, recursive = true)
 end
