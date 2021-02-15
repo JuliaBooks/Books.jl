@@ -55,7 +55,7 @@ function build_all()
     mkpath(build_dir)
     write_sum()
     write_sum_definition()
-    Books.generate_dynamic_content(; fail_on_error=true)
+    Books.generate_dynamic_content(; M=BooksDocs, fail_on_error=true)
     Books.build_all()
 end
 
