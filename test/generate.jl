@@ -27,6 +27,14 @@ using DataFrames
     mktemp() do path, io
         @test contains(B.convert_output(path, Gadfly.plot()), ".svg")
     end
+
+    @test rstrip(B.convert_output(nothing, c"DataFrame(A = [1])")) == """
+    ```
+    DataFrame(A = [1])
+    ```
+    |   A |
+    | ---:|
+    |   1 |"""
 end
 
 module Foo

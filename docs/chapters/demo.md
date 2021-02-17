@@ -55,27 +55,30 @@ which gives as output
 _generated/sum_example.md
 ```
 
-I'll probably add more helper functions for this once I know how the interface should look.
-
-## Overloading the export
-
-You can overload `convert_output(out::T)` for any type `T`.
-For example, to create tables for DataFrames define
-
-```{.include}
-_generated/convert_output_definition.md
-```
-
-Then,
+Here, how the output should be handled is based on the output type of the function.
+In this case, the output type is a `c_str` (code string).
+Methods for other outputs exist too:
 
 ```{.include}
 _generated/example_table_definition.md
 ```
 
-can be called, like in @sec:embedding-code, and returns
+shows
 
 ```{.include}
 _generated/example_table.md
+```
+
+Alternatively, we can show the same via the code string
+
+```{.include}
+_generated/code_example_table_definition.md
+```
+
+which shows as
+
+```{.include}
+_generated/code_example_table.md
 ```
 
 ## Other notes
