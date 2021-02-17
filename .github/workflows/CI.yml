@@ -31,7 +31,7 @@ jobs:
       - name: Build docs
         run: |
           cd docs
-          julia --project -e 'using BooksDocs; BooksDocs.build_all()'
+          julia --project -e 'using BooksDocs; BooksDocs.build()'
 
       - name: Deploy to secondary branch
         if: ${{ github.event_name == 'push' }}
