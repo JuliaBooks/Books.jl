@@ -41,7 +41,7 @@ Like in @sec:embedding-code, first define a method like
 _generated/sum_example_definition.md
 ```
 
-Then, add this via
+Then, add this method via
 
 <pre>
 ```{.include}
@@ -56,7 +56,7 @@ _generated/sum_example.md
 ```
 
 Here, how the output should be handled is based on the output type of the function.
-In this case, the output type is a `c_str` (code string).
+In this case, the output type is of type `Code`.
 Methods for other outputs exist too:
 
 ```{.include}
@@ -69,7 +69,7 @@ shows
 _generated/example_table.md
 ```
 
-Alternatively, we can show the same via the code string
+Alternatively, we can show the same by creating something of type `Code`.
 
 ```{.include}
 _generated/code_example_table_definition.md
@@ -80,6 +80,35 @@ which shows as
 ```{.include}
 _generated/code_example_table.md
 ```
+
+because the output of the code block is of type DataFrame.
+
+In essence, this package doesn't hide the implementation behind synctactic sugar.
+Instead, this package calls functions and gives you the freedom to decide what to do from there.
+As an example, we can pass `Module` objects to `code` to evaluate the code block in a specific module.
+
+```{.include}
+_generated/module_example_definition.md
+```
+
+When calling `module_example`, it shows as
+
+```{.include}
+_generated/module_example.md
+```
+
+and we can call x
+
+```{.include}
+_generated/module_call_x.md
+```
+
+Unsuprisingly, creating a DataFrame will now fail:
+
+```{.include}
+_generated/module_fail.md
+```
+
 
 ## Other notes
 

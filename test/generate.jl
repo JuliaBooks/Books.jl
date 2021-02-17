@@ -28,7 +28,7 @@ using DataFrames
         @test contains(B.convert_output(path, Gadfly.plot()), ".svg")
     end
 
-    @test rstrip(B.convert_output(nothing, c"DataFrame(A = [1])")) == """
+    @test rstrip(B.convert_output(nothing, code("DataFrame(A = [1])"))) == """
     ```
     DataFrame(A = [1])
     ```

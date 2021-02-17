@@ -1,16 +1,12 @@
 export
-    code,
-    @c_str
+    code
 
 struct Code
     block::AbstractString
+    mod::Module
 end
 
-code(block::AbstractString) = Code(rstrip(block))
-
-macro c_str(block)
-    return :(code($block))
-end
+code(block::AbstractString; mod=Main) = Code(rstrip(block), mod)
 
 struct ImageOptions
     caption::String
@@ -23,7 +19,12 @@ end
 
 function convert_output(path, out::Code)
     block = out.block
-    ans = eval(Meta.parse("begin $block end"))
+    mod = out.mod
+    ans = try 
+        Core.eval(mod, Meta.parse("begin $block end"))
+    catch e
+        string(e)
+    end
     shown_output = convert_output(path, ans)
     if isa(ans, AbstractString) || isa(ans, Number)
         shown_output = code_block(shown_output)
