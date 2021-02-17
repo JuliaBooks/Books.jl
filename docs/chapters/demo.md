@@ -115,6 +115,14 @@ Which is easy to fix
 _generated/module_fix.md
 ```
 
+## Plots
+
+Conversions for Gadfly are also included:
+
+```{.include}
+_generated/example_plot.md
+```
+
 ## Other notes
 
 ### Level 3 headings

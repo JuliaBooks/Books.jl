@@ -77,10 +77,7 @@ function evaluate_include(path, M, fail_on_error)
             evaluate_and_write(M, method, path)
         catch e
             @error "Failed to run code for $path:\n $e"
-            write(path, """
-            ```
-            $(string(e))
-            ```""")
+            write(path, code_block(string(e)))
         end
     end
 end

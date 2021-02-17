@@ -55,6 +55,13 @@ module_example_definition() = code_block("""
     $(@code_string module_example())
     """)
 
+example_plot() = code("""
+    using Gadfly
+
+    X = 1:30
+    plot(x = X, y = [x^2 for x in X])
+    """)
+
 function build()
     Books.generate_dynamic_content(; M=BooksDocs, fail_on_error=true)
     Books.build_all()
