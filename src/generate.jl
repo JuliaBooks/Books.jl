@@ -43,20 +43,14 @@ function method_name(path)
     name
 end
 
-"""
-    convert_output(out)
-
-Fallback method for `out::Any`.
-Other methods are defined via Requires.
-"""
-convert_output(out) = string(out)
-
 function evaluate_and_write(M::Module, method, path)
     func = getproperty(M, Symbol(method))
     out = func()
-    out = convert_output(out)
+    out = convert_output(path, out)
     write(path, out)
 end
+
+generated_dir = "_generated"
 
 """
     evaluate_include(path, fail_on_error)
@@ -65,7 +59,7 @@ For a `path` included in a chapter file, run the corresponding function and writ
 This way, the user can easily test/develop their `func` by calling `func()` in the REPL.
 """
 function evaluate_include(path, M, fail_on_error)
-    dir = "_generated"
+    dir = generated_dir
     if dirname(path) != dir
         println("Not running code for $path")
         return nothing

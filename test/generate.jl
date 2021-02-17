@@ -1,7 +1,8 @@
+import Gadfly
 using DataFrames
 
 @testset "generate" begin
-    dir = "_generated"
+    dir = B.generated_dir
     paths = [
         joinpath(dir, "example.md"),
         joinpath(dir, "example2.md"),
@@ -21,21 +22,27 @@ using DataFrames
 
     @test B.method_name(joinpath(dir, "foo.md")) == "foo"
 
-    @test contains(B.convert_output(DataFrame(A = [1])), "---")
+    @test contains(B.convert_output(nothing, DataFrame(A = [1])), "---")
+    path = tempname()
+    mktemp() do path, io
+        @test contains(B.convert_output(path, Gadfly.plot()), ".svg")
+    end
 end
 
 module Foo
     using Books
     using Test
 
-    @test Books.caller_module() == Main.Foo
+    B = Books
 
-    dir = "_generated"
+    @test B.caller_module() == Main.Foo
+
+    dir = B.generated_dir
     function foo()
         "lorem"
     end
     path = joinpath(dir, "foo.md")
-    Books.evaluate_include(path, nothing, true)
+    B.evaluate_include(path, nothing, true)
     @test read(path, String) == "lorem"
     rm(dir; force = true, recursive = true)
 end
