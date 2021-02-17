@@ -6,7 +6,7 @@ using Books
 using CodeTracking
 using DataFrames
 
-export build_all
+export build
 
 sum_example() = code("""
     a = 3
@@ -50,7 +50,7 @@ module_example_definition() = code_block("""
     $(@code_string module_example())
     """)
 
-function build_all()
+function build()
     Books.generate_dynamic_content(; M=BooksDocs, fail_on_error=true)
     Books.build_all()
 end

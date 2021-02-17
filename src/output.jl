@@ -4,9 +4,11 @@ export
 struct Code
     block::AbstractString
     mod::Module
+    hide_module::Bool
 end
 
-code(block::AbstractString; mod=Main) = Code(rstrip(block), mod)
+code(block::AbstractString; mod=Main, hide_module=false) = 
+    Code(rstrip(block), mod, hide_module)
 
 struct ImageOptions
     caption::String
@@ -29,7 +31,22 @@ function convert_output(path, out::Code)
     if isa(ans, AbstractString) || isa(ans, Number)
         shown_output = code_block(shown_output)
     end
+
+    mod_info = mod == Main || out.hide_module ? "" :
+        """
+        ```{=html}
+        <span class="books-list-module">
+            module: $mod
+        </span>
+        ```
+        \\begin{flushright}
+            \\tiny
+            module: $mod
+            \\normalsize
+        \\end{flushright}
+        """
     """
+    $mod_info
     ```
     $block
     ```

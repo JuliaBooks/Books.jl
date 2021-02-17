@@ -3,6 +3,7 @@
   --gray: hsl(0, 0%, 40%);
   --normal-size: 19px;
   --small-size: 15px;
+  --tiny-size: 11px;
   --block-background: hsl(0, 0%, 97%);
   --menu-width: 220px;
   --max-body-width: 960px;
@@ -17,6 +18,13 @@
   max-height: 0;
   overflow: hidden;
   font-size: var(--small-size);
+}
+
+.books-list-module {
+  display: block;
+  font-size: var(--tiny-size);
+  margin: 0 0;
+  text-align: right;
 }
 
 @media only screen and (min-width: calc(720px)) {
