@@ -45,6 +45,11 @@ module_call_x() = code("x"; mod=U)
 
 module_fail() = code("DataFrame(A = [1])"; mod=U)
 
+module_fix() = code("""
+    using DataFrames 
+
+    DataFrame(A = [1])"""; mod=U)
+
 module_example_definition() = code_block("""
     module U end
     $(@code_string module_example())

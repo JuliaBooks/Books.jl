@@ -97,18 +97,23 @@ When calling `module_example`, it shows as
 _generated/module_example.md
 ```
 
-and we can call x
+Similarily, we can get the value of x:
 
 ```{.include}
 _generated/module_call_x.md
 ```
 
-Unsuprisingly, creating a DataFrame will now fail:
+Unsuprisingly, creating a DataFrame will now fail because we haven't loaded DataFrames
 
 ```{.include}
 _generated/module_fail.md
 ```
 
+Which is easy to fix
+
+```{.include}
+_generated/module_fix.md
+```
 
 ## Other notes
 
