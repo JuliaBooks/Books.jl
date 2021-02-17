@@ -43,6 +43,14 @@ function method_name(path)
     name
 end
 
+"""
+    convert_output(out)
+
+Fallback method for `out::Any`.
+Other methods are defined via Requires.
+"""
+convert_output(out) = string(out)
+
 function evaluate_and_write(M::Module, method, path)
     func = getproperty(M, Symbol(method))
     out = func()

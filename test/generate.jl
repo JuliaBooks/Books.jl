@@ -1,3 +1,5 @@
+using DataFrames
+
 @testset "generate" begin
     dir = "_generated"
     paths = [
@@ -18,6 +20,8 @@
     @test B.include_filenames(include_text) == paths
 
     @test B.method_name(joinpath(dir, "foo.md")) == "foo"
+
+    @test contains(B.convert_output(DataFrame(A = [1])), "---")
 end
 
 module Foo
