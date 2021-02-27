@@ -25,6 +25,7 @@ function install_apt_packages()
         "librsvg2-bin", # rsvg-convert
         "make", 
         "pdf2svg",
+        "python3-pip",
         "texlive-fonts-recommended", 
         "texlive-fonts-extra",
         "texlive-latex-base",
@@ -43,7 +44,7 @@ function install_apt_packages()
     end
 end
 
-function install_via_tar()
+function install_non_apt_packages()
     @assert is_github_ci()
     sudo = sudo_prefix()
     PANDOC_VERSION = "2.10.1"
@@ -70,9 +71,12 @@ function install_via_tar()
             write(io, bin_dir)
         end
     end
+
+    args = [sudo, "pip3", "install", "cairosvg"]
+    nonempty_run(args)
 end
 
 function install_dependencies()
     install_apt_packages()
-    install_via_tar()
+    install_non_apt_packages()
 end
