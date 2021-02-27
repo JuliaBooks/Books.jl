@@ -27,6 +27,7 @@ function convert_output(path, out::Code)
     catch e
         string(e)
     end
+    @show path, typeof(ans)
     shown_output = convert_output(path, ans)
     if isa(ans, AbstractString) || isa(ans, Number)
         shown_output = code_block(shown_output)

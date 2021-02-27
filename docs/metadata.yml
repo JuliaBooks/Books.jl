@@ -3,6 +3,7 @@ title: Books.jl
 subtitle: Create books with Julia
 book: true
 author: Rik Huijzer
+repo: https://github.com/rikhuijzer/Books.jl
 lang: en-US
 tags: [pandoc, book, my-book, etc]
 number-sections: true

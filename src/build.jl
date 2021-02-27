@@ -82,7 +82,6 @@ function html()
 end
 
 function pdf()
-    engine = "--pdf-engine=xelatex"
     latex_template_path = pandoc_file("template.tex")
     template = "--template=$latex_template_path"
     output_filename = joinpath(build_dir, "book.pdf")
@@ -96,7 +95,6 @@ function pdf()
         csl();
         metadata;
         template;
-        engine;
         extra_args;
         output
     ]

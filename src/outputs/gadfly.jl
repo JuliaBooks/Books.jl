@@ -18,13 +18,15 @@ function convert_output(path, out::Gadfly.Plot)
     im_dir = joinpath(build_dir, "im")
     mkpath(im_dir)
 
-    mktempdir() do dir
-        svg_path = joinpath(dir, "tmp.svg")
-        write_svg(svg_path, out)
-        file = method_name(path)
-        png_filename = "$file.png"
-        png_path = joinpath(im_dir, png_filename)
-        svg2png(svg_path, png_path)
-        im_path = joinpath("im", png_filename)
-    end
+    file = method_name(path)
+    println("Writing plot images for $file")
+    svg_filename = "$file.svg"
+    svg_path = joinpath(im_dir, svg_filename)
+    write_svg(svg_path, out)
+    png_filename = "$file.png"
+    png_path = joinpath(im_dir, png_filename)
+    svg2png(svg_path, png_path)
+    im_link = joinpath("im", svg_filename)
+    # This path is fixed in the html post-processor.
+    "![$file]($png_path)"
 end

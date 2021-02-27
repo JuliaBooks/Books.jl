@@ -117,7 +117,9 @@ _generated/module_fix.md
 
 ## Plots
 
-Conversions for Gadfly are also included:
+Conversions for Gadfly are also included.
+This is actually a bit tricky, because we want to show vector graphics (SVG) on the web, but these are not supported (well) by LaTeX.
+Therefore, png images are passed to LaTeX via cairosvg since I found that this tool does the best conversions.
 
 ```{.include}
 _generated/example_plot.md
