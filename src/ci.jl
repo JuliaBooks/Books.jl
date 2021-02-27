@@ -7,7 +7,7 @@ This differs between GitHub and GitLab CI.
 """
 function is_sudo_env()
     try 
-        run(`sudo echo foo`)
+        run(`sudo echo This text is printed with sudo privileges`)
         return true
     catch
         return false
@@ -80,7 +80,7 @@ function install_non_apt_packages()
             write(io, bin_dir)
         end
     end
-    validate_installation("pandoc-crossref")
+    # validate_installation("pandoc-crossref")
 
     args = [sudo, "pip3", "install", "cairosvg"]
     nonempty_run(args)
