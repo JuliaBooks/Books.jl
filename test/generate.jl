@@ -23,9 +23,8 @@ using DataFrames
     @test B.method_name(joinpath(dir, "foo.md")) == "foo"
 
     @test contains(B.convert_output(nothing, DataFrame(A = [1])), "---")
-    path = tempname()
     mktemp() do path, io
-        @test contains(B.convert_output(path, Gadfly.plot()), ".svg")
+        @test contains(B.convert_output(path, Gadfly.plot()), ".png")
     end
 
     @test strip(B.convert_output(nothing, code("DataFrame(A = [1])"))) == """

@@ -7,7 +7,7 @@ This differs between GitHub and GitLab CI.
 """
 function is_sudo_env()
     try 
-        run(`sudo echo foo`)
+        run(`sudo echo This text is printed with sudo privileges`)
         return true
     catch
         return false
@@ -44,6 +44,14 @@ function install_apt_packages()
     end
 end
 
+function validate_installation(name::AbstractString; args="--help")
+    try 
+        run(`$name $args`)
+    catch e
+        error("Could not run $name with args $args")
+    end
+end
+
 function install_non_apt_packages()
     @assert is_github_ci()
     sudo = sudo_prefix()
@@ -54,6 +62,7 @@ function install_non_apt_packages()
     download("https://github.com/jgm/pandoc/releases/download/$PANDOC_VERSION/$filename", filename)
     args = [sudo, "dpkg", "-i", filename]
     nonempty_run(args)
+    validate_installation("pandoc")
 
     filename = "pandoc-crossref-Linux.tar.xz"
     download("https://github.com/lierdakil/pandoc-crossref/releases/download/v$CROSSREF_VERSION/$filename", filename)
@@ -71,9 +80,11 @@ function install_non_apt_packages()
             write(io, bin_dir)
         end
     end
+    # validate_installation("pandoc-crossref")
 
     args = [sudo, "pip3", "install", "cairosvg"]
     nonempty_run(args)
+    validate_installation("cairosvg")
 end
 
 function install_dependencies()

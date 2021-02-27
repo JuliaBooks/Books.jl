@@ -19,10 +19,11 @@ jobs:
           version: "^1.6.0-0"
 
       - uses: julia-actions/julia-buildpkg@master
-      - uses: julia-actions/julia-runtest@latest
 
-      - name: Install Pandoc and LaTeX dependencies
+      - name: Install Pandoc, LaTeX and other dependencies
         run: julia --project -e 'using Books; Books.install_dependencies()'
+
+      - uses: julia-actions/julia-runtest@latest
 
       - name: Install BooksDocs dependencies
         run: julia --project=docs/ -e '
