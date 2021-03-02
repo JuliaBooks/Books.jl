@@ -56,6 +56,8 @@ $endif$
 \documentclass[
 $if(fontsize)$
   $fontsize$,
+$else$
+  14pt
 $endif$
 $if(lang)$
   $babel-lang$,
@@ -313,12 +315,10 @@ $endif$
 $if(beamer)$
 \newif\ifbibliography
 $endif$
-$if(listings)$
 \usepackage{listings}
 \newcommand{\passthrough}[1]{#1}
 \lstset{defaultdialect=[5.3]Lua}
 \lstset{defaultdialect=[x86masm]Assembler}
-$endif$
 $if(listings-no-page-break)$
 \usepackage{etoolbox}
 \BeforeBeginEnvironment{lstlisting}{\par\noindent\begin{minipage}{\linewidth}}
@@ -708,8 +708,6 @@ $endif$
 %
 %
 
-$if(listings)$
-
 %
 % general listing colors
 %
@@ -726,14 +724,8 @@ $if(listings)$
 
 \lstdefinestyle{eisvogel_listing_style}{
   language         = java,
-$if(listings-disable-line-numbers)$
   xleftmargin      = 0.6em,
   framexleftmargin = 0.4em,
-$else$
-  numbers          = left,
-  xleftmargin      = 2.7em,
-  framexleftmargin = 2.5em,
-$endif$
   backgroundcolor  = \color{listing-background},
   basicstyle       = \color{listing-text-color}\linespread{1.0}$if(code-block-font-size)$$code-block-font-size$$else$\small$endif$\ttfamily{},
   breaklines       = true,
@@ -743,8 +735,8 @@ $endif$
   frameround       = ffff,
   tabsize          = 4,
   numberstyle      = \color{listing-numbers},
-  aboveskip        = 1.0em,
-  belowskip        = 0.1em,
+  aboveskip        = 0.8em,
+  belowskip        = 0.3em,
   abovecaptionskip = 0em,
   belowcaptionskip = 1.0em,
   keywordstyle     = {\color{listing-keyword}\bfseries},
@@ -824,7 +816,6 @@ $endif$
   stringstyle     = \color{listing-string},
   identifierstyle = \color{listing-identifier}
 }
-$endif$
 
 %
 % header and footer
@@ -841,7 +832,6 @@ $else$
   \lhead[$if(header-right)$$header-right$$else$$date$$endif$]{$if(header-left)$$header-left$$else$$title$$endif$}
   \chead[$if(header-center)$$header-center$$else$$endif$]{$if(header-center)$$header-center$$else$$endif$}
   \rhead[$if(header-left)$$header-left$$else$$title$$endif$]{$if(header-right)$$header-right$$else$$date$$endif$}
-  \lfoot[$if(footer-right)$$footer-right$$else$\thepage$endif$]{$if(footer-left)$$footer-left$$else$$for(author)$$author$$sep$, $endfor$$endif$}
   \cfoot[$if(footer-center)$$footer-center$$else$$endif$]{$if(footer-center)$$footer-center$$else$$endif$}
   \rfoot[$if(footer-left)$$footer-left$$else$$for(author)$\url{$repo$} $endfor$$endif$]{$if(footer-right)$$footer-right$$else$\thepage$endif$}
   \renewcommand{\headrulewidth}{0.4pt}

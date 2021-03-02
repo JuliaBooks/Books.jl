@@ -5,7 +5,7 @@ export
     html,
     pdf
 
-const project_root = dirname(dirname(pathof(Books)))
+const project_root = pkgdir(Books)
 function pandoc_file(filename)
     user_path = joinpath("pandoc", filename)
     fallback_path = joinpath(project_root, "pandoc", filename)

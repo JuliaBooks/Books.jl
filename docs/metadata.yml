@@ -4,6 +4,12 @@ subtitle: Create books with Julia
 book: true
 author: Rik Huijzer
 repo: https://github.com/rikhuijzer/Books.jl
+code-block-font-size: \scriptsize
+geometry:
+  - top=20mm
+  - left=24mm
+  - right=24mm
+  - bottom=28mm
 lang: en-US
 tags: [pandoc, book, my-book, etc]
 number-sections: true
