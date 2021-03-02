@@ -80,7 +80,7 @@ $for(classoption)$
   $classoption$$sep$,
 $endfor$
   ,captions=tableheading
-]{$if(beamer)$$documentclass$$else$$if(book)$scrbook$else$scrartcl$endif$$endif$}
+]{scrreprt}
 $if(beamer)$
 $if(background-image)$
 \usebackgroundtemplate{%
@@ -583,7 +583,6 @@ $endif$
 $if(beamer)$
 $else$
 \usepackage[font={stretch=1.2}, textfont={color=caption-color}, position=top, skip=4mm, labelfont=bf, singlelinecheck=false, justification=$if(caption-justification)$$caption-justification$$else$raggedright$endif$]{caption}
-\setcapindent{0em}
 $endif$
 
 %
@@ -642,11 +641,11 @@ $endif$
 \definecolor{heading-color}{RGB}{40,40,40}
 $if(beamer)$
 $else$
-\addtokomafont{section}{\color{heading-color}}
+% \addtokomafont{section}{\color{heading-color}}
 $endif$
 % When using the classes report, scrreprt, book,
 % scrbook or memoir, uncomment the following line.
-%\addtokomafont{chapter}{\color{heading-color}}
+% \addtokomafont{chapter}{\color{heading-color}}
 
 %
 % variables for title, author and date
@@ -937,7 +936,7 @@ $endif$
 %%
 
 $if(has-frontmatter)$
-\frontmatter
+% \frontmatter
 $endif$
 $if(title)$
 $if(beamer)$
@@ -996,12 +995,12 @@ $if(linestretch)$
 \setstretch{$linestretch$}
 $endif$
 $if(has-frontmatter)$
-\mainmatter
+% \mainmatter
 $endif$
 $body$
 
 $if(has-frontmatter)$
-\backmatter
+% \backmatter
 $endif$
 $if(natbib)$
 $if(bibliography)$
