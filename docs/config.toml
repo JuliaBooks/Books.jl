@@ -1,4 +1,5 @@
-chapters = [
+contents = [
+  "about",
   "getting-started",
   "demo",
   "references"

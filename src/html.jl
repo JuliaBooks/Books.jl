@@ -25,7 +25,7 @@ end
 """
     fix_png_images(h::AbstractString)
 
-Change all the PNG images to SVG. 
+Change all the PNG images to SVG.
 This is neccessary, because LaTeX doesn't accept SVG images.
 """
 function fix_png_images(h::AbstractString)

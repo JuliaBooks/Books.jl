@@ -27,16 +27,16 @@ extra_args = [
     "--number-sections",
     "--top-level-division=chapter"
 ]
-function chapters()
+function contents()
     content = read("config.toml", String)    
     t = TOML.parse(content)
-    t["chapters"]
+    t["contents"]
 end
 
 build_dir = "build"
 mkpath(build_dir)
 
-inputs() = [joinpath("chapters", "$chapter.md") for chapter in chapters()]
+inputs() = [joinpath("contents", "$content.md") for content in contents()]
 
 function pandoc(args) 
     cmd = `pandoc $args`
@@ -78,7 +78,7 @@ end
 function html()
     # rm(build_dir; force = true, recursive = true)
     # mkpath(build_dir)
-    write_html_pages(chapters(), pandoc_html())
+    write_html_pages(contents(), pandoc_html())
 end
 
 function pdf()
