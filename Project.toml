@@ -16,11 +16,3 @@ LiveServer = "0.6"
 Requires = "1.1"
 YAML = "0.4"
 julia = "1.6"
-
-[extras]
-DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
-Gadfly = "c91e804a-d5a3-530f-b6f0-dfbca275c004"
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-
-[targets]
-test = ["DataFrames", "Gadfly", "Test"]
