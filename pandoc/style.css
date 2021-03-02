@@ -144,26 +144,6 @@ a[target="_blank"]::after {
   margin: 0 4px 0 5px;
 }
 
-*::-moz-selection {
-  background: rgba(255, 255, 0, 0.3);
-  color: #000;
-}
-
-*::selection {
-  background: rgba(255, 255, 0, 0.3);
-  color: #000;
-}
-
-a::-moz-selection {
-  background: rgba(255, 255, 0, 0.3);
-  color: #0645ad;
-}
-
-a::selection {
-  background: rgba(255, 255, 0, 0.3);
-  color: #0645ad;
-}
-
 p {
   margin: 1em 0;
 }
