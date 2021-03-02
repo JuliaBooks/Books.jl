@@ -1,6 +1,17 @@
 @testset "html" begin
     @test B.split_keepdelim("a. 1 b. 2", r"[a|b]") == SubString{String}["a. 1 ", "b. 2"]
 
+    h = """
+        ![image](build/im/image.png)
+        and
+        ![](build/im/bar.png)
+        """
+    @test B.fix_images(h) == """
+        ![image](/im/image.svg)
+        and
+        ![](/im/bar.svg)
+        """
+
     html = """
     <body>
     <!-- end head -->

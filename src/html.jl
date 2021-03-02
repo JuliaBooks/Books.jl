@@ -13,6 +13,33 @@ function split_keepdelim(str::AbstractString, dlm::Regex)
 end
 
 """
+    fix_markdown_image(s::AbstractString)
+
+Fix single Markdown image string.
+
+# Example
+```jldoctest
+julia> Books.fix_markdown_image("![Image](build/im/image.png)")
+"![Image](/im/image.svg)"
+```
+"""
+function fix_markdown_image(s::AbstractString)
+    s = replace(s, "(build/" => "(/")
+    s = replace(s, ".png" => ".svg")
+end
+
+"""
+    fix_images(h::AbstractString)
+
+Change all the PNG images to SVG. 
+This is neccessary, because LaTeX doesn't accept SVG images.
+"""
+function fix_images(h::AbstractString)
+    markdown_image = r"![^\]]*]\([^\)]*\)"
+    replace(h, markdown_image => fix_markdown_image)
+end
+
+"""
     split_html(h::AbstractString=pandoc_html())
 
 Split `html` into chapters.

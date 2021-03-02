@@ -21,4 +21,5 @@ Manifest.toml
 build/
 docs/build/
 docs/_generated/
-dcos/Manifest.toml
+docs/Manifest.toml
+test/Manifest.toml
