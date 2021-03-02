@@ -27,6 +27,6 @@ function convert_output(path, out::Gadfly.Plot)
     png_path = joinpath(im_dir, png_filename)
     svg2png(svg_path, png_path)
     im_link = joinpath("im", svg_filename)
-    # This path is fixed in the html post-processor.
-    "![$file]($png_path)"
+    # This path is fixed for html in the html post-processor.
+    pandoc_image(file, png_path)
 end

@@ -7,8 +7,6 @@ using CodeTracking
 using DataFrames
 using Gadfly
 
-export build
-
 sum_example() = code("""
     a = 3
     b = 4
@@ -60,7 +58,7 @@ example_plot() = code("""
     using Gadfly
 
     X = 1:30
-    plot(x = X, y = [x^2 for x in X])
+    plot(x = X, y = X.^2)
     """)
 
 function build()

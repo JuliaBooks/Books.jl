@@ -117,14 +117,18 @@ _generated/module_fix.md
 
 ## Plots
 
-Conversions for Gadfly are also included.
+Conversions for Gadfly are also included, see @fig:example_plot.
 This is actually a bit tricky, because we want to show vector graphics (SVG) on the web, but these are not supported (well) by LaTeX.
-Therefore, png images are passed to LaTeX via cairosvg since I found that this tool does the best conversions without relying on Cairo.jl.
-(Cairo.jl doesn't work for me.)
+Therefore, portable network graphics (PNG) images are passed to LaTeX via cairosvg;
+I found that this tool does the best conversions without relying on Cairo.jl.
+(Cairo.jl doesn't work for me on NixOS.)
 
 ```{.include}
 _generated/example_plot.md
 ```
+
+If the output is a string instead of the output you expected, then check whether you load the related packages in time.
+For example, for this Gadfly plot, you need to load Gadfly.jl together with Books.jl for Requires.jl to work.
 
 ## Other notes
 
