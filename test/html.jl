@@ -1,18 +1,18 @@
 @testset "html" begin
     @test B.split_keepdelim("a. 1 b. 2", r"[a|b]") == SubString{String}["a. 1 ", "b. 2"]
 
-    h = """
-        ![image](build/im/image.png)
+    s = """
+        <img src="build/im/example.png" alt="example" />
         and
-        ![](build/im/bar.png)
+        <img src="build/im/bar.png" alt="bar" />
         """
-    @test B.fix_images(h) == """
-        ![image](/im/image.svg)
+    @test B.fix_png_images(s) == """
+        <img src="/im/example.svg" alt="example" />
         and
-        ![](/im/bar.svg)
+        <img src="/im/bar.svg" alt="bar" />
         """
 
-    html = """
+    h = """
     <body>
     <!-- end head -->
     <h1 class="unnumbered" id="welcome">Welcome</h1>
@@ -26,7 +26,7 @@
     <div class="license">John Doe</div>
     """
 
-    head, bodies, foot = B.split_html(html)
+    head, bodies, foot = B.split_html(h)
     @test contains(head, "<body>")
     @test length(bodies) == 4
     @test contains(foot, "John")

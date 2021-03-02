@@ -13,30 +13,24 @@ function split_keepdelim(str::AbstractString, dlm::Regex)
 end
 
 """
-    fix_markdown_image(s::AbstractString)
+    fix_png_image(h::AbstractString)
 
-Fix single Markdown image string.
-
-# Example
-```jldoctest
-julia> Books.fix_markdown_image("![Image](build/im/image.png)")
-"![Image](/im/image.svg)"
-```
+Fix a single html image string.
 """
-function fix_markdown_image(s::AbstractString)
-    s = replace(s, "(build/" => "(/")
-    s = replace(s, ".png" => ".svg")
+function fix_png_image(h::AbstractString)
+    h = replace(h, "\"build/" => "\"/")
+    h = replace(h, ".png\"" => ".svg\"")
 end
 
 """
-    fix_images(h::AbstractString)
+    fix_png_images(h::AbstractString)
 
 Change all the PNG images to SVG. 
 This is neccessary, because LaTeX doesn't accept SVG images.
 """
-function fix_images(h::AbstractString)
-    markdown_image = r"![^\]]*]\([^\)]*\)"
-    replace(h, markdown_image => fix_markdown_image)
+function fix_png_images(h::AbstractString)
+    html_image_src = r"""img src="build\/im\/[^\.]*\.png" """
+    replace(h, html_image_src => fix_png_image)
 end
 
 """
@@ -226,6 +220,7 @@ function fix_links(names, pages)
 end
 
 function write_html_pages(chs=chapters(), h=pandoc_html())
+    h = fix_png_images(h)
     names, pages = fix_links(html_pages(chs, h)...)
     for (i, (name, page)) in enumerate(zip(names, pages))
         name = i == 1 ? "index" : name

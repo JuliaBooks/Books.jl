@@ -12,5 +12,6 @@ DocMeta.setdocmeta!(
 )
 doctest(Books)
 
+include("output.jl")
 include("html.jl")
 include("generate.jl")

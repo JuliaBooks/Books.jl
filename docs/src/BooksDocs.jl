@@ -5,6 +5,7 @@ import Latexify
 using Books
 using CodeTracking
 using DataFrames
+using Gadfly
 
 export build
 
