@@ -134,4 +134,4 @@ For example, for this Gadfly plot, you need to load Gadfly.jl together with Book
 
 ### Level 3 headings
 
-These are hidden from the menu.
+These are hidden from the website menu.

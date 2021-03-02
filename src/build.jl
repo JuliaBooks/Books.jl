@@ -95,12 +95,18 @@ function pdf()
         csl();
         metadata;
         template;
+        "--listings";
         extra_args;
         output
     ]
     pandoc(args)
-    
     println("Built $output_filename")
+    
+    # For debugging purposes.
+    output_filename = joinpath(build_dir, "book.tex")
+    args[end] = "--output=$output_filename"
+    pandoc(args)
+    
     nothing
 end
 
