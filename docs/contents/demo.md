@@ -54,6 +54,20 @@ Then, it will show
 _generated/df_example.md
 ```
 
+Use `outputs` to show multiple objects:
+
+```{.include}
+_generated/multiple_df_example_def.md
+```
+
+which will appear as
+
+```{.include}
+_generated/multiple_df_example.md
+```
+
+See @sec:plots for showing multiple plots.
+
 ## Showing code blocks {#sec:code-blocks}
 
 Like in @sec:embedding-code, first define a method like
@@ -136,7 +150,7 @@ Which is easy to fix
 _generated/module_fix.md
 ```
 
-## Plots
+## Plots {#sec:plots}
 
 Conversions for Gadfly are also included, see @fig:example_plot.
 This is actually a bit tricky, because we want to show vector graphics (SVG) on the web, but these are not supported (well) by LaTeX.
@@ -150,6 +164,18 @@ _generated/example_plot.md
 
 If the output is a string instead of the output you expected, then check whether you load the related packages in time.
 For example, for this Gadfly plot, you need to load Gadfly.jl together with Books.jl for Requires.jl to work.
+
+For multiple images, use `outputs(paths, objects)`:
+
+```{.include}
+_generated/multiple_example_plots_def.md
+```
+
+Resulting in @fig:example_plot_2 and @fig:example_plot_3:
+
+```{.include}
+_generated/multiple_example_plots.md
+```
 
 ## Other notes
 

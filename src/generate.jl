@@ -1,6 +1,3 @@
-export 
-    code_block
-
 include_regex = r"```{\.include}([\w\W]*?)```"
 
 code_block(s) = """
@@ -90,6 +87,8 @@ These methods are specified by the filename and will output to that filename.
 This allows the user to easily link code blocks to code.
 The methods are assumed to be in the module `M` of the caller.
 Otherwise, specify another module `M`.
+
+The module `M` is used to locate the method defined, as a string, in the `.include` via `getproperty`.
 """
 function generate_dynamic_content(; M=nothing, fail_on_error=false)
     ins = inputs()

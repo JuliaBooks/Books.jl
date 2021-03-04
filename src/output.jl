@@ -1,14 +1,42 @@
-export
-    code
-
 struct Code
     block::AbstractString
     mod::Module
     hide_module::Bool
 end
 
-code(block::AbstractString; mod=Main, hide_module=false) = 
+"""
+    code(block::AbstractString; mod=Main, hide_module=false)
+
+Define a code `block` which needs to be evaluated in module `mod`.
+By default, the module in which the code is evaluated is shown above the code block.
+This can be disabled via `hide_module`.
+"""
+code(block::AbstractString; mod=Main, hide_module=false) =
     Code(rstrip(block), mod, hide_module)
+
+struct Outputs
+    paths::AbstractVector
+    objects::AbstractVector
+end
+
+"""
+    outputs(paths::AbstractVector, ojects::AbstractVector)
+
+Define `objects` which need to be converted to Markdown.
+This is done via `convert_output(path, out::T)`, where `T` is the appropriate type.
+"""
+outputs(paths::AbstractVector, objects::AbstractVector) = Outputs(paths, objects)
+
+"""
+    outputs(ojects::AbstractVector)
+
+Define `objects` which need to be converted to Markdown.
+This method is applicable to objects which can be converted to string directly, such as DataFrames.
+"""
+function outputs(objects::AbstractVector)
+    paths = fill(nothing, length(objects))
+    outputs(paths, objects)
+end
 
 struct ImageOptions
     caption::String
@@ -19,10 +47,10 @@ function ImageOptions(; caption=nothing, label=nothing)
     ImageOptions(caption, label)
 end
 
-function convert_output(path, out::Code)
+function convert_output(path, out::Code)::String
     block = out.block
     mod = out.mod
-    ans = try 
+    ans = try
         Core.eval(mod, Meta.parse("begin $block end"))
     catch e
         string(e)
@@ -52,6 +80,17 @@ function convert_output(path, out::Code)
     ```
     $shown_output
     """
+end
+
+"""
+    convert_output(path, outputs::Outputs)::String
+
+Convert multiple objects, such as DataFrames or plots.
+"""
+function convert_output(path, outputs::Outputs)::String
+    itr = zip(outputs.paths, outputs.objects)
+    converted = [convert_output(path, obj) for (path, obj) in itr]
+    join(converted, "\n\n")
 end
 
 """

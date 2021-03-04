@@ -10,6 +10,10 @@ using Gadfly
 df_example() = DataFrame(X = [1, 2], Y = ["a", "b"])
 df_example_def() = code_block(@code_string df_example())
 
+multiple_df_example() =
+    outputs([DataFrame(Z = [3]), DataFrame(U = [4, 5], V = [6, 7])])
+multiple_df_example_def() = code_block(@code_string multiple_df_example())
+
 sum_example() = code("""
     a = 3
     b = 4
@@ -63,6 +67,17 @@ example_plot() = code("""
     X = 1:30
     plot(x = X, y = X.^2)
     """)
+
+function multiple_example_plots()
+    paths = ["example_plot_$i" for i in 2:3]
+    X = 1:30
+    objects = [
+        plot(x = X, y = X),
+        plot(x = X, y = X.^3)
+    ]
+    outputs(paths, objects)
+end
+multiple_example_plots_def() = code_block(@code_string multiple_example_plots())
 
 function build()
     Books.generate_dynamic_content(; M=BooksDocs, fail_on_error=true)
