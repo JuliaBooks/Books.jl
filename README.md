@@ -35,3 +35,5 @@ or
 ```
 julia> pdf()
 ```
+
+For more information, see the [documentation](https://books.huijzer.xyz).
