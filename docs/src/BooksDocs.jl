@@ -7,6 +7,9 @@ using CodeTracking
 using DataFrames
 using Gadfly
 
+df_example() = DataFrame(X = [1, 2], Y = ["a", "b"])
+df_example_def() = code_block(@code_string df_example())
+
 sum_example() = code("""
     a = 3
     b = 4

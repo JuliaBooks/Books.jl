@@ -33,6 +33,27 @@ _generated/julia_version_example.md
 at the aforementioned path so that it can be included by Pandoc.
 Note that it doesn't matter where you define the function `julia_version`, as long as it is in your module.
 
+Of these evaluated methods, the output is passed through `convert_output(path, out::T)` where `T` can, for example, be a DataFrame.
+To show this, we define a method
+
+```{.include}
+_generated/df_example_def.md
+```
+
+and add its output to the Markdown file with
+
+<pre>
+```{.include}
+_generated/df_example_def.md
+```
+</pre>
+
+Then, it will show
+
+```{.include}
+_generated/df_example.md
+```
+
 ## Showing code blocks
 
 Like in @sec:embedding-code, first define a method like
