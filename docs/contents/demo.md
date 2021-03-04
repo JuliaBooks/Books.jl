@@ -54,7 +54,7 @@ Then, it will show
 _generated/df_example.md
 ```
 
-## Showing code blocks
+## Showing code blocks {#sec:code-blocks}
 
 Like in @sec:embedding-code, first define a method like
 
