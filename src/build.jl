@@ -27,10 +27,17 @@ extra_args = [
     "--number-sections",
     "--top-level-division=chapter"
 ]
-function contents()
-    content = read("config.toml", String)    
+
+function toml()
+    content = read("config.toml", String)
     t = TOML.parse(content)
-    t["contents"]
+end
+
+contents() = toml()["contents"]
+function pdf_filename()
+    t = toml()
+    key = "pdf_filename"
+    key in keys(t) ? t[key] : "book"
 end
 
 build_dir = "build"
@@ -101,7 +108,7 @@ function pdf()
     ]
     pandoc(args)
     println("Built $output_filename")
-    
+
     # For debugging purposes.
     output_filename = joinpath(build_dir, "book.tex")
     args[end] = "--output=$output_filename"

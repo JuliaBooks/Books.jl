@@ -4,3 +4,5 @@ contents = [
   "demo",
   "references"
 ]
+
+pdf_filename = "books"
