@@ -75,7 +75,7 @@ function evaluate_include(path, M, fail_on_error)
         catch e
             @error """
             Failed to run code for $path:
-            $rethrow()
+            $(rethrow())
             """
         end
     end
