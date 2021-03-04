@@ -73,8 +73,10 @@ function evaluate_include(path, M, fail_on_error)
         try
             evaluate_and_write(M, method, path)
         catch e
-            @error "Failed to run code for $path:\n $e"
-            rethrow()
+            @error """
+            Failed to run code for $path:
+            $rethrow()
+            """
         end
     end
 end
