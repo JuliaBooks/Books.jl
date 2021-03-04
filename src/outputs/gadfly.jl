@@ -11,7 +11,8 @@ end
 Unlike ImageMagick, this program gets the text spacing right.
 """
 function svg2png(svg_path, png_path)
-    run(`cairosvg $svg_path -o $png_path`)
+    # 300 dpi should be sufficient for most journals.
+    run(`cairosvg $svg_path -o $png_path --dpi 300`)
 end
 
 function convert_output(path, out::Gadfly.Plot)
