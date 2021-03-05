@@ -91,7 +91,8 @@ end
 function pdf()
     latex_template_path = pandoc_file("template.tex")
     template = "--template=$latex_template_path"
-    output_filename = joinpath(build_dir, "book.pdf")
+    file = pdf_filename()
+    output_filename = joinpath(build_dir, "$file.pdf")
     output = "--output=$output_filename"
 
     args = [
@@ -110,7 +111,7 @@ function pdf()
     println("Built $output_filename")
 
     # For debugging purposes.
-    output_filename = joinpath(build_dir, "book.tex")
+    output_filename = joinpath(build_dir, "$file.tex")
     args[end] = "--output=$output_filename"
     pandoc(args)
     
