@@ -28,18 +28,6 @@ extra_args = [
     "--top-level-division=chapter"
 ]
 
-function toml()
-    content = read("config.toml", String)
-    t = TOML.parse(content)
-end
-
-contents() = toml()["contents"]
-function pdf_filename()
-    t = toml()
-    key = "pdf_filename"
-    key in keys(t) ? t[key] : "book"
-end
-
 build_dir = "build"
 mkpath(build_dir)
 

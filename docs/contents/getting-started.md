@@ -19,7 +19,7 @@ In summary, the `metadata.yml` file is read by Pandoc while generating the outpu
 This file contains settings for the output appearance, author and more, see @sec:metadata.
 The `config.toml` file is read by Books.jl before calling Pandoc, so contains settings which are essentially passed to Pandoc, see @sec:config.
 Still, these defaults can be overwritten.
-For the templates, see @sec:templates.
+If you also want to override the templates, then see @sec:templates.
 
 ## metadata.yml {#sec:metadata}
 
@@ -35,6 +35,23 @@ _generated/metadata.md
 
 ## config.toml {#sec:config}
 
+The `metadata.yml` file is used by Books.jl.
+Settings in this file affect how Pandoc is called.
+Note that `contents` is discussed in more detail in @sec:about_contents.
+
+```{.include}
+_generated/config.md
+```
+
+### About contents {#sec:about_contents}
+
+The files listed in `contents` are read from the `contents/` directory and passed to Pandoc in the order specified by this list.
+It doesn't matter whether the files contain headings or at what levels the heading are.
+Pandoc will just place the texts behind each other.
+
+This list doesn't mention `index.md` located at the root directory of your project.
+`index.md` is added automatically when generating html output and will be the [homepage](/) for the website and typically contains a link to the generated PDF.
+
 ## Templates {#sec:templates}
 
 Unlike `metadata.yml` and `config.toml`, the default templates should be good for most users.
@@ -42,7 +59,7 @@ To override these, create one or more of the files listed in @tbl:templates.
 
 File | Description | Affects
 --- | --- | ---
-`pandoc/style.csl` | Citation style | all outputs
+`pandoc/style.csl` | citation style | all outputs
 `pandoc/style.css` | style sheet | website
 `pandoc/template.html` | HTML template | website
 `pandoc/template.tex` | PDF template | PDF

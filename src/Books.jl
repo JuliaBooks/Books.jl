@@ -8,6 +8,7 @@ using Requires
 
 const PROJECT_ROOT = pkgdir(Books)
 const GENERATED_DIR = "_generated"
+const DEFAULTS_DIR = joinpath(PROJECT_ROOT, "defaults")
 
 include("html.jl")
 include("defaults.jl")

@@ -1,5 +1,5 @@
 @memoize function default_metadata()::Dict
-    path = joinpath(PROJECT_ROOT, "defaults", "metadata.yml")
+    path = joinpath(DEFAULTS_DIR, "metadata.yml")
     data = YAML.load_file(path)
 end
 
@@ -35,9 +35,38 @@ Write `metadata.yml` for Pandoc to $(Books.GENERATED_DIR).
 The file is a combination of Books.jl default settings and the user-defined settings.
 """
 function write_metadata()
-    default_meta = default_metadata()
-    user_meta = user_metadata()
-    combined = isnothing(user_meta) ? default_meta : override(default_meta, user_meta)
+    default = default_metadata()
+    user = user_metadata()
+    combined = isnothing(user) ? default : override(default, user)
     path = joinpath(GENERATED_DIR, "metadata.yml")
     YAML.write_file(path, combined)
 end
+
+@memoize function default_config()::Dict
+    path = joinpath(DEFAULTS_DIR, "config.toml")
+    content = read("config.toml", String)
+    TOML.parse(content)
+end
+
+function user_config()
+    path = "config.toml"
+    function toml_parse(path)
+        text = read(path, String)
+        TOML.parse(text)
+    end
+    return isfile(path) ? toml_parse(path) : nothing
+end
+
+"""
+    config()
+
+Read user `config.toml` and `$DEFAULTS_DIR/config.toml` and combine the information.
+"""
+function config()
+    default = default_config()
+    user = user_config()
+    combined = isnothing(user) ? default : override(default, user)
+end
+
+contents() = config()["contents"]
+pdf_filename() = config()["pdf_filename"]

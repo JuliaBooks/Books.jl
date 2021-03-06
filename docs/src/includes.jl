@@ -1,5 +1,11 @@
 function metadata()
-    path = joinpath(Books.PROJECT_ROOT, "defaults", "metadata.yml")
+    path = joinpath(Books.DEFAULTS_DIR, "metadata.yml")
+    text = read(path, String)
+    code_block(text)
+end
+
+function config()
+    path = joinpath(Books.DEFAULTS_DIR, "config.toml")
     text = read(path, String)
     code_block(text)
 end

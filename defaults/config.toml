@@ -1,0 +1,9 @@
+# These files should be available in `contents/` and are passed to Pandoc.
+contents = [
+  "introduction",
+  "content",
+  "references"
+]
+
+# Output PDF filename.
+pdf_filename = "mybook"
