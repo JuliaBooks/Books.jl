@@ -50,6 +50,6 @@ function serve(simplewatcher=default_simplewatcher(); verbose=true, dir=build_di
         mkpath(dir)
     end
     html()
-    port = parse(Int, config()["port"])
+    port = config()["port"]
     LiveServer.serve(simplewatcher; verbose, port, dir)
 end

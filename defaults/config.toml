@@ -9,4 +9,4 @@ contents = [
 pdf_filename = "mybook"
 
 # Port used when calling `serve`.
-port = "8001"
+port = 8001
