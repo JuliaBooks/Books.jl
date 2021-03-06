@@ -1,17 +1,12 @@
-export
-    serve
-
-import LiveServer
-
 ignored_folders = [
     "build",
     ".git",
     ".github"
 ]
 
-function ignore(path)::Bool 
+function ignore(path)::Bool
     path_startswith(folder) = startswith(path, "./$folder") || startswith(path, folder)
-    any(path_startswith.(ignored_folders))
+    any(path_startswith.(ignored_folders)) || endswith(path, "metadata.yml")
 end
 
 """

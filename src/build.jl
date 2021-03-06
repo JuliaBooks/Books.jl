@@ -5,18 +5,18 @@ export
     html,
     pdf
 
-const project_root = pkgdir(Books)
 function pandoc_file(filename)
     user_path = joinpath("pandoc", filename)
-    fallback_path = joinpath(project_root, "pandoc", filename)
+    fallback_path = joinpath(PROJECT_ROOT, "defaults", filename)
     isfile(user_path) ? user_path : fallback_path
 end
 
-include_files_lua = joinpath(project_root, "src", "include-files.lua")
+include_files_lua = joinpath(PROJECT_ROOT, "src", "include-files.lua")
 include_files = "--lua-filter=$include_files_lua"
 crossref = "--filter=pandoc-crossref"
 citeproc = "--filter=pandoc-citeproc"
-metadata = "--metadata-file=metadata.yml"
+metadata_path = joinpath(GENERATED_DIR, "metadata.yml")
+metadata = "--metadata-file=$metadata_path"
 
 function csl()
     csl_path = pandoc_file("style.csl")
@@ -45,15 +45,17 @@ mkpath(build_dir)
 
 inputs() = [joinpath("contents", "$content.md") for content in contents()]
 
-function pandoc(args) 
+function pandoc(args)
+    write_metadata()
     cmd = `pandoc $args`
-    try 
+    try
         stdout = IOBuffer()
         p = run(pipeline(cmd; stdout))
         out = String(take!(stdout))
         return (p, out)
     catch e
         println(e)
+        return nothing
     end
 end
 
@@ -107,14 +109,16 @@ function pdf()
         extra_args;
         output
     ]
-    pandoc(args)
-    println("Built $output_filename")
+    out = pandoc(args)
+    if !isnothing(out)
+        println("Built $output_filename")
+    end
 
     # For debugging purposes.
     output_filename = joinpath(build_dir, "$file.tex")
     args[end] = "--output=$output_filename"
     pandoc(args)
-    
+
     nothing
 end
 

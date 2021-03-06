@@ -1,8 +1,16 @@
 module Books
 
+import LiveServer
+import YAML
+
+using Memoize
 using Requires
 
+const PROJECT_ROOT = pkgdir(Books)
+const GENERATED_DIR = "_generated"
+
 include("html.jl")
+include("defaults.jl")
 include("build.jl")
 include("serve.jl")
 include("ci.jl")
@@ -11,6 +19,7 @@ include("generate.jl")
 
 export code, outputs
 export code_block
+export serve
 
 function __init__()
     @require DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0" include("outputs/dataframes.jl")

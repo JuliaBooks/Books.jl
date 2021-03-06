@@ -1,0 +1,46 @@
+---
+title: My book
+subtitle: My book subtitle
+
+# This affects things as whether to include a white page before each chapter in the PDF.
+# See the `.tex` template for more information.
+# For reports, set `book: false`.
+book: true
+author: John Doe
+
+# Licenses; can be empty.
+html-license: <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+tex-license: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+
+# Link to repository.
+repo: https://github.com/johndoe/Book.jl
+
+# Make margins a bit smaller. LaTeX has huge default margins.
+geometry:
+  - top=20mm
+  - left=24mm
+  - right=24mm
+  - bottom=28mm
+
+# A setting for the PDF. I don't know whether it is important.
+lang: en-US
+
+tags: [pandoc, Books.jl, JuliaLang]
+number-sections: true
+mainfont: DejaVu Sans
+title-prefix: Book
+titlepage: true
+linkReferences: true
+bibliography: bibliography.bib
+link-citations: true
+
+# These table of contents settings only affect the PDF.
+toc: true
+toc-depth: 2
+
+# Cross-reference prefixes.
+eqnPrefix: Equation
+figPrefix: Figure
+tblPrefix: Table
+secPrefix: Section
+---

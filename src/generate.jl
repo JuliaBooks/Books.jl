@@ -47,8 +47,6 @@ function evaluate_and_write(M::Module, method, path)
     write(path, out)
 end
 
-generated_dir = "_generated"
-
 """
     evaluate_include(path, fail_on_error)
 
@@ -56,8 +54,7 @@ For a `path` included in a chapter file, run the corresponding function and writ
 This way, the user can easily test/develop their `func` by calling `func()` in the REPL.
 """
 function evaluate_include(path, M, fail_on_error)
-    dir = generated_dir
-    if dirname(path) != dir
+    if dirname(path) != GENERATED_DIR
         println("Not running code for $path")
         return nothing
     end
@@ -84,7 +81,7 @@ end
 """
     generate_dynamic_content(; M=nothing, fail_on_error=false)
 
-Populate the files in `_generated/` by calling the required methods.
+Populate the files in $(Books.GENERATED_DIR) by calling the required methods.
 These methods are specified by the filename and will output to that filename.
 This allows the user to easily link code blocks to code.
 The methods are assumed to be in the module `M` of the caller.

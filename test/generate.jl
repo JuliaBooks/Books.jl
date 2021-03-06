@@ -2,7 +2,7 @@ import Gadfly
 using DataFrames
 
 @testset "generate" begin
-    dir = B.generated_dir
+    dir = B.GENERATED_DIR
     paths = [
         joinpath(dir, "example.md"),
         joinpath(dir, "example2.md"),
@@ -44,7 +44,7 @@ module Foo
 
     @test B.caller_module() == Main.Foo
 
-    dir = B.generated_dir
+    dir = B.GENERATED_DIR
     function foo()
         "lorem"
     end
