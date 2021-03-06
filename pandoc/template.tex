@@ -80,7 +80,7 @@ $for(classoption)$
   $classoption$$sep$,
 $endfor$
   ,captions=tableheading
-]{scrreprt}
+]{$if(beamer)$$documentclass$$else$$if(book)$scrbook$else$scrreprt$endif$$endif$}
 $if(beamer)$
 $if(background-image)$
 \usebackgroundtemplate{%

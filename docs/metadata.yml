@@ -1,7 +1,7 @@
 ---
 title: Books.jl
 subtitle: Create books with Julia
-book: true
+book: false
 author: Rik Huijzer
 html-license: <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
 tex-license: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
