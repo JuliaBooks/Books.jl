@@ -7,3 +7,6 @@ contents = [
 
 # Output PDF filename.
 pdf_filename = "mybook"
+
+# Port used when calling `serve`.
+port = "8001"

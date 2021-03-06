@@ -30,7 +30,7 @@ The following default settings are used by Books.jl.
 You can override settings by placing a `metadata.yml` file at the root directory of your project.
 
 ```{.include}
-_generated/metadata.md
+_generated/default_metadata.md
 ```
 
 ## config.toml {#sec:config}
@@ -40,7 +40,7 @@ Settings in this file affect how Pandoc is called.
 Note that `contents` is discussed in more detail in @sec:about_contents.
 
 ```{.include}
-_generated/config.md
+_generated/default_config.md
 ```
 
 ### About contents {#sec:about_contents}

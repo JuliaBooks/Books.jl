@@ -44,7 +44,7 @@ end
 
 @memoize function default_config()::Dict
     path = joinpath(DEFAULTS_DIR, "config.toml")
-    content = read("config.toml", String)
+    content = read(path, String)
     TOML.parse(content)
 end
 
