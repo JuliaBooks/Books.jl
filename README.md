@@ -9,9 +9,7 @@ Create books with Julia.
 
 To install this package, use
 ```
-julia> ]
-
-pkg> add https://github.com/rikhuijzer/books.jl
+pkg> add Books
 ```
 
 Next, go into a directory containing the Julia project for a book that you want to build.
