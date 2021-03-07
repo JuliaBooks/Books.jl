@@ -2,6 +2,12 @@ import Gadfly
 using DataFrames
 
 @testset "generate" begin
+    @test code_block("lorem") == """
+        ```
+        lorem
+        ```
+        """
+
     dir = B.GENERATED_DIR
     paths = [
         joinpath(dir, "example.md"),

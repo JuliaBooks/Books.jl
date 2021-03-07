@@ -28,6 +28,12 @@ lang: en-US
 tags: [pandoc, Books.jl, JuliaLang]
 number-sections: true
 mainfont: DejaVu Sans
+
+# This font contains unicode characters.
+monofont: Source Code Pro
+
+code-block-font-size: \scriptsize
+
 title-prefix: Book
 titlepage: true
 linkReferences: true

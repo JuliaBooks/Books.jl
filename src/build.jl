@@ -80,6 +80,8 @@ end
 
 function pdf()
     latex_template_path = pandoc_file("template.tex")
+    # xelatex is required for UTF-8.
+    pdf_engine = "--pdf-engine=xelatex"
     template = "--template=$latex_template_path"
     file = pdf_filename()
     output_filename = joinpath(build_dir, "$file.pdf")
@@ -94,6 +96,7 @@ function pdf()
         metadata;
         template;
         "--listings";
+        pdf_engine;
         extra_args;
         output
     ]

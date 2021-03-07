@@ -1,10 +1,11 @@
 include_regex = r"```{\.include}([\w\W]*?)```"
 
-code_block(s) = """
-```
-$s
-```
 """
+    code_block(s)
+
+Wrap `s` in a Markdown code block with triple backticks.
+"""
+code_block(s) = "```\n$s\n```\n"
 
 """
     include_filenames(s::AbstractString)::Vector
@@ -35,7 +36,18 @@ function caller_module()
     throw(ErrorException("Couldn't determine the module of the caller"))
 end
 
-function method_name(path)
+"""
+    method_name(path::AbstractString)
+
+Return method name for a Markdown file.
+
+# Example
+```jldoctest
+julia> Books.method_name("_generated/example.md")
+"example"
+```
+"""
+function method_name(path::AbstractString)
     name, _ = splitext(basename(path))
     name
 end
@@ -59,7 +71,7 @@ function evaluate_include(path, M, fail_on_error)
         return nothing
     end
     method = method_name(path)
-    println("Running $method for $path")
+    println("Running $(method)() for $path")
     if isnothing(M)
         M = caller_module()
     end

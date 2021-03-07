@@ -602,11 +602,10 @@ $endif$
 % 'default' option sets the default
 % font family to Source Sans Pro, not \sfdefault.
 %
+
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   $if(fontfamily)$
   $else$
-  \usepackage[default]{sourcesanspro}
-  \usepackage{sourcecodepro}
   $endif$
 \else % if not pdftex
   $if(mainfont)$
@@ -713,7 +712,7 @@ $endif$
 \definecolor{listing-background}{HTML}{F7F7F7}
 \definecolor{listing-rule}{HTML}{B3B2B3}
 \definecolor{listing-numbers}{HTML}{B3B2B3}
-\definecolor{listing-text-color}{HTML}{000000}
+\definecolor{listing-text-color}{HTML}{080808}
 \definecolor{listing-keyword}{HTML}{435489}
 \definecolor{listing-keyword-2}{HTML}{1284CA} % additional keywords
 \definecolor{listing-keyword-3}{HTML}{9137CB} % additional keywords
@@ -721,30 +720,37 @@ $endif$
 \definecolor{listing-string}{HTML}{00999A}
 \definecolor{listing-comment}{HTML}{8E8E8E}
 
+%
+% Better no syntax highlighting than wrong syntax highlighting.
+%
+\lstdefinelanguage{raw}{
+  keywordstyle=\ttfamily
+}
+
 \lstdefinestyle{eisvogel_listing_style}{
-  language         = java,
+  language         = raw,
   xleftmargin      = 0.6em,
   framexleftmargin = 0.4em,
   backgroundcolor  = \color{listing-background},
-  basicstyle       = \color{listing-text-color}\linespread{1.0}$if(code-block-font-size)$$code-block-font-size$$else$\footnotesize$endif$\ttfamily{},
+  basicstyle       = \color{listing-text-color}\linespread{1.4}$if(code-block-font-size)$$code-block-font-size$$else$\footnotesize$endif$\ttfamily{},
   breaklines       = true,
   frame            = single,
   framesep         = 0.19em,
   rulecolor        = \color{listing-rule},
   frameround       = ffff,
   tabsize          = 4,
-  numberstyle      = \color{listing-numbers},
+  numberstyle      = , % \color{listing-numbers},
   aboveskip        = 0.8em,
-  belowskip        = 0.3em,
+  belowskip        = 0.5em,
   abovecaptionskip = 0em,
   belowcaptionskip = 1.0em,
-  keywordstyle     = {\color{listing-keyword}\bfseries},
-  keywordstyle     = {[2]\color{listing-keyword-2}\bfseries},
-  keywordstyle     = {[3]\color{listing-keyword-3}\bfseries\itshape},
+  keywordstyle     = , % {\color{listing-keyword}\bfseries},
+  keywordstyle     = , % {[2]\color{listing-keyword-2}\bfseries},
+  keywordstyle     = , % {[3]\color{listing-keyword-3}\bfseries\itshape},
   sensitive        = true,
-  identifierstyle  = \color{listing-identifier},
-  commentstyle     = \color{listing-comment},
-  stringstyle      = \color{listing-string},
+  identifierstyle  = , % \color{listing-identifier},
+  commentstyle     = , % \color{listing-comment},
+  stringstyle      = , % \color{listing-string},
   showstringspaces = false,
   escapeinside     = {/*@}{@*/}, % Allow LaTeX inside these special comments
   literate         =
