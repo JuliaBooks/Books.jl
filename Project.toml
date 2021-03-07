@@ -1,7 +1,7 @@
 name = "Books"
 uuid = "939d5c6b-51ae-42e7-97ca-7564d0d4ad91"
 authors = ["Rik Huijzer <t.h.huijzer@rug.nl>"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 Latexify = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
