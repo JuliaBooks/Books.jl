@@ -28,9 +28,6 @@ extra_args = [
     "--top-level-division=chapter"
 ]
 
-build_dir = "build"
-mkpath(build_dir)
-
 inputs() = [joinpath("contents", "$content.md") for content in contents()]
 
 function pandoc(args)
@@ -50,12 +47,12 @@ end
 function pandoc_html()
     html_template_path = pandoc_file("template.html")
     template = "--template=$html_template_path"
-    output_filename = joinpath(build_dir, "index.html")
+    output_filename = joinpath(BUILD_DIR, "index.html")
     output = "--output=$output_filename"
     html_inputs = ["index.md"; inputs()]
     filename = "style.css"
     css_path = pandoc_file(filename)
-    cp(css_path, joinpath(build_dir, filename); force=true)
+    cp(css_path, joinpath(BUILD_DIR, filename); force=true)
 
     args = [
         html_inputs;
@@ -73,8 +70,8 @@ function pandoc_html()
 end
 
 function html()
-    # rm(build_dir; force = true, recursive = true)
-    # mkpath(build_dir)
+    # rm(BUILD_DIR; force = true, recursive = true)
+    # mkpath(BUILD_DIR)
     write_html_pages(contents(), pandoc_html())
 end
 
@@ -84,7 +81,7 @@ function pdf()
     pdf_engine = "--pdf-engine=xelatex"
     template = "--template=$latex_template_path"
     file = pdf_filename()
-    output_filename = joinpath(build_dir, "$file.pdf")
+    output_filename = joinpath(BUILD_DIR, "$file.pdf")
     output = "--output=$output_filename"
 
     args = [
@@ -106,7 +103,7 @@ function pdf()
     end
 
     # For debugging purposes.
-    output_filename = joinpath(build_dir, "$file.tex")
+    output_filename = joinpath(BUILD_DIR, "$file.tex")
     args[end] = "--output=$output_filename"
     pandoc(args)
 
@@ -114,9 +111,9 @@ function pdf()
 end
 
 function build_all()
-    mkpath(build_dir)
+    mkpath(BUILD_DIR)
     filename = "favicon.png"
-    cp(joinpath("pandoc", filename), joinpath(build_dir, filename); force=true)
+    cp(joinpath("pandoc", filename), joinpath(BUILD_DIR, filename); force=true)
     html()
     pdf()
 end

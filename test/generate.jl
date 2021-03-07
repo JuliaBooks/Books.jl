@@ -29,9 +29,12 @@ using DataFrames
     @test B.method_name(joinpath(dir, "foo.md")) == "foo"
 
     @test contains(B.convert_output(nothing, DataFrame(A = [1])), "---")
+
     mktemp() do path, io
         @test contains(B.convert_output(path, Gadfly.plot()), ".png")
     end
+    im_dir = joinpath(B.BUILD_DIR, "im")
+    rm(im_dir; force=true, recursive=true)
 
     @test strip(B.convert_output(nothing, code("DataFrame(A = [1])"))) == """
     ```

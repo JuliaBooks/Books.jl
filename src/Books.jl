@@ -9,6 +9,9 @@ using Requires
 const PROJECT_ROOT = pkgdir(Books)
 const GENERATED_DIR = "_generated"
 const DEFAULTS_DIR = joinpath(PROJECT_ROOT, "defaults")
+const BUILD_DIR = "build"
+mkpath(BUILD_DIR)
+
 
 include("html.jl")
 include("defaults.jl")
@@ -20,6 +23,7 @@ include("generate.jl")
 
 export code, outputs
 export code_block
+export generate_content
 export serve
 
 function __init__()

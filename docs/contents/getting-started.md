@@ -10,10 +10,18 @@ The easiest way to get started is to
 _generated/serve_example.md
 ```
 
-To insert Julia output, see @sec:embedding-code, use
+To generate all the Julia output, see @sec:embedding-code, use
 
 ```{.include}
 _generated/generate_example.md
+```
+
+As the number of outputs increases, you might want to only update one output.
+For example, if you have a module `Foo` containing a method
+`version() = "This book is written using Julia $VERSION"`, then you can embed the output using `generate_content`
+
+```{.include}
+_generated/generate_content_function_docs.md
 ```
 
 I'm using this package for multiple projects and have tried to set as many default configuration settings as possible to avoid code duplication.

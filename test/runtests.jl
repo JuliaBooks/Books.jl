@@ -7,7 +7,7 @@ B = Books
 DocMeta.setdocmeta!(
   Books,
   :DocTestSetup,
-  :(using Books);
+  :(using Books; using DataFrames; mkpath(Books.GENERATED_DIR));
   recursive=true
 )
 doctest(Books)

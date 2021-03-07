@@ -52,18 +52,50 @@ function method_name(path::AbstractString)
     name
 end
 
-function evaluate_and_write(M::Module, method, path)
-    func = getproperty(M, Symbol(method))
-    out = func()
+"""
+    evaluate_and_write(f::Function, path)
+
+Evaluates `f`, converts the output writes the output to `path`.
+Some output conversions will also write to other files, which the file at `path` links to.
+For example, this happens with plots.
+
+# Example
+```jldoctest
+julia> using DataFrames
+
+julia> example_table() = DataFrame(A = [1, 2], B = [3, 4])
+example_table (generic function with 1 method)
+
+julia> path = joinpath(tempdir(), "example.md");
+
+julia> Books.evaluate_and_write(example_table, path)
+Running example_table() for /tmp/example.md
+
+julia> print(read(path, String))
+|   A |   B |
+| ---:| ---:|
+|   1 |   3 |
+|   2 |   4 |
+```
+"""
+function evaluate_and_write(f::Function, path)
+    println("Running $(f)() for $path")
+    out = f()
     out = convert_output(path, out)
     write(path, out)
+    nothing
+end
+
+function evaluate_and_write(method_name, M::Module, path)
+    println("Running $(method_name)() for $path")
+    f = getproperty(M, Symbol(method_name))
+    evaluate_and_write(f, path)
 end
 
 """
-    evaluate_include(path, fail_on_error)
+    evaluate_include(path, M, fail_on_error)
 
 For a `path` included in a chapter file, run the corresponding function and write the output to `path`.
-This way, the user can easily test/develop their `func` by calling `func()` in the REPL.
 """
 function evaluate_include(path, M, fail_on_error)
     if dirname(path) != GENERATED_DIR
@@ -71,16 +103,15 @@ function evaluate_include(path, M, fail_on_error)
         return nothing
     end
     method = method_name(path)
-    println("Running $(method)() for $path")
     if isnothing(M)
         M = caller_module()
     end
     mkpath(dirname(path))
     if fail_on_error
-        evaluate_and_write(M, method, path)
+        evaluate_and_write(method, M, path)
     else
         try
-            evaluate_and_write(M, method, path)
+            evaluate_and_write(method, M, path)
         catch e
             @error """
             Failed to run code for $path:
@@ -91,9 +122,9 @@ function evaluate_include(path, M, fail_on_error)
 end
 
 """
-    generate_dynamic_content(; M=nothing, fail_on_error=false)
+    generate_content(; M=nothing, fail_on_error=false)
 
-Populate the files in $(Books.GENERATED_DIR) by calling the required methods.
+Populate the files in `$(Books.GENERATED_DIR)/` by calling the required methods.
 These methods are specified by the filename and will output to that filename.
 This allows the user to easily link code blocks to code.
 The methods are assumed to be in the module `M` of the caller.
@@ -101,9 +132,31 @@ Otherwise, specify another module `M`.
 
 The module `M` is used to locate the method defined, as a string, in the `.include` via `getproperty`.
 """
-function generate_dynamic_content(; M=nothing, fail_on_error=false)
-    ins = inputs()
-    included_paths = vcat([include_filenames(read(x, String)) for x in ins]...)
+function generate_content(; M=nothing, fail_on_error=false)
+    paths = inputs()
+    included_paths = vcat([include_filenames(read(path, String)) for path in paths]...)
     f(path) = evaluate_include(path, M, fail_on_error)
     foreach(f, included_paths)
+end
+
+"""
+    generate_content(f::Function; fail_on_error=false)
+
+Populate the file in $(Books.GENERATED_DIR) by calling `func`.
+This method is useful during development to quickly see the effect of updating your code.
+Use with Revise.jl and optionally `Revise.entr`.
+
+# Example
+```jldoctest
+julia> module Foo
+       version() = "This book is built with Julia \$VERSION"
+       end;
+
+julia> generate_content(Foo.version)
+Running version() for _generated/version.md
+```
+"""
+function generate_content(f::Function; fail_on_error=false)
+    path = joinpath(GENERATED_DIR, "$f.md")
+    evaluate_and_write(f, path)
 end

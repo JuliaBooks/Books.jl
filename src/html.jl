@@ -224,7 +224,7 @@ function write_html_pages(chs=chapters(), h=pandoc_html())
     names, pages = fix_links(html_pages(chs, h)...)
     for (i, (name, page)) in enumerate(zip(names, pages))
         name = i == 1 ? "index" : name
-        path = joinpath(build_dir, "$name.html")
+        path = joinpath(BUILD_DIR, "$name.html")
         write(path, page)
     end
 end

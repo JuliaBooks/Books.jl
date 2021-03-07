@@ -23,7 +23,7 @@ Then, in your package, define the method `julia_version`:
 julia_version() = "This book is built with Julia $VERSION."
 ```
 
-Next, ensure that you call `Books.generate_dynamic_content(M = Foo)`, where `Foo` is the name of your module.
+Next, ensure that you call `Books.generate_content(; M = Foo)`, where `Foo` is the name of your module.
 This will place the text
 
 ```{.include}

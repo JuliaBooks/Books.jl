@@ -16,7 +16,7 @@ function svg2png(svg_path, png_path)
 end
 
 function convert_output(path, out::Gadfly.Plot)
-    im_dir = joinpath(build_dir, "im")
+    im_dir = joinpath(BUILD_DIR, "im")
     mkpath(im_dir)
 
     file = method_name(path)

@@ -45,7 +45,7 @@ function default_simplewatcher()
     sw
 end
 
-function serve(simplewatcher=default_simplewatcher(); verbose=true, dir=build_dir)
+function serve(simplewatcher=default_simplewatcher(); verbose=true, dir=BUILD_DIR)
     if !isdir(dir)
         mkpath(dir)
     end
