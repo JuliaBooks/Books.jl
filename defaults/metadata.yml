@@ -2,6 +2,7 @@
 title: My book
 subtitle: My book subtitle
 author: John Doe
+title-prefix: Book
 
 # This affects things as whether to include a white page before each chapter in the PDF.
 # See the `.tex` template for more information.
@@ -34,7 +35,6 @@ monofont: Source Code Pro
 
 code-block-font-size: \scriptsize
 
-title-prefix: Book
 titlepage: true
 linkReferences: true
 bibliography: bibliography.bib
