@@ -1,6 +1,7 @@
 module Books
 
 import LiveServer
+import Markdown
 import YAML
 
 using Memoize

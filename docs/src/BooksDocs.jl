@@ -10,7 +10,7 @@ using Gadfly
 include("includes.jl")
 
 function build()
-    Books.generate_dynamic_content(; M=BooksDocs, fail_on_error=true)
+    Books.generate_content(; M=BooksDocs, fail_on_error=true)
     Books.build_all()
 end
 

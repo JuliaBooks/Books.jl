@@ -126,3 +126,41 @@ function pandoc_image(file, path; caption=nothing, ref=nothing)
 
     "![$caption.]($path){#$ref}"
 end
+
+"""
+    docstring(s::Markdown.MD)
+
+Return docstring, as obtained from `@doc f` for function `f`, to be parsed by Pandoc.
+Needs work to be made prettier.
+"""
+function docstring(s::Markdown.MD)
+    lines = split(string(s), '\n')
+    ignore(line) = any([
+        contains(line, "```")
+    ])
+    filter!(!ignore, lines)
+    # lines = ["> $line" for line in lines]
+    text = join(lines, '\n')
+    """
+    <pre>
+    $text
+    </pre>
+    """
+end
+
+"""
+    doctest(s::Markdown.MD)
+
+Return jldoctest, as obtained from `@doc f` for function `f`.
+"""
+function doctest(s::Markdown.MD)
+    s = string(s)
+    start = findfirst("```jldoctest", s).start
+    stop = findlast("```", s).stop
+    content = s[start:stop]
+    lines = split(content, '\n')
+    lines = lines[2:end-1]
+    content = join(lines, '\n')
+    code_block(content)
+end
+

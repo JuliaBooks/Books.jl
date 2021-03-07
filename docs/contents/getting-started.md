@@ -18,13 +18,13 @@ _generated/generate_example.md
 
 As the number of outputs increases, you might want to only update one output.
 For example, if you have a module `Foo` containing a method
-`version() = "This book is written using Julia $VERSION"`, then you can embed the output using `generate_content`
+`version() = "This book is written using Julia $VERSION"`, then you can embed the output using `generate_content`:
 
 ```{.include}
 _generated/generate_content_function_docs.md
 ```
 
-I'm using this package for multiple projects and have tried to set as many default configuration settings as possible to avoid code duplication.
+To avoid code duplication between projects, this package tries to have good defaults for many settings.
 For your project, you can override the default settings by creating `config.toml` and `metadata.yml` files.
 In summary, the `metadata.yml` file is read by Pandoc while generating the outputs.
 This file contains settings for the output appearance, author and more, see @sec:metadata.

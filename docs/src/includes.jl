@@ -18,7 +18,7 @@ generate_example() = code_block(raw"""
     [...]
     """)
 
-generate_content_function_docs() = string(@doc generate_content(::Function))
+generate_content_function_docs() = Books.doctest(@doc generate_content(::Function))
 
 function default_metadata()
     path = joinpath(Books.DEFAULTS_DIR, "metadata.yml")

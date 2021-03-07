@@ -15,8 +15,17 @@ pkg> add Books
 Next, go into a directory containing the Julia project for a book that you want to build.
 See the `docs` folder of this project for an example project.
 Then, you can serve your book as a website via
+
 ```
 julia --project -ie 'using Books; serve()'
+```
+
+and create a PDF with
+
+```
+julia> using Books
+
+julia> pdf()
 ```
 
 For more information, see the [documentation](https://books.huijzer.xyz).
