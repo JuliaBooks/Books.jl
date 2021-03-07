@@ -14,28 +14,16 @@ If you don't need PDFs or EPUBs, then [Franklin.jl](https://github.com/tlienart/
 To create single pages and PDFs containing code blocks, see [Weave.jl](https://github.com/JunoLab/Weave.jl){target="_blank"}.
 
 One of the main differences with Franklin.jl, Weave.jl and knitr (Bookdown) is that this package completely decouples the computations from the building of the output.
-The benefit of this is that you can spawn two separate processes, namely the one to serve your webpages
+The benefit of this is that you can spawn two separate processes, namely the one to serve your webpages:
 
-```
-$ julia --project -e 'using Books; serve()'
-Watching ./pandoc/favicon.png
-Watching ./src/plots.jl
-[...]
- ✓ LiveServer listening on http://localhost:8001/ ...
-  (use CTRL+C to shut down)
+```{.include}
+_generated/serve_example.md
 ```
 
-and the one where you do the computations for your package `Foo`
+and the one where you do the computations for your package `Foo`:
 
-```
-$ julia --project -e  'using Books; using Foo; M = Foo'
-
-julia> Books.generate_dynamic_content(; M)
-Running example() for _generated/example.md
-Running julia_version() for _generated/julia_version.md
-Running example_plot() for _generated/example_plot.md
-Writing plot images for example_plot
-[...]
+```{.include}
+_generated/generate_example.md
 ```
 
 This way, the website remains responsive when the computations are running.

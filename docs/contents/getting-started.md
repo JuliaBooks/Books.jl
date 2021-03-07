@@ -1,20 +1,23 @@
 # Getting started {#sec:getting-started}
 
-The easiest way to get started is to copy over the files in `docs/`, step inside that directory and serve your book via
+The easiest way to get started is to
 
-```
-pkg> add Books
+1. copy over the files in `docs/`,
+1. step inside that directory and
+1. serve your book via:
 
-julia> using Books
-
-julia> serve()
-[...]
- LiveServer listening on http://localhost:8001/ ...
-  (use CTRL+C to shut down)
+```{.include}
+_generated/serve_example.md
 ```
 
-I'm using this package for multiple projects and have tried to set as many default configuration settings as possible.
-For your project, override the settings in your `config.toml` and `metadata.yml` files.
+To insert Julia output, see @sec:embedding-code, use
+
+```{.include}
+_generated/generate_example.md
+```
+
+I'm using this package for multiple projects and have tried to set as many default configuration settings as possible to avoid code duplication.
+For your project, you can override the default settings by creating `config.toml` and `metadata.yml` files.
 In summary, the `metadata.yml` file is read by Pandoc while generating the outputs.
 This file contains settings for the output appearance, author and more, see @sec:metadata.
 The `config.toml` file is read by Books.jl before calling Pandoc, so contains settings which are essentially passed to Pandoc, see @sec:config.

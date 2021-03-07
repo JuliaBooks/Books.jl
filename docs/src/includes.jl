@@ -1,3 +1,23 @@
+serve_example() = code_block(raw"""
+    $ julia --project -e 'using Books; serve()'
+    Watching ./pandoc/favicon.png
+    Watching ./src/plots.jl
+    [...]
+     ✓ LiveServer listening on http://localhost:8001/ ...
+      (use CTRL+C to shut down)
+    """)
+
+generate_example() = code_block(raw"""
+    $ julia --project -e  'using Books; using Foo; M = Foo'
+
+    julia> Books.generate_dynamic_content(; M)
+    Running example() for _generated/example.md
+    Running julia_version() for _generated/julia_version.md
+    Running example_plot() for _generated/example_plot.md
+    Writing plot images for example_plot
+    [...]
+    """)
+
 function default_metadata()
     path = joinpath(Books.DEFAULTS_DIR, "metadata.yml")
     text = read(path, String)

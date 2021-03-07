@@ -24,7 +24,7 @@ julia_version() = "This book is built with Julia $VERSION."
 ```
 
 Next, ensure that you call `Books.generate_dynamic_content(M = Foo)`, where `Foo` is the name of your module.
-This will place the text 
+This will place the text
 
 ```{.include}
 _generated/julia_version_example.md
