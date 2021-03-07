@@ -19,19 +19,4 @@ Then, you can serve your book as a website via
 julia --project -ie 'using Books; serve()'
 ```
 
-If you just want to build your book, use
-```
-$ julia --project
-
-julia> build_all()
-```
-or 
-```
-julia> html()
-```
-or
-```
-julia> pdf()
-```
-
 For more information, see the [documentation](https://books.huijzer.xyz).
