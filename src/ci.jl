@@ -27,12 +27,11 @@ Thanks to https://github.com/AnomalyInnovations/serverless-stack-com.
 """
 function install_extra_fonts()
     font_repo_dir = joinpath(homedir(), "source-code-pro")
-    run(`git clone https://github.com/adobe-fonts/source-code-pro $font_repo_dir`)
+    rm(font_repo_dir; recursive=true, force=true)
+    run(`git clone --branch=release --depth=1 https://github.com/adobe-fonts/source-code-pro $font_repo_dir`)
     ttf_dir = joinpath(font_repo_dir, "TTF")
     fonts_dir = joinpath(homedir(), ".fonts")
     mkpath(fonts_dir)
-    args = [sudo, "cp", "$ttf_dir/*.ttf", fonts_dir]
-    nonempty_run(args)
 end
 
 function install_apt_packages()
