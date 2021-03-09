@@ -37,12 +37,12 @@ function install_extra_fonts()
     mkpath(fonts_dir)
 
     files = readdir(ttf_dir)
-    function mv_ttf(file)
+    for file in files
         from = joinpath(ttf_dir, file)
         to = joinpath(fonts_dir, file)
         mv(from, to; force=true)
     end
-    mv_ttf.(files)
+    chmod(fonts_dir, 666; recursive=true)
 end
 
 function install_apt_packages()
