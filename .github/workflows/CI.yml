@@ -23,7 +23,7 @@ jobs:
           version: ${{ matrix.version }}
       - uses: julia-actions/julia-buildpkg@master
       - name: Install Pandoc, LaTeX and other dependencies
-        run: sudo julia --project -e 'using Pkg; Pkg.instantiate();
+        run: sudo CI=true julia --project -e 'using Pkg; Pkg.instantiate();
                 using Books; Books.install_dependencies()'
 
       - uses: julia-actions/julia-runtest@latest
@@ -44,7 +44,7 @@ jobs:
           version: '^1.6.0-0'
 
       - name: Install Pandoc, LaTeX and other dependencies
-        run: sudo CI=true JULIA_DEPOT_PATH="$HOME/.julia" julia --project -e '
+        run: sudo CI=true julia --project -e 'using Pkg; Pkg.instantiate();
                 using Books; Books.install_dependencies()'
 
       - name: Install BooksDocs dependencies
