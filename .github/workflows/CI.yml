@@ -36,6 +36,8 @@ jobs:
         with:
           persist-credentials: false
 
+      - run: echo $PWD
+
       - uses: julia-actions/setup-julia@v1
         with:
           version: '^1.6.0-0'
