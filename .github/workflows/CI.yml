@@ -41,7 +41,7 @@ jobs:
           version: '^1.6.0-0'
 
       - name: Install Pandoc, LaTeX and other dependencies
-        run: sudo -E julia --project -e 'using Pkg; Pkg.instantiate();
+        run: sudo CI=true julia --project -e 'using Pkg; Pkg.instantiate();
                 using Books; Books.install_dependencies()'
 
       - name: Install BooksDocs dependencies
