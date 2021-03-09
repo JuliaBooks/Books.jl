@@ -37,13 +37,14 @@ jobs:
           persist-credentials: false
 
       - run: echo $PWD
+      - run: echo $HOME
 
       - uses: julia-actions/setup-julia@v1
         with:
           version: '^1.6.0-0'
 
       - name: Install Pandoc, LaTeX and other dependencies
-        run: sudo CI=true julia --project -e 'using Pkg; Pkg.instantiate();
+        run: sudo CI=true JULIA_DEPOT_PATH="$HOME/.julia" julia --project -e '
                 using Books; Books.install_dependencies()'
 
       - name: Install BooksDocs dependencies
