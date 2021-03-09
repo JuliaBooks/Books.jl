@@ -1,4 +1,5 @@
-is_github_ci() = "CI" in keys(ENV)
+is_ci() = "CI" in keys(ENV)
+
 """
     is_sudo_env()
 
@@ -45,6 +46,7 @@ function install_extra_fonts()
 end
 
 function install_apt_packages()
+    @assert is_ci()
     println("Installing apt packages")
 
     packages = [
@@ -79,6 +81,7 @@ function validate_installation(name::AbstractString; args="--version")
 end
 
 function install_non_apt_packages()
+    @assert is_ci()
     println("Installing non-apt packages")
 
     sudo = sudo_prefix()

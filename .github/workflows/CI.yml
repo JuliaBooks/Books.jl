@@ -23,10 +23,9 @@ jobs:
           version: ${{ matrix.version }}
       - uses: julia-actions/julia-buildpkg@master
       - name: Install Pandoc, LaTeX and other dependencies
-        run: |
-          sudo julia --project -e 'using Books; Books.install_dependencies()'
-          # Temp workaround to copy files with sudo privileges.
-          sudo cp ~/source-code-pro/TTF/*.ttf ~/.fonts
+        run: sudo julia --project -e 'using Pkg; Pkg.instantiate();
+                using Books; Books.install_dependencies()'
+
       - uses: julia-actions/julia-runtest@latest
 
   test-and-deploy:
@@ -44,6 +43,8 @@ jobs:
       - name: Install Pandoc, LaTeX and other dependencies
         run: sudo julia --project -e 'using Pkg; Pkg.instantiate();
                 using Books; Books.install_dependencies()'
+        env:
+          CI: true
 
       - name: Install BooksDocs dependencies
         run: julia --project=docs/ -e '
