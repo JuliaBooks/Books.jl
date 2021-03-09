@@ -8,7 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  test-and-deploy:
+    name: Test and deploy
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -17,17 +18,11 @@ jobs:
 
       - uses: julia-actions/setup-julia@v1
         with:
-          version: "^1.6.0-0"
-
-      - uses: julia-actions/julia-buildpkg@master
+          version: '^1.6.0-0'
 
       - name: Install Pandoc, LaTeX and other dependencies
-        run: |
-          julia --project -e 'using Books; Books.install_dependencies()'
-          # Temp workaround to copy files with sudo privileges.
-          sudo cp ~/source-code-pro/TTF/*.ttf ~/.fonts
-
-      - uses: julia-actions/julia-runtest@latest
+        run: sudo CI=true julia --project -e 'using Pkg; Pkg.instantiate();
+                using Books; Books.install_dependencies()'
 
       - name: Install BooksDocs dependencies
         run: julia --project=docs/ -e '
