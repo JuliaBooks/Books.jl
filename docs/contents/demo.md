@@ -1,6 +1,13 @@
 # Demo {#sec:demo}
 
-We can refer to the chapter Getting Started with @sec:getting-started.
+We can refer to a section with the normal [pandoc-crossref](https://lierdakil.github.io/pandoc-crossref/){target="_blank"} syntax.
+For example,
+
+<pre>
+See @sec:getting-started.
+</pre>
+
+> See @sec:getting-started.
 
 We can refer to citations such as @orwell1945animal and [@orwell1945animal] or to equations like @eq:sin.
 

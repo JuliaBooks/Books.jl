@@ -13,7 +13,6 @@ const DEFAULTS_DIR = joinpath(PROJECT_ROOT, "defaults")
 const BUILD_DIR = "build"
 mkpath(BUILD_DIR)
 
-
 include("html.jl")
 include("defaults.jl")
 include("build.jl")

@@ -33,15 +33,10 @@ inputs() = [joinpath("contents", "$content.md") for content in contents()]
 function pandoc(args)
     write_metadata()
     cmd = `pandoc $args`
-    try
-        stdout = IOBuffer()
-        p = run(pipeline(cmd; stdout))
-        out = String(take!(stdout))
-        return (p, out)
-    catch e
-        println(e)
-        return nothing
-    end
+    stdout = IOBuffer()
+    p = run(pipeline(cmd; stdout))
+    out = String(take!(stdout))
+    return (p, out)
 end
 
 function pandoc_html()
