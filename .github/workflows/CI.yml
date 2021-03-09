@@ -22,7 +22,7 @@ jobs:
 
       - name: Install Pandoc, LaTeX and other dependencies
         run: |
-          sudo CI=true julia --project -e 'using Pkg; Pkg.instantiate();
+          sudo CI=true USR_HOME="$HOME" julia --project -e 'using Pkg; Pkg.instantiate();
                 using Books; Books.install_dependencies()'
           fc-cache -fsv
 
