@@ -9,15 +9,13 @@ on:
 
 jobs:
   test:
-    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ github.event_name }}
-    runs-on: ${{ matrix.os }}
+    name: Julia ${{ matrix.version }} - ${{ github.event_name }} - Test
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
         version:
           - '1.4'
-        os:
-          - ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: julia-actions/setup-julia@v1
@@ -32,7 +30,7 @@ jobs:
       - uses: julia-actions/julia-runtest@latest
 
   test-and-deploy:
-    name: Julia 1.6 test and deploy
+    name: Julia 1.6 - Test and deploy
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2

@@ -26,6 +26,8 @@ Required for Source Code Pro.
 Thanks to https://github.com/AnomalyInnovations/serverless-stack-com.
 """
 function install_extra_fonts()
+    println("Installing extra fonts")
+
     font_repo_dir = joinpath(homedir(), "source-code-pro")
     rm(font_repo_dir; recursive=true, force=true)
     run(`git clone --branch=release --depth=1 https://github.com/adobe-fonts/source-code-pro $font_repo_dir`)
@@ -35,10 +37,11 @@ function install_extra_fonts()
 end
 
 function install_apt_packages()
-    @assert is_github_ci()
+    println("Installing apt packages")
+
     packages = [
         "librsvg2-bin", # rsvg-convert
-        "make", 
+        "make",
         "pdf2svg",
         "python3-pip",
         "texlive-fonts-recommended", 
@@ -68,7 +71,8 @@ function validate_installation(name::AbstractString; args="--help")
 end
 
 function install_non_apt_packages()
-    @assert is_github_ci()
+    println("Installing non-apt packages")
+
     sudo = sudo_prefix()
     PANDOC_VERSION = "2.10.1"
     CROSSREF_VERSION = "0.3.8.1"
