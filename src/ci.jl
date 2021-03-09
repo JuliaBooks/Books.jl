@@ -33,10 +33,7 @@ function install_extra_fonts()
     rm(font_repo_dir; recursive=true, force=true)
     run(`git clone --branch=release --depth=1 https://github.com/adobe-fonts/source-code-pro $font_repo_dir`)
     ttf_dir = joinpath(font_repo_dir, "TTF")
-    fonts_dir = "USR_HOME" in keys(ENV) ?
-        joinpath(ENV["USR_HOME"], ".fonts") :
-        joinpath(homedir(), ".fonts")
-
+    fonts_dir = "/usr/share/fonts"
     mkpath(fonts_dir)
 
     files = readdir(ttf_dir)
