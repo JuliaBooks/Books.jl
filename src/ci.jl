@@ -34,6 +34,14 @@ function install_extra_fonts()
     ttf_dir = joinpath(font_repo_dir, "TTF")
     fonts_dir = joinpath(homedir(), ".fonts")
     mkpath(fonts_dir)
+
+    files = readdir(ttf_dir)
+    function mv_ttf(file)
+        from = joinpath(ttf_dir, file)
+        to = joinpath(fonts_dir, file)
+        mv(from, to; force=true)
+    end
+    mv_ttf.(files)
 end
 
 function install_apt_packages()
@@ -62,7 +70,7 @@ function install_apt_packages()
     end
 end
 
-function validate_installation(name::AbstractString; args="--help")
+function validate_installation(name::AbstractString; args="--version")
     try
         run(`$name $args`)
     catch e
