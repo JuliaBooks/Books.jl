@@ -23,7 +23,7 @@ jobs:
 
       - name: Install Pandoc, LaTeX and other dependencies
         run: |
-          julia --project -e 'using Books; Books.install_dependencies()'
+          sudo julia --project -e 'using Books; Books.install_dependencies()'
           # Temp workaround to copy files with sudo privileges.
           sudo cp ~/source-code-pro/TTF/*.ttf ~/.fonts
 
