@@ -2,6 +2,8 @@ module Books
 
 import LiveServer
 import Markdown
+import Tectonic
+import TOML
 import YAML
 
 using Memoize
