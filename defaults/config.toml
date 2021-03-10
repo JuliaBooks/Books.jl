@@ -15,7 +15,7 @@
   port = 8010
 
   # Alternative project, used when calling, for example, serve(project="develop").
-  [projects.develop]
+  [projects.dev]
   contents = [
     "introduction",
     "analysis",
