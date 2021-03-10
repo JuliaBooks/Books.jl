@@ -20,18 +20,21 @@ function rebuild_neccesary(file::AbstractString)::Bool
     extension != ".svg"
 end
 
-function custom_callback(file::AbstractString) 
+function custom_callback(file::AbstractString, project::AbstractString)
     if !ignore(file)
         if rebuild_neccesary(file)
             println("Running `html()`")
-            html()
+            html(; project)
         end
     end
     LiveServer.file_changed_callback(file)
 end
 
-function default_simplewatcher()
-    sw = LiveServer.SimpleWatcher(custom_callback)
+custom_callback_partial(project::AbstractString) = file -> custom_callback(file, project)
+
+function default_simplewatcher(project)
+    f = custom_callback_partial(project)
+    sw = LiveServer.SimpleWatcher(f)
 
     for (root, dirs, files) in walkdir(".")
         for file in files
@@ -45,9 +48,12 @@ function default_simplewatcher()
     sw
 end
 
-function serve(simplewatcher=default_simplewatcher();
+function serve(; simplewatcher=nothing,
         project="default", verbose=true, dir=BUILD_DIR)
 
+    if isnothing(simplewatcher)
+        simplewatcher = default_simplewatcher(project)
+    end
     if !isdir(dir)
         mkpath(dir)
     end
