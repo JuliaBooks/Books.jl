@@ -103,8 +103,6 @@ function pdf(; project="default")
 end
 
 function docx(; project="default")
-    template_path = pandoc_file("template.docx")
-    template = "--reference-doc=$template_path"
     file = config(project)["output_filename"]
     output_filename = joinpath(BUILD_DIR, "$file.docx")
     output = "--output=$output_filename"
@@ -114,7 +112,6 @@ function docx(; project="default")
         include_files;
         crossref;
         citeproc;
-        template;
         metadata;
         output
     ]

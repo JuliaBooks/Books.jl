@@ -83,7 +83,6 @@ File | Description | Affects
 `pandoc/style.css` | style sheet | website
 `pandoc/template.html` | HTML template | website
 `pandoc/template.tex` | PDF template | PDF
-`pandoc/template.docx` | Docx template | Docx
 
 : Default templates. {#tbl:templates}
 
@@ -93,4 +92,3 @@ Here, the citation style defaults to APA, because it is the only style that I co
 - parenthetical: [@orwell1945animal]
 
 For other citation styles from the [citation-style-language](https://github.com/citation-style-language/styles), users have to manually specify the author in the in-text citations.
-The `template.docx` refers to an APA style too.

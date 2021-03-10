@@ -1,7 +1,7 @@
 MIT License
 
 > Copyright (c) 2021 Rik Huijzer and contributors
-> 
+>
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal
 > in the Software without restriction, including without limitation the rights
@@ -28,4 +28,3 @@ This package includes code from the following projects, which have their own lic
 - The citation style is obtained via the [Citation Style Language (CSL) project](https://citationstyles.org/).
 - [The include-files Lua filter](https://github.com/pandoc/lua-filters/blob/master/LICENSE).
 - Icon made by [smashicons](https://www.flaticon.com/authors/smashicons).
-- The docx template is from [papaja](https://github.com/crsh/papaja).
