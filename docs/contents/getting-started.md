@@ -44,9 +44,19 @@ _generated/default_metadata.md
 
 ## config.toml {#sec:config}
 
-The `metadata.yml` file is used by Books.jl.
+The `config.toml` file is used by Books.jl.
 Settings in this file affect how Pandoc is called.
-Note that `contents` is discussed in more detail in @sec:about_contents.
+In `config.toml`, you can define multiple projects; at least define `projects.default`.
+The settings of `projects.default` are used when you call `pdf()` or `serve()`.
+To use other settings, for example the settings for `develop`, use `pdf(project="develop")` or `serve(project="develop")`.
+
+Below, the default configuration is shown.
+When not defining a `config.toml` file or omitting any of the settings, such as `port`, these defaults will be used.
+The benefit of multiple projects is, for example, that you can run a `develop` project locally which contains more information than the `default` project.
+One example could be where you write a paper, book or report and have a page with some notes.
+
+The meaning of `contents` is discussed in @sec:about_contents.
+The `pdf_filename` is used by `pdf()` and the `port` setting is used by `serve()`.
 
 ```{.include}
 _generated/default_config.md
@@ -59,7 +69,8 @@ It doesn't matter whether the files contain headings or at what levels the headi
 Pandoc will just place the texts behind each other.
 
 This list doesn't mention `index.md` located at the root directory of your project.
-`index.md` is added automatically when generating html output and will be the [homepage](/) for the website and typically contains a link to the generated PDF.
+`index.md` is added automatically when generating html output and will be the [homepage](/) for the website.
+It typically contains the link to the generated PDF.
 
 ## Templates {#sec:templates}
 

@@ -1,12 +1,28 @@
-# These files should be available in `contents/` and are passed to Pandoc.
-contents = [
-  "introduction",
-  "content",
-  "references"
-]
+[projects]
 
-# Output PDF filename.
-pdf_filename = "mybook"
+  # Default project, used when calling serve() or pdf().
+  [projects.default]
+  contents = [
+    "introduction",
+    "analysis",
+    "references"
+  ]
 
-# Port used when calling `serve`.
-port = 8001
+  # Output pdf filename.
+  pdf_filename = "analysis"
+
+  # Port used by serve().
+  port = 8010
+
+  # Alternative project, used when calling, for example, serve(project="develop").
+  [projects.develop]
+  contents = [
+    "introduction",
+    "analysis",
+    "notes",
+    "references"
+  ]
+
+  pdf_filename = "analysis-with-notes"
+
+  port = 8011

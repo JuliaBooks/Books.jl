@@ -28,7 +28,10 @@ extra_args = [
     "--top-level-division=chapter"
 ]
 
-inputs() = [joinpath("contents", "$content.md") for content in contents()]
+function inputs(project)
+    C = config(project)["contents"]
+    [joinpath("contents", "$content.md") for content in C]
+end
 
 function pandoc(args)
     write_metadata()
@@ -39,12 +42,12 @@ function pandoc(args)
     return (p, out)
 end
 
-function pandoc_html()
+function pandoc_html(project::AbstractString)
     html_template_path = pandoc_file("template.html")
     template = "--template=$html_template_path"
     output_filename = joinpath(BUILD_DIR, "index.html")
     output = "--output=$output_filename"
-    html_inputs = ["index.md"; inputs()]
+    html_inputs = ["index.md"; inputs(project)]
     filename = "style.css"
     css_path = pandoc_file(filename)
     cp(css_path, joinpath(BUILD_DIR, filename); force=true)
@@ -64,23 +67,22 @@ function pandoc_html()
     out
 end
 
-function html()
-    # rm(BUILD_DIR; force = true, recursive = true)
-    # mkpath(BUILD_DIR)
-    write_html_pages(contents(), pandoc_html())
+function html(; project="default")
+    C = config(project)["contents"]
+    write_html_pages(C, pandoc_html(project))
 end
 
-function pdf()
+function pdf(; project="default")
     latex_template_path = pandoc_file("template.tex")
     # xelatex is required for UTF-8.
     pdf_engine = "--pdf-engine=xelatex"
     template = "--template=$latex_template_path"
-    file = pdf_filename()
+    file = config(project)["pdf_filename"]
     output_filename = joinpath(BUILD_DIR, "$file.pdf")
     output = "--output=$output_filename"
 
     args = [
-        inputs();
+        inputs(project);
         include_files;
         crossref;
         citeproc;

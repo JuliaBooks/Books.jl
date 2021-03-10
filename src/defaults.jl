@@ -42,31 +42,51 @@ function write_metadata()
     YAML.write_file(path, combined)
 end
 
-@memoize function default_config()::Dict
-    path = joinpath(DEFAULTS_DIR, "config.toml")
-    content = read(path, String)
-    TOML.parse(content)
+"""
+    project_info(path, project::AbstractString)
+
+Return project info for TOML file at `path` as raw text or `nothing` if `project` is not defined.
+"""
+function project_info(path, project::AbstractString)
+    text = read(path, String)
+    dic = TOML.parse(text)
+    project in keys(dic["projects"]) ?
+        dic["projects"][project] :
+        nothing
 end
 
-function user_config()
+@memoize function default_config(project::AbstractString)
+    path = joinpath(DEFAULTS_DIR, "config.toml")
+    project_info(path, project)
+end
+
+function user_config(project::AbstractString)
     path = "config.toml"
-    function toml_parse(path)
-        text = read(path, String)
-        TOML.parse(text)
-    end
-    return isfile(path) ? toml_parse(path) : nothing
+    isfile(path) ? project_info(path, project) : nothing
 end
 
 """
-    config()
+    config(project::AbstractString)
 
 Read user `config.toml` and `$DEFAULTS_DIR/config.toml` and combine the information.
-"""
-function config()
-    default = default_config()
-    user = user_config()
-    combined = isnothing(user) ? default : override(default, user)
-end
 
-contents() = config()["contents"]
-pdf_filename() = config()["pdf_filename"]
+# Example
+```jldoctest
+julia> cd(joinpath(pkgdir(Books), "docs"))
+
+julia> Books.config("default")
+Dict{String, Any} with 3 entries:
+  "pdf_filename" => "books"
+  "port"         => 8010
+  "contents"     => ["about", "getting-started", "demo", "references"]
+```
+"""
+function config(project::AbstractString)
+    default = default_config(project)
+    user = user_config(project)
+    combined =
+        isnothing(user) && isnothing(default) ? error("Project $project not defined in config.toml") :
+        isnothing(user) ? default :
+        isnothing(default) ? user :
+        override(default, user)
+end

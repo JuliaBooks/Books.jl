@@ -45,11 +45,13 @@ function default_simplewatcher()
     sw
 end
 
-function serve(simplewatcher=default_simplewatcher(); verbose=true, dir=BUILD_DIR)
+function serve(simplewatcher=default_simplewatcher();
+        project="default", verbose=true, dir=BUILD_DIR)
+
     if !isdir(dir)
         mkpath(dir)
     end
     html()
-    port = config()["port"]
+    port = config(project)["port"]
     LiveServer.serve(simplewatcher; verbose, port, dir)
 end

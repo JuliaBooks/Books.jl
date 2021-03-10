@@ -1,10 +1,10 @@
-contents = [
-  "about",
-  "getting-started",
-  "demo",
-  "references"
-]
+[projects]
 
-pdf_filename = "books"
-
-port = 8011
+  [projects.default]
+  contents = [
+    "about",
+    "getting-started",
+    "demo",
+    "references"
+  ]
+  pdf_filename = "books"

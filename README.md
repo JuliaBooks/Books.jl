@@ -7,7 +7,7 @@ Create books with Julia.
 
 ## Usage
 
-To install this package, use
+To install this package (Julia ≥1.6), use
 ```
 pkg> add Books
 ```

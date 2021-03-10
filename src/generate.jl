@@ -122,7 +122,7 @@ function evaluate_include(path, M, fail_on_error)
 end
 
 """
-    generate_content(; M=nothing, fail_on_error=false)
+    generate_content(; M=nothing, fail_on_error=false, project="default")
 
 Populate the files in `$(Books.GENERATED_DIR)/` by calling the required methods.
 These methods are specified by the filename and will output to that filename.
@@ -132,8 +132,8 @@ Otherwise, specify another module `M`.
 
 The module `M` is used to locate the method defined, as a string, in the `.include` via `getproperty`.
 """
-function generate_content(; M=nothing, fail_on_error=false)
-    paths = inputs()
+function generate_content(; M=nothing, fail_on_error=false, project="default")
+    paths = inputs(project)
     included_paths = vcat([include_filenames(read(path, String)) for path in paths]...)
     f(path) = evaluate_include(path, M, fail_on_error)
     foreach(f, included_paths)
