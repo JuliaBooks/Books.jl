@@ -54,9 +54,6 @@ function install_apt_packages()
         "make",
         "pdf2svg",
         "python3-pip",
-        "texlive-fonts-recommended", 
-        "texlive-fonts-extra",
-        "texlive-binaries",
         "xz-utils" # Required by tar.
     ]
 
