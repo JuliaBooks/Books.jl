@@ -20,6 +20,17 @@ jobs:
         with:
           version: '^1.6.0-0'
 
+      - uses: actions/cache@v1
+        env:
+          cache-name: cache-artifacts
+        with:
+          path: ~/.julia/artifacts
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('**/Project.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-test-${{ env.cache-name }}-
+            ${{ runner.os }}-test-
+            ${{ runner.os }}-
+
       - name: Install Pandoc, LaTeX and other dependencies
         run: |
           julia --project -e 'using Pkg; Pkg.instantiate();

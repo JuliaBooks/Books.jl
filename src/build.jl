@@ -1,5 +1,3 @@
-import TOML
-
 function pandoc_file(filename)
     user_path = joinpath("pandoc", filename)
     fallback_path = joinpath(PROJECT_ROOT, "defaults", filename)
@@ -30,11 +28,13 @@ end
 
 function pandoc(args)
     write_metadata()
+    # pandoc_jll.pandoc() do bin
     cmd = `pandoc $args`
     stdout = IOBuffer()
     p = run(pipeline(cmd; stdout))
     out = String(take!(stdout))
     return (p, out)
+    # end
 end
 
 function pandoc_html(project::AbstractString)
@@ -69,35 +69,37 @@ end
 
 function pdf(; project="default")
     latex_template_path = pandoc_file("template.tex")
-    # xelatex is required for UTF-8.
-    pdf_engine = "--pdf-engine=xelatex"
     template = "--template=$latex_template_path"
     file = config(project)["output_filename"]
     output_filename = joinpath(BUILD_DIR, "$file.pdf")
     output = "--output=$output_filename"
 
-    args = [
-        inputs(project);
-        include_files;
-        crossref;
-        citeproc;
-        csl();
-        metadata;
-        template;
-        "--listings";
-        pdf_engine;
-        extra_args;
-        output
-    ]
-    out = pandoc(args)
-    if !isnothing(out)
-        println("Built $output_filename")
-    end
+    Tectonic.tectonic() do tectonic_bin
+        pdf_engine = "--pdf-engine=$tectonic_bin"
 
-    # For debugging purposes.
-    output_filename = joinpath(BUILD_DIR, "$file.tex")
-    args[end] = "--output=$output_filename"
-    pandoc(args)
+        args = [
+            inputs(project);
+            include_files;
+            crossref;
+            citeproc;
+            csl();
+            metadata;
+            template;
+            "--listings";
+            pdf_engine;
+            extra_args;
+            output
+        ]
+        out = pandoc(args)
+        if !isnothing(out)
+            println("Built $output_filename")
+        end
+
+        # For debugging purposes.
+        output_filename = joinpath(BUILD_DIR, "$file.tex")
+        args[end] = "--output=$output_filename"
+        pandoc(args)
+    end
 
     nothing
 end

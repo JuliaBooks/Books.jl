@@ -2,7 +2,10 @@ module Books
 
 import LiveServer
 import Markdown
+import Tectonic
+import TOML
 import YAML
+import pandoc_jll
 
 using Memoize
 using Requires

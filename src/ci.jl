@@ -56,9 +56,7 @@ function install_apt_packages()
         "python3-pip",
         "texlive-fonts-recommended", 
         "texlive-fonts-extra",
-        "texlive-latex-base",
         "texlive-binaries",
-        "texlive-xetex",
         "xz-utils" # Required by tar.
     ]
 
