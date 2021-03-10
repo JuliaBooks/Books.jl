@@ -7,4 +7,4 @@
     "demo",
     "references"
   ]
-  pdf_filename = "books"
+  output_filename = "books"

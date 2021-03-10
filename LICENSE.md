@@ -24,7 +24,7 @@ This package includes code from the following projects, which have their own lic
 
 - [Julia](https://github.com/JuliaLang/julia/blob/master/LICENSE.md).
 - [The Eisvogel LaTeX template](https://github.com/Wandmalfarbe/pandoc-latex-template/blob/master/LICENSE).
-- [A Pandoc book template](https://github.com/wikiti/pandoc-book-template/blob/master/LICENSE.md). 
+- [A Pandoc book template](https://github.com/wikiti/pandoc-book-template/blob/master/LICENSE.md).
 - The citation style is obtained via the [Citation Style Language (CSL) project](https://citationstyles.org/).
 - [The include-files Lua filter](https://github.com/pandoc/lua-filters/blob/master/LICENSE).
 - Icon made by [smashicons](https://www.flaticon.com/authors/smashicons).

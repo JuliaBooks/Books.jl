@@ -76,9 +76,9 @@ julia> cd(joinpath(pkgdir(Books), "docs"))
 
 julia> Books.config("default")
 Dict{String, Any} with 3 entries:
-  "pdf_filename" => "books"
-  "port"         => 8010
-  "contents"     => ["about", "getting-started", "demo", "references"]
+  "port"            => 8010
+  "contents"        => ["about", "getting-started", "demo", "references"]
+  "output_filename" => "books"
 ```
 """
 function config(project::AbstractString)

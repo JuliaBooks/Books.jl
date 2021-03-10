@@ -1,10 +1,5 @@
 import TOML
 
-export
-    build_all,
-    html,
-    pdf
-
 function pandoc_file(filename)
     user_path = joinpath("pandoc", filename)
     fallback_path = joinpath(PROJECT_ROOT, "defaults", filename)
@@ -77,7 +72,7 @@ function pdf(; project="default")
     # xelatex is required for UTF-8.
     pdf_engine = "--pdf-engine=xelatex"
     template = "--template=$latex_template_path"
-    file = config(project)["pdf_filename"]
+    file = config(project)["output_filename"]
     output_filename = joinpath(BUILD_DIR, "$file.pdf")
     output = "--output=$output_filename"
 
@@ -107,10 +102,32 @@ function pdf(; project="default")
     nothing
 end
 
-function build_all()
+function docx(; project="default")
+    template_path = pandoc_file("template.docx")
+    template = "--template=$template_path"
+    file = config(project)["output_filename"]
+    output_filename = joinpath(BUILD_DIR, "$file.docx")
+    output = "--output=$output_filename"
+
+    args = [
+        inputs(project);
+        include_files;
+        crossref;
+        citeproc;
+        metadata;
+        output
+    ]
+    out = pandoc(args)
+    if !isnothing(out)
+        println("Built $output_filename")
+    end
+    nothing
+end
+
+function build_all(; project="default")
     mkpath(BUILD_DIR)
     filename = "favicon.png"
     cp(joinpath("pandoc", filename), joinpath(BUILD_DIR, filename); force=true)
-    html()
-    pdf()
+    html(; project)
+    pdf(; project)
 end

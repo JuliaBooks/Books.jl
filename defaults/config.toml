@@ -8,8 +8,8 @@
     "references"
   ]
 
-  # Output pdf filename.
-  pdf_filename = "analysis"
+  # Output pdf or docx filename.
+  output_filename = "analysis"
 
   # Port used by serve().
   port = 8010
@@ -23,6 +23,6 @@
     "references"
   ]
 
-  pdf_filename = "analysis-with-notes"
+  output_filename = "analysis-with-notes"
 
   port = 8011
