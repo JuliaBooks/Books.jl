@@ -51,7 +51,7 @@ function serve(simplewatcher=default_simplewatcher();
     if !isdir(dir)
         mkpath(dir)
     end
-    html()
+    html(project)
     port = config(project)["port"]
     LiveServer.serve(simplewatcher; verbose, port, dir)
 end
