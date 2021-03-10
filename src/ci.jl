@@ -36,6 +36,7 @@ function install_extra_fonts()
     fonts_dir = joinpath(homedir(), ".fonts")
 
     files = readdir(ttf_dir)
+    mkpath(fonts_dir)
     println("Moving files to $fonts_dir")
     for file in files
         from = joinpath(ttf_dir, file)
