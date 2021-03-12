@@ -8,6 +8,8 @@ import YAML
 
 using Memoize
 using Requires
+using pandoc_jll
+using pandoc_crossref_jll
 
 const PROJECT_ROOT = pkgdir(Books)
 const GENERATED_DIR = "_generated"
