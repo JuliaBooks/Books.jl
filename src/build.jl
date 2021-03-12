@@ -26,14 +26,10 @@ function inputs(project)
     [joinpath("contents", "$content.md") for content in C]
 end
 
-function pandoc_env(f)
-    pandoc()
-end
-
 function call_pandoc(args)
     write_metadata()
     pandoc() do pandoc_bin
-        pandoc_crossref() do pandoc_crossref_bin
+        pandoc_crossref() do _
             cmd = `$pandoc_bin $args`
             stdout = IOBuffer()
             p = run(pipeline(cmd; stdout))
