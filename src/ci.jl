@@ -80,33 +80,6 @@ function install_non_apt_packages()
     println("Installing non-apt packages")
 
     sudo = sudo_prefix()
-    PANDOC_VERSION = "2.10.1"
-    CROSSREF_VERSION = "0.3.8.1"
-
-    filename = "pandoc-$PANDOC_VERSION-1-amd64.deb"
-    download("https://github.com/jgm/pandoc/releases/download/$PANDOC_VERSION/$filename", filename)
-    args = [sudo, "dpkg", "-i", filename]
-    nonempty_run(args)
-    validate_installation("pandoc")
-
-    filename = "pandoc-crossref-Linux.tar.xz"
-    download("https://github.com/lierdakil/pandoc-crossref/releases/download/v$CROSSREF_VERSION/$filename", filename)
-    run(`tar -xf $filename`)
-    name = "pandoc-crossref"
-    target = joinpath(pwd(), "$name")
-    source = "/usr/local/bin/$name"
-    try
-        run(`ln -s $target $source`)
-    catch
-        bin_dir = joinpath(homedir(), "bin")
-        mkdir(bin_dir)
-        mv(name, joinpath(bin_dir, name))
-        open(ENV["GITHUB_PATH"], "a") do io
-            write(io, bin_dir)
-        end
-    end
-    # validate_installation("pandoc-crossref")
-
     args = [sudo, "pip3", "install", "cairosvg"]
     nonempty_run(args)
     validate_installation("cairosvg")

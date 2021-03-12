@@ -26,15 +26,17 @@ function inputs(project)
     [joinpath("contents", "$content.md") for content in C]
 end
 
-function pandoc(args)
+function call_pandoc(args)
     write_metadata()
-    # pandoc_jll.pandoc() do bin
-    cmd = `pandoc $args`
-    stdout = IOBuffer()
-    p = run(pipeline(cmd; stdout))
-    out = String(take!(stdout))
-    return (p, out)
-    # end
+    pandoc() do pandoc_bin
+        pandoc_crossref() do _
+            cmd = `$pandoc_bin $args`
+            stdout = IOBuffer()
+            p = run(pipeline(cmd; stdout))
+            out = String(take!(stdout))
+            return (p, out)
+        end
+    end
 end
 
 function pandoc_html(project::AbstractString)
@@ -58,7 +60,7 @@ function pandoc_html(project::AbstractString)
         extra_args;
         # output
     ]
-    _, out = pandoc(args)
+    _, out = call_pandoc(args)
     out
 end
 
@@ -90,7 +92,7 @@ function pdf(; project="default")
             extra_args;
             output
         ]
-        out = pandoc(args)
+        out = call_pandoc(args)
         if !isnothing(out)
             println("Built $output_filename")
         end
@@ -98,7 +100,7 @@ function pdf(; project="default")
         # For debugging purposes.
         output_filename = joinpath(BUILD_DIR, "$file.tex")
         args[end] = "--output=$output_filename"
-        pandoc(args)
+        call_pandoc(args)
     end
 
     nothing
@@ -117,7 +119,7 @@ function docx(; project="default")
         metadata;
         output
     ]
-    out = pandoc(args)
+    out = call_pandoc(args)
     if !isnothing(out)
         println("Built $output_filename")
     end
