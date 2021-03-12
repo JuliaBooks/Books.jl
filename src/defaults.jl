@@ -38,6 +38,7 @@ function write_metadata()
     default = default_metadata()
     user = user_metadata()
     combined = isnothing(user) ? default : override(default, user)
+    mkpath(GENERATED_DIR)
     path = joinpath(GENERATED_DIR, "metadata.yml")
     YAML.write_file(path, combined)
 end
