@@ -5,7 +5,7 @@ end
 
 function user_metadata()
     path = "metadata.yml"
-    return isfile(path) ? YAML.load_file(path) : nothing
+    isfile(path) ? YAML.load_file(path) : error("Couldn't find metadata.yml")
 end
 
 """
@@ -37,7 +37,7 @@ The file is a combination of Books.jl default settings and the user-defined sett
 function write_metadata()
     default = default_metadata()
     user = user_metadata()
-    combined = isnothing(user) ? default : override(default, user)
+    combined = override(default, user)
     mkpath(GENERATED_DIR)
     path = joinpath(GENERATED_DIR, "metadata.yml")
     YAML.write_file(path, combined)
