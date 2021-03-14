@@ -31,20 +31,27 @@ outputs(paths::AbstractVector, objects::AbstractVector) = Outputs(paths, objects
     outputs(ojects::AbstractVector)
 
 Define `objects` which need to be converted to Markdown.
-This method is applicable to objects which can be converted to string directly, such as DataFrames.
+This method is applicable to objects which can be converted to string directly.
 """
 function outputs(objects::AbstractVector)
     paths = fill(nothing, length(objects))
     outputs(paths, objects)
 end
 
-struct ImageOptions
-    caption::String
-    label::String
+struct Options
+    object::Any
+    caption::Union{AbstractString,Nothing}
+    label::Union{AbstractString,Nothing}
 end
 
-function ImageOptions(; caption=nothing, label=nothing)
-    ImageOptions(caption, label)
+"""
+    options(object; caption=nothing, label=nothing)
+
+Define an `Options` struct which contains an `object` and some meta-information to be passed to the resulting document.
+These options are used by `pandoc-crossref`.
+"""
+function options(object; caption=nothing, label=nothing)
+    Options(object, caption, label)
 end
 
 function convert_output(path, out::Code)::String
@@ -103,6 +110,21 @@ Other methods are defined via Requires.
 convert_output(path, out) = string(out)
 
 """
+    prettify_caption(caption)
+
+Return prettier caption.
+
+```jldoctest
+julia> Books.prettify_caption("example_table")
+"Example table"
+```
+"""
+function prettify_caption(caption)
+    caption = replace(caption, '_' => ' ')
+    caption = uppercasefirst(caption)
+end
+
+"""
     pandoc_image(file, path; caption=nothing, ref=nothing)
 
 Return pandoc image link.
@@ -115,9 +137,7 @@ julia> Books.pandoc_image("example_image", "/im/example_image.png")
 """
 function pandoc_image(file, path; caption=nothing, ref=nothing)
     if isnothing(caption)
-        caption = file
-        caption = replace(caption, '_' => ' ')
-        caption = uppercasefirst(caption)
+        caption = prettify_caption(file)
     end
 
     if isnothing(ref)

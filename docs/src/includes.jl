@@ -32,8 +32,8 @@ function default_config()
     code_block(text)
 end
 
-df_example() = DataFrame(X = [1, 2], Y = ["a", "b"])
-df_example_def() = code_block(@code_string df_example())
+my_table() = DataFrame(U = [1, 2], V = [:a, :b], W = [3, 4])
+my_table_def() = code_block(@code_string my_table())
 
 multiple_df_example() =
     outputs([DataFrame(Z = [3]), DataFrame(U = [4, 5], V = [6, 7])])

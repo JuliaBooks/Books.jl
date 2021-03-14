@@ -10,7 +10,7 @@ The easiest way to get started is to
 _generated/serve_example.md
 ```
 
-To generate all the Julia output (see @sec:embedding-code for more information) use
+To generate all the Julia output (see @sec:embedding-output for more information) use
 
 ```{.include}
 _generated/generate_example.md

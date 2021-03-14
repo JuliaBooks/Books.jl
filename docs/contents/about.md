@@ -31,7 +31,7 @@ Thanks to LiveServer.jl and Pandoc, updating the page after changing text or cod
 Also, because the `serve` process does relatively few things, it doesn't often crash.
 A drawback of this decoupling is that you need to link your text to the correct computation in the Markdown file, whereas in other packages you would insert the code as a string.
 
-The decoupling also allows the output, which you want to include, to be evaluated inside your package, see @sec:embedding-code.
+The decoupling also allows the output, which you want to include, to be evaluated inside your package, see @sec:embedding-output.
 This means that you don't have to define all your dependencies in a `@setup` (Documenter.jl) or `# hideall` (Franklin.jl / Literate.jl) code block.
 (Granted, you could work your way around it by only calling methods inside a package.)
 The dependencies, such as `using DataFrames`, are available from your package.
