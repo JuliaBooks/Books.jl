@@ -13,7 +13,7 @@ function svg2png(svg_path, png_path)
     run(`cairosvg $svg_path -o $png_path --dpi 400`)
 end
 
-function convert_gadfly_output(path, out)
+function convert_gadfly_output(path, out; caption=nothing, label=nothing)
     im_dir = joinpath(BUILD_DIR, "im")
     mkpath(im_dir)
 
@@ -26,8 +26,8 @@ function convert_gadfly_output(path, out)
     png_path = joinpath(im_dir, png_filename)
     svg2png(svg_path, png_path)
     im_link = joinpath("im", svg_filename)
-    # This path is fixed for html in the html post-processor.
-    pandoc_image(file, png_path)
+    caption, label = caption_label(path, caption, label)
+    pandoc_image(file, png_path; caption, label)
 end
 
 function convert_output(path, out::Compose.Context)

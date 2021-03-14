@@ -14,37 +14,38 @@ This can be disabled via `hide_module`.
 code(block::AbstractString; mod=Main, hide_module=false) =
     Code(rstrip(block), mod, hide_module)
 
-struct Outputs
-    paths::AbstractVector
-    objects::AbstractVector
-end
-
 """
-    outputs(paths::AbstractVector, ojects::AbstractVector)
+    Outputs(objects::AbstractVector; paths::AbstractVector=nothing)
 
 Define `objects` which need to be converted to Markdown.
 This is done via `convert_output(path, out::T)`, where `T` is the appropriate type.
 """
-outputs(paths::AbstractVector, objects::AbstractVector) = Outputs(paths, objects)
+struct Outputs
+    objects::AbstractVector
+    paths::AbstractVector
 
-"""
-    outputs(ojects::AbstractVector)
-
-Define `objects` which need to be converted to Markdown.
-This method is applicable to objects which can be converted to string directly, such as DataFrames.
-"""
-function outputs(objects::AbstractVector)
-    paths = fill(nothing, length(objects))
-    outputs(paths, objects)
+    function Outputs(objects::AbstractVector; paths=nothing)
+        if isnothing(paths)
+            paths = fill(nothing, length(objects))
+        end
+        new(objects, paths)
+    end
 end
 
-struct ImageOptions
-    caption::String
-    label::String
-end
+"""
+    Options(object;
+        caption::Union{AbstractString,Nothing}=nothing,
+        label::Union{AbstractString,Nothing}=nothing)
 
-function ImageOptions(; caption=nothing, label=nothing)
-    ImageOptions(caption, label)
+Struct containing an `object` and some meta-information to be passed to the resulting document.
+These options are used by `pandoc-crossref`.
+"""
+struct Options
+    object::Any
+    caption::Union{AbstractString,Nothing}
+    label::Union{AbstractString,Nothing}
+
+    Options(object; caption=nothing, label=nothing) = new(object, caption, label)
 end
 
 function convert_output(path, out::Code)::String
@@ -94,6 +95,34 @@ function convert_output(path, outputs::Outputs)::String
 end
 
 """
+    convert_output(path, options::Options)
+
+Convert `options.object` while taking `options.caption` and `options.label` into account.
+This method needs to pass the options correctly to the resulting type, because the syntax depends on the type;
+see the `pandoc-crossref` documentation for more information on the syntax.
+
+# Example
+```jldoctest
+julia> df = DataFrame(A = [1]);
+
+julia> caption = "My DataFrame";
+
+julia> options = Options(df; caption);
+
+julia> print(Books.convert_output(nothing, options))
+|   A |
+| ---:|
+|   1 |
+
+: My DataFrame
+```
+"""
+function convert_output(path, opts::Options)::String
+    convert_output(path, opts.object;
+        caption=opts.caption, label=opts.label)
+end
+
+"""
     convert_output(path, out)
 
 Fallback method for `out::Any`.
@@ -103,28 +132,91 @@ Other methods are defined via Requires.
 convert_output(path, out) = string(out)
 
 """
-    pandoc_image(file, path; caption=nothing, ref=nothing)
+    prettify_caption(caption)
 
-Return pandoc image link.
+Return prettier caption.
+
+```jldoctest
+julia> Books.prettify_caption("example_table")
+"Example table"
+```
+"""
+function prettify_caption(caption)
+    caption = replace(caption, '_' => ' ')
+    caption = uppercasefirst(caption)
+end
+
+"""
+    pandoc_image(file, path; caption=nothing, label=nothing)
+
+Return pandoc image link where label is prepended with `#fig:`.
+This path works for PDF and is fixed for html in the html post-processor.
 
 # Example
 ```jldoctest
-julia> Books.pandoc_image("example_image", "/im/example_image.png")
-"![Example image.](/im/example_image.png){#fig:example_image}"
+julia> Books.pandoc_image("example_image", "build/im/example_image.png")
+"![](build/im/example_image.png)"
 ```
 """
-function pandoc_image(file, path; caption=nothing, ref=nothing)
-    if isnothing(caption)
-        caption = file
-        caption = replace(caption, '_' => ' ')
-        caption = uppercasefirst(caption)
+function pandoc_image(file, path; caption=nothing, label=nothing)
+    if isnothing(caption) && isnothing(label)
+        "![]($path)"
+    elseif isnothing(label)
+        "![$caption.]($path)"
+    elseif isnothing(caption)
+        "![]($path){#fig:$label}"
+    else
+        "![$caption.]($path){#fig:$label}"
+    end
+end
+
+"""
+    caption_label(path, caption, label)
+
+Return `caption` and `label` for the inputs.
+This method sets some reasonable defaults if any of the inputs is missing.
+
+# Examples
+```jldoctest
+julia> Books.caption_label("a/foo_bar.md", nothing, nothing)
+(caption = "Foo bar", label = "foo_bar")
+
+julia> Books.caption_label(nothing, "cap", nothing)
+(caption = "cap", label = nothing)
+
+julia> Books.caption_label(nothing, nothing, "my_label")
+(caption = "My label", label = "my_label")
+
+julia> Books.caption_label(nothing, nothing, nothing)
+(caption = nothing, label = nothing)
+```
+"""
+function caption_label(path, caption, label)
+    if isnothing(path) && isnothing(caption) && isnothing(label)
+        return (caption=nothing, label=nothing)
     end
 
-    if isnothing(ref)
-        ref = "fig:$file"
+    if !isnothing(path)
+        name = method_name(path)
+        if isnothing(label)
+            label = name
+        end
+        if isnothing(caption)
+            caption = prettify_caption(name)
+        end
+        return (caption=caption, label=label)
     end
 
-    "![$caption.]($path){#$ref}"
+    if !isnothing(label)
+        if isnothing(caption)
+            caption = prettify_caption(label)
+        end
+        return (caption=caption, label=label)
+    end
+
+    if !isnothing(caption)
+        return (caption=caption, label=label)
+    end
 end
 
 """
@@ -163,4 +255,3 @@ function doctest(s::Markdown.MD)
     content = join(lines, '\n')
     code_block(content)
 end
-

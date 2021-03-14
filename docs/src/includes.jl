@@ -32,11 +32,11 @@ function default_config()
     code_block(text)
 end
 
-df_example() = DataFrame(X = [1, 2], Y = ["a", "b"])
-df_example_def() = code_block(@code_string df_example())
+my_table() = DataFrame(U = [1, 2], V = [:a, :b], W = [3, 4])
+my_table_def() = code_block(@code_string my_table())
 
 multiple_df_example() =
-    outputs([DataFrame(Z = [3]), DataFrame(U = [4, 5], V = [6, 7])])
+    Outputs([DataFrame(Z = [3]), DataFrame(U = [4, 5], V = [6, 7])])
 multiple_df_example_def() = code_block(@code_string multiple_df_example())
 
 sum_example() = code("""
@@ -48,13 +48,19 @@ sum_example() = code("""
 
 sum_example_definition() = code_block(@code_string sum_example())
 
-example_table() = DataFrame(A = [1, 2], B = [3, 4])
-example_table_definition() = code_block(@code_string example_table()) 
+example_table() = DataFrame(A = [1, 2], B = [3, 4], C = [5, 6])
+example_table_definition() = code_block(@code_string example_table())
+
+options_example() = Options(DataFrame(A = [1], B = [2], C = [3]);
+                        caption="My DataFrame", label="foo")
+options_example_def() = code_block(@code_string options_example())
+
+options_example_doctests() = Books.doctest(@doc Books.caption_label)
 
 code_example_table() = code("""
     using DataFrames
 
-    DataFrame(A = [1, 2], B = [3, 4])
+    DataFrame(A = [1, 2], B = [3, 4], C = [5, 6])
     """)
 
 code_example_table_definition() = code_block(@code_string code_example_table())
@@ -74,12 +80,12 @@ end
 
 module_call_x() = code("x"; mod=U)
 
-module_fail() = code("DataFrame(A = [1])"; mod=U)
+module_fail() = code("DataFrame(A = [1], B = [2])"; mod=U)
 
 module_fix() = code("""
-    using DataFrames 
+    using DataFrames
 
-    DataFrame(A = [1])"""; mod=U)
+    DataFrame(A = [1], B = [2])"""; mod=U)
 
 module_example_definition() = code_block("""
     module U end
@@ -100,6 +106,6 @@ function multiple_example_plots()
         plot(x = X, y = X),
         plot(x = X, y = X.^3)
     ]
-    outputs(paths, objects)
+    Outputs(objects; paths)
 end
 multiple_example_plots_def() = code_block(@code_string multiple_example_plots())

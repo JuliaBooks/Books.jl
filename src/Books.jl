@@ -26,7 +26,7 @@ include("output.jl")
 include("generate.jl")
 
 export html, pdf, docx
-export code, outputs
+export code, Outputs, Options
 export code_block
 export generate_content
 export serve

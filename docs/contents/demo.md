@@ -13,7 +13,7 @@ We can refer to citations such as @orwell1945animal and [@orwell1945animal] or t
 
 $$ y = sin(x) $$ {#eq:sin}
 
-## Embedding code {#sec:embedding-code}
+## Embedding output {#sec:embedding-output}
 
 For embedding code, you can use the `include-files` Lua filter.
 This package can automatically run methods based on the included filenames.
@@ -44,24 +44,32 @@ Of these evaluated methods, the output is passed through `convert_output(path, o
 To show this, we define a method
 
 ```{.include}
-_generated/df_example_def.md
+_generated/my_table_def.md
 ```
 
 and add its output to the Markdown file with
 
 <pre>
 ```{.include}
-_generated/df_example_def.md
+_generated/my_table.md
 ```
 </pre>
 
-Then, it will show
+Then, it will show as
 
 ```{.include}
-_generated/df_example.md
+_generated/my_table.md
 ```
 
-Use `outputs` to show multiple objects:
+where the caption and the label are inferred from the `path`.
+Refer to @tbl:my_table with
+```
+@tbl:my_table
+```
+
+> @tbl:my_table
+
+To show multiple objects, use `Outputs`:
 
 ```{.include}
 _generated/multiple_df_example_def.md
@@ -73,11 +81,39 @@ which will appear as
 _generated/multiple_df_example.md
 ```
 
-See @sec:plots for showing multiple plots.
+To add labels and captions to these tables based on the `path`, use `Outputs(objects; paths)` instead of `Outputs(objects)`.
+To change the labels and/or captions, see @sec:labels-captions.
+For showing multiple plots, see @sec:plots.
+
+## Labels and captions {#sec:labels-captions}
+
+To set labels and captions, wrap your object in `Options`:
+
+```{.include}
+_generated/options_example_def.md
+```
+
+giving
+
+```{.include}
+_generated/options_example.md
+```
+which can be referred to with
+```
+@tbl:foo
+```
+> @tbl:foo
+
+It is also possible to pass only a caption or a label.
+This package will attempt to infer missing information from the `path`, `caption` or `label` when possible:
+
+```{.include}
+_generated/options_example_doctests.md
+```
 
 ## Showing code blocks {#sec:code-blocks}
 
-Like in @sec:embedding-code, first define a method like
+Like in @sec:embedding-output, first define a method like
 
 ```{.include}
 _generated/sum_example_definition.md
@@ -172,7 +208,7 @@ _generated/example_plot.md
 If the output is a string instead of the output you expected, then check whether you load the related packages in time.
 For example, for this Gadfly plot, you need to load Gadfly.jl together with Books.jl for Requires.jl to work.
 
-For multiple images, use `outputs(paths, objects)`:
+For multiple images, use `Outputs(objects; paths)`:
 
 ```{.include}
 _generated/multiple_example_plots_def.md

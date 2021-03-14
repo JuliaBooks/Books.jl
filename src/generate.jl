@@ -43,7 +43,9 @@ Return method name for a Markdown file.
 
 # Example
 ```jldoctest
-julia> Books.method_name("_generated/example.md")
+julia> path = "_generated/example.md";
+
+julia> Books.method_name(path)
 "example"
 ```
 """
@@ -76,6 +78,8 @@ julia> print(read(path, String))
 | ---:| ---:|
 |   1 |   3 |
 |   2 |   4 |
+
+: Example {#tbl:example}
 ```
 """
 function evaluate_and_write(f::Function, path)
