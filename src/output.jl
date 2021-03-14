@@ -21,14 +21,14 @@ Define `objects` which need to be converted to Markdown.
 This is done via `convert_output(path, out::T)`, where `T` is the appropriate type.
 """
 struct Outputs
-    paths::AbstractVector
     objects::AbstractVector
+    paths::AbstractVector
 
-    function Outputs(objects::AbstractVector; paths::AbstractVector=nothing)
+    function Outputs(objects::AbstractVector; paths=nothing)
         if isnothing(paths)
-            fill(nothing, length(objects))
+            paths = fill(nothing, length(objects))
         end
-        new(paths, objects)
+        new(objects, paths)
     end
 end
 
@@ -147,26 +147,76 @@ function prettify_caption(caption)
 end
 
 """
-    pandoc_image(file, path; caption=nothing, ref=nothing)
+    pandoc_image(file, path; caption=nothing, label=nothing)
 
-Return pandoc image link.
+Return pandoc image link where label is prepended with `#fig:`.
+This path works for PDF and is fixed for html in the html post-processor.
 
 # Example
 ```jldoctest
-julia> Books.pandoc_image("example_image", "/im/example_image.png")
-"![Example image.](/im/example_image.png){#fig:example_image}"
+julia> Books.pandoc_image("example_image", "build/im/example_image.png")
+"![](build/im/example_image.png)"
 ```
 """
-function pandoc_image(file, path; caption=nothing, ref=nothing)
-    if isnothing(caption)
-        caption = prettify_caption(file)
+function pandoc_image(file, path; caption=nothing, label=nothing)
+    if isnothing(caption) && isnothing(label)
+        "![]($path)"
+    elseif isnothing(label)
+        "![$caption.]($path)"
+    elseif isnothing(caption)
+        "![]($path){#fig:$label}"
+    else
+        "![$caption.]($path){#fig:$label}"
+    end
+end
+
+"""
+    caption_label(path, caption, label)
+
+Return `caption` and `label` for the inputs.
+This method sets some reasonable defaults if any of the inputs is missing.
+
+# Examples
+```jldoctest
+julia> Books.caption_label("a/foo_bar.md", nothing, nothing)
+(caption = "Foo bar", label = "foo_bar")
+
+julia> Books.caption_label(nothing, "cap", nothing)
+(caption = "cap", label = nothing)
+
+julia> Books.caption_label(nothing, nothing, "my_label")
+(caption = "My label", label = "my_label")
+
+julia> Books.caption_label(nothing, nothing, nothing)
+(caption = nothing, label = nothing)
+```
+"""
+function caption_label(path, caption, label)
+    if isnothing(path) && isnothing(caption) && isnothing(label)
+        return (caption=nothing, label=nothing)
     end
 
-    if isnothing(ref)
-        ref = "fig:$file"
+    if !isnothing(path)
+        name = method_name(path)
+        if isnothing(label)
+            label = name
+        end
+        if isnothing(caption)
+            caption = prettify_caption(name)
+        end
+        return (caption=caption, label=label)
     end
 
-    "![$caption.]($path){#$ref}"
+    if !isnothing(label)
+        if isnothing(caption)
+            caption = prettify_caption(label)
+        end
+        return (caption=caption, label=label)
+    end
+
+    if !isnothing(caption)
+        return (caption=caption, label=label)
+    end
 end
 
 """
@@ -205,4 +255,3 @@ function doctest(s::Markdown.MD)
     content = join(lines, '\n')
     code_block(content)
 end
-

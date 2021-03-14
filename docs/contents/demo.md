@@ -69,7 +69,7 @@ Refer to @tbl:my_table with
 
 > @tbl:my_table
 
-To show multiple objects, use `outputs`:
+To show multiple objects, use `Outputs`:
 
 ```{.include}
 _generated/multiple_df_example_def.md
@@ -81,22 +81,35 @@ which will appear as
 _generated/multiple_df_example.md
 ```
 
-To add labels and captions to these tables based on the `path`, use `outputs(paths, objects)` instead of `outputs(objects)`.
+To add labels and captions to these tables based on the `path`, use `Outputs(objects; paths)` instead of `Outputs(objects)`.
 To change the labels and/or captions, see @sec:labels-captions.
 For showing multiple plots, see @sec:plots.
 
 ## Labels and captions {#sec:labels-captions}
 
-Work in progress.
+To set labels and captions, wrap your object in `Options`:
 
-A | B
---- | ---
-1 | 2
+```{.include}
+_generated/options_example_def.md
+```
 
-: {#tbl:foo}
+giving
 
-
+```{.include}
+_generated/options_example.md
+```
+which can be referred to with
+```
 @tbl:foo
+```
+> @tbl:foo
+
+It is also possible to pass only a caption or a label.
+This package will attempt to infer missing information from the `path`, `caption` or `label` when possible:
+
+```{.include}
+_generated/options_example_doctests.md
+```
 
 ## Showing code blocks {#sec:code-blocks}
 
@@ -195,7 +208,7 @@ _generated/example_plot.md
 If the output is a string instead of the output you expected, then check whether you load the related packages in time.
 For example, for this Gadfly plot, you need to load Gadfly.jl together with Books.jl for Requires.jl to work.
 
-For multiple images, use `outputs(paths, objects)`:
+For multiple images, use `Outputs(objects; paths)`:
 
 ```{.include}
 _generated/multiple_example_plots_def.md

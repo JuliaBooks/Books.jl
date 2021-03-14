@@ -49,7 +49,13 @@ sum_example() = code("""
 sum_example_definition() = code_block(@code_string sum_example())
 
 example_table() = DataFrame(A = [1, 2], B = [3, 4])
-example_table_definition() = code_block(@code_string example_table()) 
+example_table_definition() = code_block(@code_string example_table())
+
+options_example() = Options(DataFrame(A = [1], B = [2], C = [3]);
+                        caption="My DataFrame", label="foo")
+options_example_def() = code_block(@code_string options_example())
+
+options_example_doctests() = Books.doctest(@doc Books.caption_label)
 
 code_example_table() = code("""
     using DataFrames
