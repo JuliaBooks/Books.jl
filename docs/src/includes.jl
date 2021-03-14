@@ -36,7 +36,7 @@ my_table() = DataFrame(U = [1, 2], V = [:a, :b], W = [3, 4])
 my_table_def() = code_block(@code_string my_table())
 
 multiple_df_example() =
-    outputs([DataFrame(Z = [3]), DataFrame(U = [4, 5], V = [6, 7])])
+    Outputs([DataFrame(Z = [3]), DataFrame(U = [4, 5], V = [6, 7])])
 multiple_df_example_def() = code_block(@code_string multiple_df_example())
 
 sum_example() = code("""
@@ -100,6 +100,6 @@ function multiple_example_plots()
         plot(x = X, y = X),
         plot(x = X, y = X.^3)
     ]
-    outputs(paths, objects)
+    Outputs(objects; paths)
 end
 multiple_example_plots_def() = code_block(@code_string multiple_example_plots())

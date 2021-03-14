@@ -89,6 +89,15 @@ For showing multiple plots, see @sec:plots.
 
 Work in progress.
 
+A | B
+--- | ---
+1 | 2
+
+: {#tbl:foo}
+
+
+@tbl:foo
+
 ## Showing code blocks {#sec:code-blocks}
 
 Like in @sec:embedding-output, first define a method like

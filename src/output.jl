@@ -14,44 +14,38 @@ This can be disabled via `hide_module`.
 code(block::AbstractString; mod=Main, hide_module=false) =
     Code(rstrip(block), mod, hide_module)
 
-struct Outputs
-    paths::AbstractVector
-    objects::AbstractVector
-end
-
 """
-    outputs(paths::AbstractVector, ojects::AbstractVector)
+    Outputs(objects::AbstractVector; paths::AbstractVector=nothing)
 
 Define `objects` which need to be converted to Markdown.
 This is done via `convert_output(path, out::T)`, where `T` is the appropriate type.
 """
-outputs(paths::AbstractVector, objects::AbstractVector) = Outputs(paths, objects)
+struct Outputs
+    paths::AbstractVector
+    objects::AbstractVector
 
-"""
-    outputs(ojects::AbstractVector)
-
-Define `objects` which need to be converted to Markdown.
-This method is applicable to objects which can be converted to string directly.
-"""
-function outputs(objects::AbstractVector)
-    paths = fill(nothing, length(objects))
-    outputs(paths, objects)
+    function Outputs(objects::AbstractVector; paths::AbstractVector=nothing)
+        if isnothing(paths)
+            fill(nothing, length(objects))
+        end
+        new(paths, objects)
+    end
 end
 
+"""
+    Options(object;
+        caption::Union{AbstractString,Nothing}=nothing,
+        label::Union{AbstractString,Nothing}=nothing)
+
+Struct containing an `object` and some meta-information to be passed to the resulting document.
+These options are used by `pandoc-crossref`.
+"""
 struct Options
     object::Any
     caption::Union{AbstractString,Nothing}
     label::Union{AbstractString,Nothing}
-end
 
-"""
-    options(object; caption=nothing, label=nothing)
-
-Define an `Options` struct which contains an `object` and some meta-information to be passed to the resulting document.
-These options are used by `pandoc-crossref`.
-"""
-function options(object; caption=nothing, label=nothing)
-    Options(object, caption, label)
+    Options(object; caption=nothing, label=nothing) = new(object, caption, label)
 end
 
 function convert_output(path, out::Code)::String
@@ -98,6 +92,34 @@ function convert_output(path, outputs::Outputs)::String
     itr = zip(outputs.paths, outputs.objects)
     converted = [convert_output(path, obj) for (path, obj) in itr]
     join(converted, "\n\n")
+end
+
+"""
+    convert_output(path, options::Options)
+
+Convert `options.object` while taking `options.caption` and `options.label` into account.
+This method needs to pass the options correctly to the resulting type, because the syntax depends on the type;
+see the `pandoc-crossref` documentation for more information on the syntax.
+
+# Example
+```jldoctest
+julia> df = DataFrame(A = [1]);
+
+julia> caption = "My DataFrame";
+
+julia> options = Options(df; caption);
+
+julia> print(Books.convert_output(nothing, options))
+|   A |
+| ---:|
+|   1 |
+
+: My DataFrame
+```
+"""
+function convert_output(path, opts::Options)::String
+    convert_output(path, opts.object;
+        caption=opts.caption, label=opts.label)
 end
 
 """
