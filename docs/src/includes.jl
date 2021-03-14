@@ -48,7 +48,7 @@ sum_example() = code("""
 
 sum_example_definition() = code_block(@code_string sum_example())
 
-example_table() = DataFrame(A = [1, 2], B = [3, 4])
+example_table() = DataFrame(A = [1, 2], B = [3, 4], C = [5, 6])
 example_table_definition() = code_block(@code_string example_table())
 
 options_example() = Options(DataFrame(A = [1], B = [2], C = [3]);
@@ -60,7 +60,7 @@ options_example_doctests() = Books.doctest(@doc Books.caption_label)
 code_example_table() = code("""
     using DataFrames
 
-    DataFrame(A = [1, 2], B = [3, 4])
+    DataFrame(A = [1, 2], B = [3, 4], C = [5, 6])
     """)
 
 code_example_table_definition() = code_block(@code_string code_example_table())
@@ -80,12 +80,12 @@ end
 
 module_call_x() = code("x"; mod=U)
 
-module_fail() = code("DataFrame(A = [1])"; mod=U)
+module_fail() = code("DataFrame(A = [1], B = [2])"; mod=U)
 
 module_fix() = code("""
-    using DataFrames 
+    using DataFrames
 
-    DataFrame(A = [1])"""; mod=U)
+    DataFrame(A = [1], B = [2])"""; mod=U)
 
 module_example_definition() = code_block("""
     module U end
