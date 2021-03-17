@@ -7,7 +7,7 @@ end
 include_files_lua = joinpath(PROJECT_ROOT, "src", "include-files.lua")
 include_files = "--lua-filter=$include_files_lua"
 crossref = "--filter=pandoc-crossref"
-citeproc = "--filter=pandoc-citeproc"
+citeproc = "--citeproc"
 metadata_path = joinpath(GENERATED_DIR, "metadata.yml")
 metadata = "--metadata-file=$metadata_path"
 

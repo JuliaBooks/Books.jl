@@ -34,12 +34,22 @@ function fix_png_images(h::AbstractString)
 end
 
 """
-    split_html(h::AbstractString=pandoc_html())
+    split_html(h::AbstractString)
 
-Split `html` into chapters.
+Split `h` into chapters.
+
 We need this function because Pandoc needs all the files at the same time to allow for cross-references.
+
+# Example
+```jldoctest
+julia> cd(joinpath(pkgdir(Books), "docs"))
+
+julia> h = Books.pandoc_html("default");
+
+julia> head, bodies, foot = Books.split_html(h);
+```
 """
-function split_html(h::AbstractString=pandoc_html())
+function split_html(h::AbstractString)
     head_pattern = "<!-- end head -->"
     head, after_head = split(h, head_pattern)
     foot_pattern = "<!-- begin foot -->"
