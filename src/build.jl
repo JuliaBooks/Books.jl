@@ -132,4 +132,5 @@ function build_all(; project="default")
     cp(joinpath("pandoc", filename), joinpath(BUILD_DIR, filename); force=true)
     html(; project)
     pdf(; project)
+    docx(; project)
 end
