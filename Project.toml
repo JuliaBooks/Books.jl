@@ -1,7 +1,7 @@
 name = "Books"
 uuid = "939d5c6b-51ae-42e7-97ca-7564d0d4ad91"
 authors = ["Rik Huijzer <t.h.huijzer@rug.nl>"]
-version = "0.1.4"
+version = "0.2.0"
 
 [deps]
 Compose = "a81c6b42-2e10-5240-aca2-a61377ecd94b"
