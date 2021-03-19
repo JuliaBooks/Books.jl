@@ -31,12 +31,12 @@ jobs:
             ${{ runner.os }}-test-
             ${{ runner.os }}-
 
-      - name: Install Pandoc, LaTeX and other dependencies
+      - name: Install dependencies
         run: |
           julia --project -e 'using Pkg; Pkg.instantiate();
                 using Books; Books.install_dependencies()'
 
-      - name: Install BooksDocs dependencies
+      - name: Instantiate BooksDocs
         run: julia --project=docs/ -e '
           using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
 
