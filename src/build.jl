@@ -54,6 +54,7 @@ function pandoc_html(project::AbstractString)
         include_files;
         crossref;
         citeproc;
+        "--mathjax";
         csl();
         metadata;
         template;

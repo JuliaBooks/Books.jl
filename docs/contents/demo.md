@@ -9,9 +9,9 @@ See @sec:getting-started.
 
 > See @sec:getting-started.
 
-We can refer to citations such as @orwell1945animal and [@orwell1945animal] or to equations like @eq:sin.
+We can refer to citations such as @orwell1945animal and [@orwell1945animal] or to equations such as @eq:example.
 
-$$ y = sin(x) $$ {#eq:sin}
+$$ y = \frac{\sin{x}}{\cos{x}} $$ {#eq:example}
 
 ## Embedding output {#sec:embedding-output}
 
