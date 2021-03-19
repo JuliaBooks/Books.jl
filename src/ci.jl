@@ -53,11 +53,7 @@ function install_apt_packages()
     println("Installing apt packages")
 
     packages = [
-        "librsvg2-bin", # rsvg-convert
-        "make",
-        "pdf2svg",
-        "python3-pip",
-        "xz-utils" # Required by tar.
+        "python3-pip"
     ]
 
     sudo = sudo_prefix()
