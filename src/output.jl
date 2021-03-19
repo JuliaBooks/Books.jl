@@ -33,6 +33,25 @@ struct Outputs
 end
 
 """
+    ImageOptions(object; width=nothing, height=nothing)
+
+Struct containing `width` and `height` for an image.
+"""
+struct ImageOptions
+    object::Any
+    width::Any
+    height::Any
+
+    ImageOptions(object; width=nothing, height=nothing) = new(object, width, height)
+end
+
+function convert_output(path, out::ImageOptions; kwargs...)
+    width = out.width
+    height = out.height
+    convert_output(path, out.object; width, height, kwargs...)
+end
+
+"""
     Options(object;
         caption::Union{AbstractString,Nothing}=nothing,
         label::Union{AbstractString,Nothing}=nothing)

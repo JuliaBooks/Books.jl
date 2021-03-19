@@ -95,17 +95,31 @@ module_example_definition() = code_block("""
 example_plot() = code("""
     using Gadfly
 
-    X = 1:30
-    plot(x = X, y = X.^2)
+    I = 1:30
+    plot(x=I, y=I.^2)
     """)
 
 function multiple_example_plots()
     paths = ["example_plot_$i" for i in 2:3]
-    X = 1:30
+    I = 1:30
     objects = [
-        plot(x = X, y = X),
-        plot(x = X, y = X.^3)
+        plot(x=I, y=I),
+        plot(x=I, y=I.^3)
     ]
     Outputs(objects; paths)
 end
+
+function image_options_plot()
+    I = 1:0.1:30
+    p = plot(x=I, y=sin.(I), Geom.line)
+    ImageOptions(p; width=6inch, height=2inch)
+end
+image_options_plot_def() = code_block(@code_string image_options_plot())
+
+function combined_options_plot()
+    imageoptions = image_options_plot()
+    Options(imageoptions; caption="Sine function")
+end
+combined_options_plot_def() = code_block(@code_string combined_options_plot())
+
 multiple_example_plots_def() = code_block(@code_string multiple_example_plots())

@@ -1,11 +1,18 @@
 using Compose
 
-function write_svg(path, p; w=6inch, h=4inch)
-    draw(SVG(path, w, h), p)
+function write_svg(path, p, width, height)
+    if isnothing(width)
+        width = 6inch
+    end
+    if isnothing(height)
+        height = 4inch
+    end
+    draw(SVG(path, width, height), p)
 end
 
 """
     svg2png(svg_path, png_path)
+
 Unlike ImageMagick, this program gets the text spacing right.
 """
 function svg2png(svg_path, png_path)
@@ -13,7 +20,8 @@ function svg2png(svg_path, png_path)
     run(`cairosvg $svg_path -o $png_path --dpi 400`)
 end
 
-function convert_gadfly_output(path, out; caption=nothing, label=nothing)
+function convert_gadfly_output(path, out;
+        caption=nothing, label=nothing, width=nothing, height=nothing)
     im_dir = joinpath(BUILD_DIR, "im")
     mkpath(im_dir)
 
@@ -21,7 +29,7 @@ function convert_gadfly_output(path, out; caption=nothing, label=nothing)
     println("Writing plot images for $file")
     svg_filename = "$file.svg"
     svg_path = joinpath(im_dir, svg_filename)
-    write_svg(svg_path, out)
+    write_svg(svg_path, out, width, height)
     png_filename = "$file.png"
     png_path = joinpath(im_dir, png_filename)
     svg2png(svg_path, png_path)

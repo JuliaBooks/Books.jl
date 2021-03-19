@@ -220,6 +220,20 @@ Resulting in @fig:example_plot_2 and @fig:example_plot_3:
 _generated/multiple_example_plots.md
 ```
 
+For changing the size, use `ImageOptions`:
+
+```{.include}
+_generated/image_options_plot_def.md
+_generated/image_options_plot.md
+```
+
+Or, use the combination for setting captions and size
+
+```{.include}
+_generated/combined_options_plot_def.md
+_generated/combined_options_plot.md
+```
+
 ## Other notes
 
 ### Level 3 headings
