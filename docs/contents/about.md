@@ -17,13 +17,13 @@ One of the main differences with Franklin.jl, Weave.jl and knitr (Bookdown) is t
 The benefit of this is that you can spawn two separate processes, namely the one to serve your webpages:
 
 ```{.include}
-_generated/serve_example.md
+_gen/serve_example.md
 ```
 
 and the one where you do the computations for your package `Foo`:
 
 ```{.include}
-_generated/generate_example.md
+_gen/generate_example.md
 ```
 
 This way, the website remains responsive when the computations are running.

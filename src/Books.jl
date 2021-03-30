@@ -12,7 +12,7 @@ using pandoc_jll
 using pandoc_crossref_jll
 
 const PROJECT_ROOT = pkgdir(Books)
-const GENERATED_DIR = "_generated"
+const GENERATED_DIR = "_gen"
 const DEFAULTS_DIR = joinpath(PROJECT_ROOT, "defaults")
 const BUILD_DIR = "build"
 mkpath(BUILD_DIR)
@@ -30,7 +30,7 @@ include("generate.jl")
 export html, pdf, docx
 export code, Outputs, ImageOptions, Options
 export code_block
-export generate_content
+export gen
 export serve
 
 function __init__()

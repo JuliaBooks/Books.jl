@@ -41,9 +41,7 @@ Split `h` into chapters.
 We need this function because Pandoc needs all the files at the same time to allow for cross-references.
 
 # Example
-```jldoctest
-julia> cd(joinpath(pkgdir(Books), "docs"))
-
+```
 julia> h = Books.pandoc_html("default");
 
 julia> head, bodies, foot = Books.split_html(h);

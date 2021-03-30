@@ -7,19 +7,19 @@ The easiest way to get started is to
 1. serve your book via:
 
 ```{.include}
-_generated/serve_example.md
+_gen/serve_example.md
 ```
 
 To generate all the Julia output (see @sec:embedding-output for more information) use
 
 ```{.include}
-_generated/generate_example.md
+_gen/generate_example.md
 ```
 
 As the number of outputs increases, you might want to only update one output:
 
 ```{.include}
-_generated/generate_content_function_docs.md
+_gen/gen_function_docs.md
 ```
 
 To avoid code duplication between projects, this package tries to have good defaults for many settings.
@@ -39,7 +39,7 @@ The following default settings are used by Books.jl.
 You can override settings by placing a `metadata.yml` file at the root directory of your project.
 
 ```{.include}
-_generated/default_metadata.md
+_gen/default_metadata.md
 ```
 
 ## config.toml {#sec:config}
@@ -59,7 +59,7 @@ The meaning of `contents` is discussed in @sec:about_contents.
 The `pdf_filename` is used by `pdf()` and the `port` setting is used by `serve()`.
 
 ```{.include}
-_generated/default_config.md
+_gen/default_config.md
 ```
 
 ### About contents {#sec:about_contents}

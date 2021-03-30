@@ -32,9 +32,10 @@ jobs:
             ${{ runner.os }}-
 
       - name: Install dependencies
-        run: |
-          julia --project -e 'using Pkg; Pkg.instantiate();
-                using Books; Books.install_dependencies()'
+        run: julia --project -e 'using Pkg; Pkg.instantiate();
+          using Books; Books.install_dependencies()'
+
+      - uses: julia-actions/julia-runtest@latest
 
       - name: Instantiate BooksDocs
         run: julia --project=docs/ -e '

@@ -43,7 +43,7 @@ Return method name for a Markdown file.
 
 # Example
 ```jldoctest
-julia> path = "_generated/example.md";
+julia> path = "_gen/example.md";
 
 julia> Books.method_name(path)
 "example"
@@ -126,7 +126,7 @@ function evaluate_include(path, M, fail_on_error)
 end
 
 """
-    generate_content(; M=nothing, fail_on_error=false, project="default")
+    gen(; M=nothing, fail_on_error=false, project="default")
 
 Populate the files in `$(Books.GENERATED_DIR)/` by calling the required methods.
 These methods are specified by the filename and will output to that filename.
@@ -136,7 +136,7 @@ Otherwise, specify another module `M`.
 
 The module `M` is used to locate the method defined, as a string, in the `.include` via `getproperty`.
 """
-function generate_content(; M=nothing, fail_on_error=false, project="default")
+function gen(; M=nothing, fail_on_error=false, project="default")
     paths = inputs(project)
     included_paths = vcat([include_filenames(read(path, String)) for path in paths]...)
     f(path) = evaluate_include(path, M, fail_on_error)
@@ -144,7 +144,7 @@ function generate_content(; M=nothing, fail_on_error=false, project="default")
 end
 
 """
-    generate_content(f::Function; fail_on_error=false)
+    gen(f::Function; fail_on_error=false)
 
 Populate the file in $(Books.GENERATED_DIR) by calling `func`.
 This method is useful during development to quickly see the effect of updating your code.
@@ -156,11 +156,11 @@ julia> module Foo
        version() = "This book is built with Julia \$VERSION"
        end;
 
-julia> generate_content(Foo.version)
-Running version() for _generated/version.md
+julia> gen(Foo.version)
+Running version() for _gen/version.md
 ```
 """
-function generate_content(f::Function; fail_on_error=false)
+function gen(f::Function; fail_on_error=false)
     path = joinpath(GENERATED_DIR, "$f.md")
     evaluate_and_write(f, path)
 end
