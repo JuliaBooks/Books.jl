@@ -10,15 +10,15 @@ serve_example() = code_block(raw"""
 generate_example() = code_block(raw"""
     $ julia --project -e  'using Books; using Foo; M = Foo'
 
-    julia> Books.generate_content(; M)
-    Running example() for _generated/example.md
-    Running julia_version() for _generated/julia_version.md
-    Running example_plot() for _generated/example_plot.md
+    julia> Books.gen(; M)
+    Running example() for _gen/example.md
+    Running julia_version() for _gen/julia_version.md
+    Running example_plot() for _gen/example_plot.md
     Writing plot images for example_plot
     [...]
     """)
 
-generate_content_function_docs() = Books.doctest(@doc generate_content(::Function))
+gen_function_docs() = Books.doctest(@doc gen(::Function))
 
 function default_metadata()
     path = joinpath(Books.DEFAULTS_DIR, "metadata.yml")

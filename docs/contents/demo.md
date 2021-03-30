@@ -21,7 +21,7 @@ For example, generate a Markdown file `sum.md` with Julia and include it with
 
 <pre>
 ```{.include}
-_generated/julia_version.md
+_gen/julia_version.md
 ```
 </pre>
 
@@ -30,11 +30,11 @@ Then, in your package, define the method `julia_version`:
 julia_version() = "This book is built with Julia $VERSION."
 ```
 
-Next, ensure that you call `Books.generate_content(; M = Foo)`, where `Foo` is the name of your module.
+Next, ensure that you call `Books.gen(; M = Foo)`, where `Foo` is the name of your module.
 This will place the text
 
 ```{.include}
-_generated/julia_version_example.md
+_gen/julia_version_example.md
 ```
 
 at the aforementioned path so that it can be included by Pandoc.
@@ -44,21 +44,21 @@ Of these evaluated methods, the output is passed through `convert_output(path, o
 To show this, we define a method
 
 ```{.include}
-_generated/my_table_def.md
+_gen/my_table_def.md
 ```
 
 and add its output to the Markdown file with
 
 <pre>
 ```{.include}
-_generated/my_table.md
+_gen/my_table.md
 ```
 </pre>
 
 Then, it will show as
 
 ```{.include}
-_generated/my_table.md
+_gen/my_table.md
 ```
 
 where the caption and the label are inferred from the `path`.
@@ -72,13 +72,13 @@ Refer to @tbl:my_table with
 To show multiple objects, use `Outputs`:
 
 ```{.include}
-_generated/multiple_df_example_def.md
+_gen/multiple_df_example_def.md
 ```
 
 which will appear as
 
 ```{.include}
-_generated/multiple_df_example.md
+_gen/multiple_df_example.md
 ```
 
 To add labels and captions to these tables based on the `path`, use `Outputs(objects; paths)` instead of `Outputs(objects)`.
@@ -90,13 +90,13 @@ For showing multiple plots, see @sec:plots.
 To set labels and captions, wrap your object in `Options`:
 
 ```{.include}
-_generated/options_example_def.md
+_gen/options_example_def.md
 ```
 
 giving
 
 ```{.include}
-_generated/options_example.md
+_gen/options_example.md
 ```
 which can be referred to with
 ```
@@ -108,7 +108,7 @@ It is also possible to pass only a caption or a label.
 This package will attempt to infer missing information from the `path`, `caption` or `label` when possible:
 
 ```{.include}
-_generated/options_example_doctests.md
+_gen/options_example_doctests.md
 ```
 
 ## Showing code blocks {#sec:code-blocks}
@@ -116,21 +116,21 @@ _generated/options_example_doctests.md
 Like in @sec:embedding-output, first define a method like
 
 ```{.include}
-_generated/sum_example_definition.md
+_gen/sum_example_definition.md
 ```
 
 Then, add this method via
 
 <pre>
 ```{.include}
-_generated/sum_example.md
+_gen/sum_example.md
 ```
 </pre>
 
 which gives as output
 
 ```{.include}
-_generated/sum_example.md
+_gen/sum_example.md
 ```
 
 Here, how the output should be handled is based on the output type of the function.
@@ -138,25 +138,25 @@ In this case, the output type is of type `Code`.
 Methods for other outputs exist too:
 
 ```{.include}
-_generated/example_table_definition.md
+_gen/example_table_definition.md
 ```
 
 shows
 
 ```{.include}
-_generated/example_table.md
+_gen/example_table.md
 ```
 
 Alternatively, we can show the same by creating something of type `Code`.
 
 ```{.include}
-_generated/code_example_table_definition.md
+_gen/code_example_table_definition.md
 ```
 
 which shows as
 
 ```{.include}
-_generated/code_example_table.md
+_gen/code_example_table.md
 ```
 
 because the output of the code block is of type DataFrame.
@@ -166,31 +166,31 @@ Instead, this package calls functions and gives you the freedom to decide what t
 As an example, we can pass `Module` objects to `code` to evaluate the code block in a specific module.
 
 ```{.include}
-_generated/module_example_definition.md
+_gen/module_example_definition.md
 ```
 
 When calling `module_example`, it shows as
 
 ```{.include}
-_generated/module_example.md
+_gen/module_example.md
 ```
 
 Similarily, we can get the value of x:
 
 ```{.include}
-_generated/module_call_x.md
+_gen/module_call_x.md
 ```
 
 Unsuprisingly, creating a DataFrame will now fail because we haven't loaded DataFrames
 
 ```{.include}
-_generated/module_fail.md
+_gen/module_fail.md
 ```
 
 Which is easy to fix
 
 ```{.include}
-_generated/module_fix.md
+_gen/module_fix.md
 ```
 
 ## Plots {#sec:plots}
@@ -202,7 +202,7 @@ I found that this tool does the best conversions without relying on Cairo.jl.
 (Cairo.jl doesn't work for me on NixOS.)
 
 ```{.include}
-_generated/example_plot.md
+_gen/example_plot.md
 ```
 
 If the output is a string instead of the output you expected, then check whether you load the related packages in time.
@@ -211,27 +211,27 @@ For example, for this Gadfly plot, you need to load Gadfly.jl together with Book
 For multiple images, use `Outputs(objects; paths)`:
 
 ```{.include}
-_generated/multiple_example_plots_def.md
+_gen/multiple_example_plots_def.md
 ```
 
 Resulting in @fig:example_plot_2 and @fig:example_plot_3:
 
 ```{.include}
-_generated/multiple_example_plots.md
+_gen/multiple_example_plots.md
 ```
 
 For changing the size, use `ImageOptions`:
 
 ```{.include}
-_generated/image_options_plot_def.md
-_generated/image_options_plot.md
+_gen/image_options_plot_def.md
+_gen/image_options_plot.md
 ```
 
 Or, use the combination for setting captions and size
 
 ```{.include}
-_generated/combined_options_plot_def.md
-_generated/combined_options_plot.md
+_gen/combined_options_plot_def.md
+_gen/combined_options_plot.md
 ```
 
 ## Other notes
