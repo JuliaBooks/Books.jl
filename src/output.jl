@@ -200,6 +200,9 @@ This method sets some reasonable defaults if any of the inputs is missing.
 julia> Books.caption_label("a/foo_bar.md", nothing, nothing)
 (caption = "Foo bar", label = "foo_bar")
 
+julia> Books.caption_label("a/foo_bar.md", "My caption", nothing)
+(caption = "My caption", label = "foo_bar")
+
 julia> Books.caption_label(nothing, "cap", nothing)
 (caption = "cap", label = nothing)
 
