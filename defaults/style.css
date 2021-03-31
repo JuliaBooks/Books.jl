@@ -289,16 +289,6 @@ dd:last-child {
   margin-bottom: 0;
 }
 
-img {
-  border: 0;
-  display: block;
-  text-align: center;
-  margin: 0 auto;
-  -ms-interpolation-mode: bicubic;
-  vertical-align: middle;
-}
-
-
 figure {
   display: block;
   text-align: center;
@@ -307,8 +297,10 @@ figure {
 
 figure img {
   border: none;
-  margin: 0 auto;
+  /* For detailed images, we need the full width. */
+  width: 100%;
 }
+
 
 figcaption {
   font-size: 0.8em;

@@ -138,6 +138,9 @@ The module `M` is used to locate the method defined, as a string, in the `.inclu
 """
 function gen(; M=nothing, fail_on_error=false, project="default")
     paths = inputs(project)
+    if !isfile(first(paths))
+        error("Couldn't find input file. Is there a valid project in your current working directory?")
+    end
     included_paths = vcat([include_filenames(read(path, String)) for path in paths]...)
     f(path) = evaluate_include(path, M, fail_on_error)
     foreach(f, included_paths)
