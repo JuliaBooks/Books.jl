@@ -35,7 +35,7 @@ jobs:
         run: julia --project -e 'using Pkg; Pkg.instantiate();
           using Books; Books.install_dependencies()'
 
-      - uses: julia-actions/julia-runtest@latest
+      - uses: julia-actions/julia-runtest@v1
 
       - name: Instantiate BooksDocs
         run: julia --project=docs/ -e '
