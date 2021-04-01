@@ -12,4 +12,4 @@ Latexify = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
 
 [compat]
 CodeTracking = "1.0"
-Latexify = "0.14"
+Latexify = "0.15"
