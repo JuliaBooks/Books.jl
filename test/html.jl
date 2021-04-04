@@ -48,4 +48,8 @@
 
     names = B.html_page_names(bodies)
     @test names == ["welcome", "getting-started", "something", "embedding-code"]
+
+    text = "<h1 data-number=\"1\" id=\"前言\"><span class=\"header-section-number\">1</span> 前言</h1>"
+    tuples = B.section_infos(text)
+    @test tuples[1] == (num = "1", id = "前言", text = "前言")
 end
