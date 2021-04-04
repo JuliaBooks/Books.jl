@@ -68,7 +68,7 @@ function section_infos(text)
         if !isnothing(m)
             number, id = m.captures 
             line_end = split(line, '>')[end-1]
-            text = line_end[2:end-4]
+            text = line_end[nextind(line_end, 0, 2):prevind(line_end, end, 4)]
             tuple = (num = number, id = id, text = lstrip(text))
             push!(tuples, tuple)
         end
@@ -76,7 +76,7 @@ function section_infos(text)
         if !isnothing(m)
             id = m.captures[1]
             interesting_region = split(line, '>')[end-1]
-            text = interesting_region[1:end-4]
+            text = interesting_region[nextind(interesting_region, 0, 1):prevind(interesting_region, end, 4)]
             tuple = (num = "", id = id, text = lstrip(text))
             push!(tuples, tuple)
         end
