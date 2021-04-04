@@ -76,10 +76,11 @@ Read user `config.toml` and `$DEFAULTS_DIR/config.toml` and combine the informat
 julia> cd(joinpath(pkgdir(Books), "docs"))
 
 julia> Books.config("default")
-Dict{String, Any} with 3 entries:
-  "port"            => 8010
-  "contents"        => ["about", "getting-started", "demo", "references"]
-  "output_filename" => "books"
+Dict{String, Any} with 4 entries:
+  "port"              => 8010
+  "contents"          => ["about", "getting-started", "demo", "references"]
+  "output_filename"   => "books"
+  "online_url_prefix" => "Books.jl"
 ```
 """
 function config(project::AbstractString)

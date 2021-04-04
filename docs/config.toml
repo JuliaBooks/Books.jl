@@ -8,3 +8,6 @@
     "references"
   ]
   output_filename = "books"
+
+  # Prefix for GitHub Pages links.
+  online_url_prefix = "Books.jl"

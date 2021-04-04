@@ -19,15 +19,15 @@ mkpath(BUILD_DIR)
 
 include("html.jl")
 include("defaults.jl")
+include("ci.jl")
 include("build.jl")
 include("serve.jl")
-include("ci.jl")
 include("output.jl")
 include("outputs/compose.jl")
 include("outputs/dataframes.jl")
 include("generate.jl")
 
-export html, pdf, docx
+export html, pdf, docx, build_all
 export code, Outputs, ImageOptions, Options
 export code_block
 export gen

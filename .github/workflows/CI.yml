@@ -51,6 +51,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          cname: books.huijzer.xyz
           force_orphan: true
           publish_dir: ./docs/build/

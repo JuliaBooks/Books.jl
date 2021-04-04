@@ -11,6 +11,9 @@
   # Output pdf or docx filename.
   output_filename = "analysis"
 
+  # Prefix for GitHub or GitLab Pages.
+  online_url_prefix = ""
+
   # Port used by serve().
   port = 8010
 
