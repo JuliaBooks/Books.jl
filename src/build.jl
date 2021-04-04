@@ -39,7 +39,7 @@ function call_pandoc(args)
     end
 end
 
-function pandoc_html(project::AbstractString)
+function pandoc_html(project::AbstractString, url_prefix)
     html_template_path = pandoc_file("template.html")
     template = "--template=$html_template_path"
     output_filename = joinpath(BUILD_DIR, "index.html")
@@ -55,6 +55,7 @@ function pandoc_html(project::AbstractString)
         crossref;
         citeproc;
         "--mathjax";
+        "--metadata=url-prefix:$url_prefix";
         csl();
         metadata;
         template;
@@ -66,8 +67,9 @@ function pandoc_html(project::AbstractString)
 end
 
 function html(; project="default")
+    url_prefix = is_ci() ? '/' * config(project)["online_url_prefix"] : ""
     C = config(project)["contents"]
-    write_html_pages(C, pandoc_html(project))
+    write_html_pages(url_prefix, C, pandoc_html(project, url_prefix))
 end
 
 function pdf(; project="default")

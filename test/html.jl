@@ -6,7 +6,8 @@
         and
         <img src="build/im/bar.png" alt="bar" />
         """
-    @test B.fix_png_images(s) == """
+    url_prefix = ""
+    @test B.fix_image_urls(s, url_prefix) == """
         <img src="/im/example.svg" alt="example" />
         and
         <img src="/im/bar.svg" alt="bar" />

@@ -13,24 +13,26 @@ function split_keepdelim(str::AbstractString, dlm::Regex)
 end
 
 """
-    fix_png_image(h::AbstractString)
+    fix_png_image(h::AbstractString, url_prefix)
 
 Fix a single html image string.
 """
-function fix_png_image(h::AbstractString)
-    h = replace(h, "\"build/" => "\"/")
+function fix_png_image(h::AbstractString, url_prefix)
+    h = replace(h, "\"build/" => "\"$(url_prefix)/")
     h = replace(h, ".png\"" => ".svg\"")
 end
 
 """
-    fix_png_images(h::AbstractString)
+    fix_image_urls(h::AbstractString, url_prefix)
 
 Change all the PNG images to SVG.
 This is neccessary, because LaTeX doesn't accept SVG images.
+Also, add the `url_prefix`.
 """
-function fix_png_images(h::AbstractString)
+function fix_image_urls(h::AbstractString, url_prefix)
     html_image_src = r"""img src="build\/im\/[^\.]*\.png" """
-    replace(h, html_image_src => fix_png_image)
+    fix_png_image_partial(h::AbstractString) = fix_png_image(h, url_prefix)
+    replace(h, html_image_src => fix_png_image_partial)
 end
 
 """
@@ -165,10 +167,10 @@ end
 function html_pages(chs=chapters(), h=pandoc_html())
     head, menu, bodies, foot = add_menu(split_html(h))
     create_page(body) = """
-    $head 
+    $head
     <div class="books-outside">
-    $menu 
-    <div class="books-content"> 
+    $menu
+    <div class="books-content">
     $body $foot
     </div>
     </div>
@@ -201,20 +203,20 @@ function map_ids(names, pages)
     mapping
 end
 
-function fix_links(names, pages)
+function fix_links(names, pages, url_prefix)
     mapping = map_ids(names, pages)
     rx = r"href=\"([^\"]*)\""
     uncapture(capture) = "href=\"$capture\""
     updated_pages = []
     function fix_page(name, page)
-        function replace_match(s) 
+        function replace_match(s)
             capture = first(match(rx, s).captures)
             if startswith(capture, "#sec:")
                 page_link = mapping[capture]
-                return uncapture("/$page_link.html$capture")
+                return uncapture("$url_prefix/$page_link.html$capture")
             elseif startswith(capture, "#ref-")
                 page_link = "references"
-                return uncapture("/$page_link.html$capture")
+                return uncapture("$url_prefix/$page_link.html$capture")
             else
                 return uncapture(capture)
             end
@@ -227,9 +229,9 @@ function fix_links(names, pages)
     (names, fixed_pages)
 end
 
-function write_html_pages(chs=chapters(), h=pandoc_html())
-    h = fix_png_images(h)
-    names, pages = fix_links(html_pages(chs, h)...)
+function write_html_pages(url_prefix, chs=chapters(), h=pandoc_html())
+    h = fix_image_urls(h, url_prefix)
+    names, pages = fix_links(html_pages(chs, h)..., url_prefix)
     for (i, (name, page)) in enumerate(zip(names, pages))
         name = i == 1 ? "index" : name
         path = joinpath(BUILD_DIR, "$name.html")
