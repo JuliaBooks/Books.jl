@@ -30,7 +30,7 @@ Then, in your package, define the method `julia_version()`:
 julia_version() = "This book is built with Julia $VERSION."
 ```
 
-Next, ensure that you call `Books.gen(; M = Foo)`, where `Foo` is the name of your module.
+Next, ensure that you call `using Books; gen(; M = Foo)`, where `Foo` is the name of your module.
 This will place the text
 
 ```{.include}
@@ -39,12 +39,25 @@ _gen/julia_version_example.md
 
 at the aforementioned path so that it can be included by Pandoc.
 Note that it doesn't matter where you define the function `julia_version`, as long as it is in your module.
+Also, to save yourself some typing, you can start Julia with
+
+```
+$ julia --project -ie 'using Books; using Foo; M = Foo'
+```
+
+which allows you to generate all the content by calling
+
+```
+julia> gen(; M)
+```
+
+as well as being able to quickly restart Julia after you have updated some constants such as structs.
 
 Of these evaluated methods, the output is passed through `convert_output(path, out::T)` where `T` can, for example, be a DataFrame.
 To show this, we define a method
 
 ```{.include}
-_gen/my_table_def.md
+_gen/my_table-sc.md
 ```
 
 and add its output to the Markdown file with
@@ -72,7 +85,7 @@ Refer to @tbl:my_table with
 To show multiple objects, use `Outputs`:
 
 ```{.include}
-_gen/multiple_df_example_def.md
+_gen/multiple_df_example-sc.md
 ```
 
 which will appear as
@@ -90,15 +103,11 @@ For showing multiple plots, see @sec:plots.
 To set labels and captions, wrap your object in `Options`:
 
 ```{.include}
-_gen/options_example_def.md
+_gen/options_example-sco.md
 ```
 
-giving
-
-```{.include}
-_gen/options_example.md
-```
 which can be referred to with
+
 ```
 @tbl:foo
 ```
@@ -153,10 +162,10 @@ shows
 _gen/example_table.md
 ```
 
-Alternatively, we can show the same by creating something of type `Code`.
+Alternatively, we can show the same by creating something of type `Code`:
 
 ```{.include}
-_gen/code_example_table_definition.md
+_gen/code_example_table-sc.md
 ```
 
 which shows as
@@ -200,7 +209,6 @@ _gen/module_fix.md
 ```
 
 ## Code blocks from functions {#sec:code_blocks_functions}
-
 
 So, instead of passing a string which `Books.jl` will evaluate, `Books.jl` can also obtain the code for a method directly.
 (Thanks to `CodeTracking.@code_string`.)
@@ -247,7 +255,7 @@ I found that this tool does the best conversions without relying on Cairo.jl.
 (Cairo.jl doesn't work for me on NixOS.)
 
 ```{.include}
-_gen/example_plot.md
+_gen/example_plot-sco.md
 ```
 
 If the output is a string instead of the output you expected, then check whether you load the related packages in time.
@@ -256,7 +264,7 @@ For example, for this Gadfly plot, you need to load Gadfly.jl together with Book
 For multiple images, use `Outputs(objects; paths)`:
 
 ```{.include}
-_gen/multiple_example_plots_def.md
+_gen/multiple_example_plots-sc.md
 ```
 
 Resulting in @fig:example_plot_2 and @fig:example_plot_3:
@@ -268,8 +276,7 @@ _gen/multiple_example_plots.md
 For changing the size, use `ImageOptions`:
 
 ```{.include}
-_gen/image_options_plot-sc.md
-_gen/image_options_plot.md
+_gen/image_options_plot-sco.md
 ```
 
 Or, use the combination for setting captions and size

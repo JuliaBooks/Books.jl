@@ -33,11 +33,9 @@ function default_config()
 end
 
 my_table() = DataFrame(U = [1, 2], V = [:a, :b], W = [3, 4])
-my_table_def() = code_block(@code_string my_table())
 
 multiple_df_example() =
     Outputs([DataFrame(Z = [3]), DataFrame(U = [4, 5], V = [6, 7])])
-multiple_df_example_def() = code_block(@code_string multiple_df_example())
 
 sum_example() = code("""
     a = 3
@@ -57,7 +55,6 @@ end
 
 options_example() = Options(DataFrame(A = [1], B = [2], C = [3]);
                         caption="My DataFrame", label="foo")
-options_example_def() = code_block(@code_string options_example())
 
 options_example_doctests() = Books.doctest(@doc Books.caption_label)
 
@@ -66,8 +63,6 @@ code_example_table() = code("""
 
     DataFrame(A = [1, 2], B = [3, 4], C = [5, 6])
     """)
-
-code_example_table_definition() = code_block(@code_string code_example_table())
 
 julia_version() = "This method is defined to work around a bug in the regex."
 
@@ -96,12 +91,10 @@ module_example_definition() = code_block("""
     $(@code_string module_example())
     """)
 
-example_plot() = code("""
-    using Gadfly
-
+function example_plot()
     I = 1:30
-    plot(x=I, y=I.^2)
-    """)
+    Gadfly.plot(x=I, y=I.^2)
+end
 
 function multiple_example_plots()
     paths = ["example_plot_$i" for i in 2:3]
@@ -118,12 +111,8 @@ function image_options_plot()
     p = plot(x=I, y=sin.(I), Geom.line)
     ImageOptions(p; width=6inch, height=2inch)
 end
-image_options_plot_def() = @sc image_options_plot()
 
 function combined_options_plot()
     imageoptions = image_options_plot()
     Options(imageoptions; caption="Sine function")
 end
-combined_options_plot_def() = code_block(@code_string combined_options_plot())
-
-multiple_example_plots_def() = code_block(@code_string multiple_example_plots())

@@ -29,8 +29,8 @@ See the documentation or tests for examples.
 """
 macro sco(f)
     esc(quote
-        code = @sc f
-        CodeAndFunction(code, f)
+        code = @sc $(f)
+        CodeAndFunction(code, $(f))
     end)
 end
 
