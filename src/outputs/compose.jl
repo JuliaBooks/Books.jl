@@ -38,6 +38,6 @@ function convert_gadfly_output(path, out;
     pandoc_image(file, png_path; caption, label)
 end
 
-function convert_output(path, out::Compose.Context)
-    convert_gadfly_output(path, out)
+function convert_output(path, out::Compose.Context; kwargs...)
+    convert_gadfly_output(path, out; kwargs...)
 end
