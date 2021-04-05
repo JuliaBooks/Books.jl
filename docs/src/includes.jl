@@ -51,6 +51,10 @@ sum_example_definition() = code_block(@code_string sum_example())
 example_table() = DataFrame(A = [1, 2], B = [3, 4], C = [5, 6])
 example_table_definition() = code_block(@code_string example_table())
 
+function another_example_table()
+    DataFrame(A = [1, 2], B = [3, 4], C = [5, 6])
+end
+
 options_example() = Options(DataFrame(A = [1], B = [2], C = [3]);
                         caption="My DataFrame", label="foo")
 options_example_def() = code_block(@code_string options_example())

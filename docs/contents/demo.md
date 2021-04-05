@@ -25,7 +25,7 @@ _gen/julia_version.md
 ```
 </pre>
 
-Then, in your package, define the method `julia_version`:
+Then, in your package, define the method `julia_version()`:
 ```
 julia_version() = "This book is built with Julia $VERSION."
 ```
@@ -111,7 +111,13 @@ This package will attempt to infer missing information from the `path`, `caption
 _gen/options_example_doctests.md
 ```
 
-## Showing code blocks {#sec:code-blocks}
+## Code blocks from strings {#sec:code_blocks_strings}
+
+There are two ways to show code blocks.
+One way is by passing your code as a string.
+This is how similar packages work.
+However, with `Books.jl`, the aim is to work with functions and *not* with code as strings as discussed in @sec:about.
+See @sec:code_blocks_functions for a better way for showing code blocks.
 
 Like in @sec:embedding-output, first define a method like
 
@@ -191,6 +197,45 @@ Which is easy to fix
 
 ```{.include}
 _gen/module_fix.md
+```
+
+## Code blocks from functions {#sec:code_blocks_functions}
+
+
+So, instead of passing a string which `Books.jl` will evaluate, `Books.jl` can also obtain the code for a method directly.
+(Thanks to `CodeTracking.@code_string`.)
+For example, we can define the following method:
+
+```{.include}
+_gen/another_example_table-sc.md
+```
+
+and call it by adding the `-sco` (source code and output) suffix to the path:
+
+<pre>
+```{.include}
+_gen/another_example_table-sco.md
+```
+</pre>
+
+This gives
+
+```{.include}
+_gen/another_example_table-sco.md
+```
+
+To only show the source code, use the `-sc` suffix:
+
+<pre>
+```{.include}
+_gen/another_example_table-sc.md
+```
+</pre>
+
+giving
+
+```{.include}
+_gen/another_example_table-sc.md
 ```
 
 ## Plots {#sec:plots}
