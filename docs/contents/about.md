@@ -36,3 +36,7 @@ This means that you don't have to define all your dependencies in a `@setup` (Do
 (Granted, you could work your way around it by only calling methods inside a package.)
 The dependencies, such as `using DataFrames`, are available from your package.
 This provides all the benefits which Julia packages normally have, such as unit testing and live reloading via Revise.jl.
+
+As another benefit, all the code which you show in a book can be used via the function name.
+So, this avoids names as "J3" and "J4", and allows users to load the code from your package and call the functions themselves.
+This could save the reader from copy and pasting code.
