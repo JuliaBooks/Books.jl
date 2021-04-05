@@ -39,23 +39,38 @@ end
 """
     method_name(path::AbstractString)
 
-Return method name for a Markdown file.
+Return method name and suffix for a Markdown file.
+Here, the suffix is used to allow users to specify that, for example, `@sc` has to be called on the method.
 
 # Example
 ```jldoctest
-julia> path = "_gen/example.md";
+julia> path = "_gen/foo_bar.md";
 
 julia> Books.method_name(path)
-"example"
+("foo_bar", "")
+
+julia> path = "_gen/foo_bar-sc.md";
+
+julia> Books.method_name(path)
+("foo_bar", "sc")
 ```
 """
 function method_name(path::AbstractString)
-    name, _ = splitext(basename(path))
-    name
+    name, extension = splitext(basename(path))
+    suffix = ""
+    if contains(name, '-')
+        parts = split(name, '-')
+        if length(parts) != 2
+            error("Path name is expected to contain at most one - (minus)")
+        end
+        name = parts[1]
+        suffix = parts[2]
+    end
+    (name, suffix)
 end
 
 """
-    evaluate_and_write(f::Function, path)
+    evaluate_and_write(f::Function, path, suffix::AbstractString)
 
 Evaluates `f`, converts the output writes the output to `path`.
 Some output conversions will also write to other files, which the file at `path` links to.
@@ -70,7 +85,7 @@ example_table (generic function with 1 method)
 
 julia> path = joinpath(tempdir(), "example.md");
 
-julia> Books.evaluate_and_write(example_table, path)
+julia> Books.evaluate_and_write(example_table, path, "")
 Running example_table() for /tmp/example.md
 
 julia> print(read(path, String))
@@ -82,18 +97,22 @@ julia> print(read(path, String))
 : Example {#tbl:example}
 ```
 """
-function evaluate_and_write(f::Function, path)
+function evaluate_and_write(f::Function, path, suffix::AbstractString)
     println("Running $(f)() for $path")
-    out = f()
+    out =
+        suffix == "sc" ? @sc(f) :
+        suffix == "sco" ? @sco(f) :
+        f()
     out = convert_output(path, out)
     write(path, out)
     nothing
 end
 
-function evaluate_and_write(method_name, M::Module, path)
-    println("Running $(method_name)() for $path")
-    f = getproperty(M, Symbol(method_name))
-    evaluate_and_write(f, path)
+function evaluate_and_write(M::Module, path)
+    method, suffix = method_name(path)
+    println("Running $(method)() for $path")
+    f = getproperty(M, Symbol(method))
+    evaluate_and_write(f, path, suffix)
 end
 
 """
@@ -106,16 +125,15 @@ function evaluate_include(path, M, fail_on_error)
         println("Not running code for $path")
         return nothing
     end
-    method = method_name(path)
     if isnothing(M)
         M = caller_module()
     end
     mkpath(dirname(path))
     if fail_on_error
-        evaluate_and_write(method, M, path)
+        evaluate_and_write(M, path)
     else
         try
-            evaluate_and_write(method, M, path)
+            evaluate_and_write(M, path)
         catch e
             @error """
             Failed to run code for $path:
@@ -165,5 +183,6 @@ Running version() for _gen/version.md
 """
 function gen(f::Function; fail_on_error=false)
     path = joinpath(GENERATED_DIR, "$f.md")
-    evaluate_and_write(f, path)
+    suffix = ""
+    evaluate_and_write(f, path, suffix)
 end

@@ -26,8 +26,6 @@ using DataFrames
     """
     @test B.include_filenames(include_text) == paths
 
-    @test B.method_name(joinpath(dir, "foo.md")) == "foo"
-
     @test contains(B.convert_output(nothing, DataFrame(A = [1])), "---")
 
     mktemp() do path, io
