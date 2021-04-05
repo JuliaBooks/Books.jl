@@ -230,8 +230,7 @@ _gen/image_options_plot.md
 Or, use the combination for setting captions and size
 
 ```{.include}
-_gen/combined_options_plot_def.md
-_gen/combined_options_plot.md
+_gen/combined_options_plot-sco.md
 ```
 
 ## Other notes
