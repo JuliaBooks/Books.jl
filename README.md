@@ -28,4 +28,4 @@ julia> using Books
 julia> pdf()
 ```
 
-For more information, see the [documentation](https://books.huijzer.xyz).
+For more information, see the [documentation](https://rikhuijzer.github.io/Books.jl/).
