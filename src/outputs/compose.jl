@@ -25,7 +25,7 @@ function convert_gadfly_output(path, out;
     im_dir = joinpath(BUILD_DIR, "im")
     mkpath(im_dir)
 
-    file = method_name(path)
+    file, _ = method_name(path)
     println("Writing plot images for $file")
     svg_filename = "$file.svg"
     svg_path = joinpath(im_dir, svg_filename)

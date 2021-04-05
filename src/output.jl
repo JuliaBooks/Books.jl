@@ -219,7 +219,7 @@ function caption_label(path, caption, label)
     end
 
     if !isnothing(path)
-        name = method_name(path)
+        name, suffix = method_name(path)
         if isnothing(label)
             label = name
         end
