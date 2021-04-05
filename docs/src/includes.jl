@@ -114,7 +114,7 @@ function image_options_plot()
     p = plot(x=I, y=sin.(I), Geom.line)
     ImageOptions(p; width=6inch, height=2inch)
 end
-image_options_plot_def() = code_block(@code_string image_options_plot())
+image_options_plot_def() = @sc image_options_plot()
 
 function combined_options_plot()
     imageoptions = image_options_plot()

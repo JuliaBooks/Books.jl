@@ -99,7 +99,9 @@ julia> print(read(path, String))
 """
 function evaluate_and_write(f::Function, path, suffix::AbstractString)
     println("Running $(f)() for $path")
-    out = f()
+    out =
+        suffix == "sc" ? @sc(f()) :
+        f()
     out = convert_output(path, out)
     write(path, out)
     nothing

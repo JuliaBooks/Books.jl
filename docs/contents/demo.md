@@ -223,7 +223,7 @@ _gen/multiple_example_plots.md
 For changing the size, use `ImageOptions`:
 
 ```{.include}
-_gen/image_options_plot_def.md
+_gen/image_options_plot-sc.md
 _gen/image_options_plot.md
 ```
 
