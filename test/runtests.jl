@@ -14,4 +14,5 @@ doctest(Books)
 
 include("output.jl")
 include("html.jl")
+include("showcode.jl")
 include("generate.jl")

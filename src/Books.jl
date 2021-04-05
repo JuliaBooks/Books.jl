@@ -1,5 +1,6 @@
 module Books
 
+import CodeTracking
 import LiveServer
 import Markdown
 import Tectonic
@@ -25,11 +26,13 @@ include("serve.jl")
 include("output.jl")
 include("outputs/compose.jl")
 include("outputs/dataframes.jl")
+include("showcode.jl")
 include("generate.jl")
 
 export html, pdf, docx, build_all
 export code, Outputs, ImageOptions, Options
 export code_block
+export @sc
 export gen
 export serve
 
