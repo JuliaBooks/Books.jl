@@ -1,7 +1,9 @@
 ignored_folders = [
     "build",
     ".git",
-    ".github"
+    ".github",
+    # This would trigger too often when calling `gen(; M)` on a large project.
+    "_gen"
 ]
 
 function ignore(path)::Bool

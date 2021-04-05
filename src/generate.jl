@@ -151,10 +151,11 @@ These methods are specified by the filename and will output to that filename.
 This allows the user to easily link code blocks to code.
 The methods are assumed to be in the module `M` of the caller.
 Otherwise, specify another module `M`.
+After calling the methods, this method will also call `html()` to update the site when `call_html=true`.
 
 The module `M` is used to locate the method defined, as a string, in the `.include` via `getproperty`.
 """
-function gen(; M=nothing, fail_on_error=false, project="default")
+function gen(; M=nothing, fail_on_error=false, project="default", call_html=true)
     paths = inputs(project)
     if !isfile(first(paths))
         error("Couldn't find input file. Is there a valid project in your current working directory?")
@@ -162,14 +163,19 @@ function gen(; M=nothing, fail_on_error=false, project="default")
     included_paths = vcat([include_filenames(read(path, String)) for path in paths]...)
     f(path) = evaluate_include(path, M, fail_on_error)
     foreach(f, included_paths)
+    if call_html
+        println("Updating html")
+        html(; project)
+    end
 end
 
 """
-    gen(f::Function; fail_on_error=false)
+    gen(f::Function; fail_on_error=false, project="default", call_html=true)
 
 Populate the file in $(Books.GENERATED_DIR) by calling `func`.
 This method is useful during development to quickly see the effect of updating your code.
 Use with Revise.jl and optionally `Revise.entr`.
+After calling `f`, this method will also call `html()` to update the site when `call_html=true`.
 
 # Example
 ```jldoctest
@@ -181,8 +187,12 @@ julia> gen(Foo.version)
 Running version() for _gen/version.md
 ```
 """
-function gen(f::Function; fail_on_error=false)
+function gen(f::Function; fail_on_error=false, project="default", call_html=true)
     path = joinpath(GENERATED_DIR, "$f.md")
     suffix = ""
     evaluate_and_write(f, path, suffix)
+    if call_html
+        println("Updating html")
+        html(; project)
+    end
 end
