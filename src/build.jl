@@ -66,8 +66,29 @@ function pandoc_html(project::AbstractString, url_prefix)
     out
 end
 
+"""
+    ci_url_prefix(project)
+
+Return the url prefix when `is_ci() == true`.
+
+# Example
+```jldoctest
+julia> cd(pkdir(Books)); Books.ci_url_prefix("default")
+""
+
+julia> cd("docs"); Books.ci_url_prefix("default")
+"/Books.jl"
+"""
+function ci_url_prefix(project)
+    user_setting = config(project)["online_url_prefix"]
+    if user_setting != ""
+        user_setting = '/' * user_setting
+    end
+    user_setting
+end
+
 function html(; project="default")
-    url_prefix = is_ci() ? '/' * config(project)["online_url_prefix"] : ""
+    url_prefix = is_ci() ? ci_url_prefix(project) : ""
     C = config(project)["contents"]
     write_html_pages(url_prefix, C, pandoc_html(project, url_prefix))
 end
