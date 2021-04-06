@@ -9,6 +9,7 @@ DocMeta.setdocmeta!(
   :DocTestSetup,
   :(using Books;
     cd(joinpath(pkgdir(Books), "docs"));
+    mkpath(Books.GENERATED_DIR);
     using DataFrames);
   recursive=true
 )
