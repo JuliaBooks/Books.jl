@@ -7,7 +7,9 @@ B = Books
 DocMeta.setdocmeta!(
   Books,
   :DocTestSetup,
-  :(using Books; using DataFrames);
+  :(using Books;
+    cd(joinpath(pkgdir(Books), "docs"));
+    using DataFrames);
   recursive=true
 )
 doctest(Books)
