@@ -182,7 +182,7 @@ Use with Revise.jl and optionally `Revise.entr`.
 After calling `f`, this method will also call `html()` to update the site when `call_html=true`.
 
 # Example
-```
+```jldoctest
 julia> module Foo
        version() = "This book is built with Julia \$VERSION"
        end;

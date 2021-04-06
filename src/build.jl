@@ -73,10 +73,14 @@ Return the url prefix when `is_ci() == true`.
 
 # Example
 ```jldoctest
-julia> cd(pkdir(Books)); Books.ci_url_prefix("default")
+julia> cd(pkdir(Books)) do
+           Books.ci_url_prefix("default")
+       end
 ""
 
-julia> cd("docs"); Books.ci_url_prefix("default")
+julia> cd("docs") do
+           Books.ci_url_prefix("default")
+       end
 "/Books.jl"
 """
 function ci_url_prefix(project)
