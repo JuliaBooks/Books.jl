@@ -120,13 +120,13 @@ This package will attempt to infer missing information from the `path`, `caption
 _gen/options_example_doctests.md
 ```
 
-## Code blocks from strings {#sec:code_blocks_strings}
+## String code blocks {#sec:string_code_blocks}
 
 There are two ways to show code blocks.
 One way is by passing your code as a string.
 This is how similar packages work.
-However, with `Books.jl`, the aim is to work with functions and *not* with code as strings as discussed in @sec:about.
-See @sec:code_blocks_functions for a better way for showing code blocks.
+However, with `Books.jl`, the aim is to work with functions and *not* with code as strings as discussed at the end of @sec:about.
+See @sec:function_code_blocks for a better way for showing code blocks.
 
 Like in @sec:embedding-output, first define a method like
 
@@ -208,42 +208,49 @@ Which is easy to fix
 _gen/module_fix.md
 ```
 
-## Code blocks from functions {#sec:code_blocks_functions}
+## Function code blocks {#sec:function_code_blocks}
 
 So, instead of passing a string which `Books.jl` will evaluate, `Books.jl` can also obtain the code for a method directly.
 (Thanks to `CodeTracking.@code_string`.)
 For example, we can define the following method:
 
 ```{.include}
-_gen/another_example_table-sc.md
+_gen/my_data-sc.md
 ```
 
 and call it by adding the `-sco` (source code and output) suffix to the path:
 
 <pre>
 ```{.include}
-_gen/another_example_table-sco.md
+_gen/my_data-sco.md
 ```
 </pre>
 
 This gives
 
 ```{.include}
-_gen/another_example_table-sco.md
+_gen/my_data-sco.md
 ```
 
 To only show the source code, use the `-sc` suffix:
 
 <pre>
 ```{.include}
-_gen/another_example_table-sc.md
+_gen/my_data-sc.md
 ```
 </pre>
 
 giving
 
 ```{.include}
-_gen/another_example_table-sc.md
+_gen/my_data-sc.md
+```
+
+Since we're using methods as code blocks, we can use the code shown in one code block in another.
+For example, to determine the mean of column A:
+
+```{.include}
+_gen/my_data_mean-sco.md
 ```
 
 ## Plots {#sec:plots}

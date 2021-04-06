@@ -187,14 +187,14 @@ julia> module Foo
        version() = "This book is built with Julia \$VERSION"
        end;
 
-julia> gen(Foo.version)
+julia> cd(joinpath(pkgdir(Books), "docs")); gen(Foo.version)
 Running version() for _gen/version.md
+Updating html
 ```
 """
 function gen(f::Function; fail_on_error=false, project="default", call_html=true)
     path = joinpath(GENERATED_DIR, "$f.md")
     suffix = ""
-    println("Running $(f)() for $path")
     evaluate_and_write(f, path, suffix)
     if call_html
         println("Updating html")

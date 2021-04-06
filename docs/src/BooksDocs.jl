@@ -1,6 +1,7 @@
 module BooksDocs
 
 import Latexify
+import Statistics
 
 using Books
 using CodeTracking

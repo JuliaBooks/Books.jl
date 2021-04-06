@@ -38,5 +38,12 @@ The dependencies, such as `using DataFrames`, are available from your package.
 This provides all the benefits which Julia packages normally have, such as unit testing and live reloading via Revise.jl.
 
 As another benefit, all the code which you show in a book can be used via the function name.
-So, this avoids names as "J3" and "J4", and allows users to load the code from your package and call the functions themselves.
-This could save the reader from copy and pasting code.
+So, this avoids naming code blocks like "J3" and "J4", and allows users to load the code from your package and call the functions themselves.
+This has multiple benefits, namely
+
+1. it allows for explicitly using the output from one code block as input to another code block,
+1. it allows for demonstrating to the reader how to organize code (because, in general the tip is: use functions) _and_
+1. could save the reader from copy and pasting code.
+
+The latter point is due to the fact that the reader can load the package for the book and run the function.
+An example for points 1 and 2 is shown in @sec:function_code_blocks.
