@@ -37,6 +37,7 @@ end
 function convert_output(path, cf::CodeAndFunction)
     code = cf.code
     f = cf.f
+    println("Running $(f)() for $path")
     out = f()
     out = convert_output(path, out)
     """

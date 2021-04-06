@@ -98,11 +98,16 @@ julia> print(read(path, String))
 ```
 """
 function evaluate_and_write(f::Function, path, suffix::AbstractString)
-    println("Running $(f)() for $path")
+    function run_f(f)
+        println("Running $(f)() for $path")
+        f()
+    end
+
     out =
         suffix == "sc" ? @sc(f) :
         suffix == "sco" ? @sco(f) :
-        f()
+        run_f(f)
+
     out = convert_output(path, out)
     write(path, out)
     nothing
@@ -110,7 +115,6 @@ end
 
 function evaluate_and_write(M::Module, path)
     method, suffix = method_name(path)
-    println("Running $(method)() for $path")
     f = getproperty(M, Symbol(method))
     evaluate_and_write(f, path, suffix)
 end
@@ -190,6 +194,7 @@ Running version() for _gen/version.md
 function gen(f::Function; fail_on_error=false, project="default", call_html=true)
     path = joinpath(GENERATED_DIR, "$f.md")
     suffix = ""
+    println("Running $(f)() for $path")
     evaluate_and_write(f, path, suffix)
     if call_html
         println("Updating html")
