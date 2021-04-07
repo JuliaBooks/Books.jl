@@ -39,21 +39,26 @@ _gen/julia_version_example.md
 
 at the aforementioned path so that it can be included by Pandoc.
 Note that it doesn't matter where you define the function `julia_version`, as long as it is in your module.
-Also, to save yourself some typing, you can start Julia with
+To save yourself some typing, and to allow yourself to get some coffee while Julia gets up to speed, you can start Julia for some package `Foo` with
 
 ```
-$ julia --project -ie 'using Books; using Foo; M = Foo'
+$ julia --project -ie 'using Books; using Foo; M = Foo; gen(; M)'
 ```
 
-which allows you to generate all the content by calling
+which allows you to re-generate all the content by calling
 
 ```
 julia> gen(; M)
 ```
 
-as well as being able to quickly restart Julia after you have updated some constants such as structs.
+Also, it allows you to quickly restart Julia after you have updated some constants such as structs.
+To re-generate only the content for one method like, for example, the method `my_plot`, use
 
-Of these evaluated methods, the output is passed through `convert_output(path, out::T)` where `T` can, for example, be a DataFrame.
+```
+julia> gen(Foo.my_plot)
+```
+
+In the background, `gen` passes the methods through `convert_output(path, out::T)` where `T` can, for example, be a DataFrame.
 To show this, we define a method
 
 ```{.include}
