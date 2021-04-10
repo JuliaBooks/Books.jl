@@ -181,11 +181,11 @@ function pandoc_image(file, path; caption=nothing, label=nothing)
     if isnothing(caption) && isnothing(label)
         "![]($path)"
     elseif isnothing(label)
-        "![$caption.]($path)"
+        "![$caption]($path)"
     elseif isnothing(caption)
         "![]($path){#fig:$label}"
     else
-        "![$caption.]($path){#fig:$label}"
+        "![$caption]($path){#fig:$label}"
     end
 end
 

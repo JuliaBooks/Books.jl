@@ -102,10 +102,18 @@ function evaluate_and_write(f::Function, path, suffix::AbstractString)
         println("Running $(f)() for $path")
         f()
     end
+    function run_sc(f)
+        println("Obtaining source code for $f()")
+        @sc(f)
+    end
+    function run_sco(f)
+        println("Obtaining source code and output for $f()")
+        @sco(f)
+    end
 
     out =
-        suffix == "sc" ? @sc(f) :
-        suffix == "sco" ? @sco(f) :
+        suffix == "sc" ? run_sc(f) :
+        suffix == "sco" ? run_sco(f) :
         run_f(f)
 
     out = convert_output(path, out)

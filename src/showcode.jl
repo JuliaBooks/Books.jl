@@ -5,6 +5,7 @@ Show code for `f()`; to also show output, use [`@sco`](@ref).
 See the documentation or tests for examples.
 """
 macro sc(f)
+    println("Obtaining source code for $f()")
     esc(quote
         s = Books.CodeTracking.@code_string $(f)()
         code_block(s)

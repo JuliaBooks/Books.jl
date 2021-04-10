@@ -10,7 +10,15 @@ on:
 jobs:
   test-and-deploy:
     name: Test and deploy
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - '1.6'
+        os:
+          - ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -35,11 +43,11 @@ jobs:
         run: julia --project -e 'using Pkg; Pkg.instantiate();
           using Books; Books.install_dependencies()'
 
+      - uses: julia-actions/julia-runtest@v1
+
       - name: Instantiate BooksDocs
         run: julia --project=docs/ -e '
           using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
-
-      - uses: julia-actions/julia-runtest@v1
 
       - name: Build docs
         run: |
@@ -47,7 +55,8 @@ jobs:
           julia --project -e 'using BooksDocs; BooksDocs.build()'
 
       - name: Deploy to secondary branch
-        if: ${{ github.event_name == 'push' }}
+        # Always updates documentation when ubuntu passes, which is fine.
+        if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch') && runner.os == 'ubuntu-latest' }}
         uses: peaceiris/actions-gh-pages@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
