@@ -55,11 +55,21 @@ Also, it allows you to quickly restart Julia after you have updated some constan
 To re-generate only the content for one method like, for example, the method `my_plot`, use
 
 ```
-julia> gen(Foo.my_plot)
+julia> gen(M.my_plot)
+[...]
 ```
 
-In the background, `gen` passes the methods through `convert_output(path, out::T)` where `T` can, for example, be a DataFrame.
-To show this, we define a method
+To run this method automatically when you make a change in your package, ensure that you loaded [Revise.jl](https://github.com/timholy/Revise.jl) before loading your package and run
+
+```
+julia> f() = gen(M.my_plot);
+
+julia> entr(f, [], [M])
+[...]
+```
+
+In the background, `gen` passes the methods through `convert_output(path, out::T)` where `T` can, for example, be a DataFrame or a plot.
+To show that a DataFrame is converted to a Markdown table, we define a method
 
 ```{.include}
 _gen/my_table-sc.md
