@@ -28,6 +28,11 @@ jobs:
         with:
           version: '1.6'
 
+      - run: |
+          echo ${{ github.event_name }}
+          echo ${{ runner.os }}
+          echo ${{ github.runner.os }}
+
       - uses: actions/cache@v1
         env:
           cache-name: cache-artifacts
