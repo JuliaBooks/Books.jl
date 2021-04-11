@@ -26,7 +26,7 @@ jobs:
 
       - uses: julia-actions/setup-julia@v1
         with:
-          version: '^1.6.0-0'
+          version: '1.6'
 
       - uses: actions/cache@v1
         env:
@@ -56,7 +56,7 @@ jobs:
 
       - name: Deploy to secondary branch
         # Always updates documentation when ubuntu passes, which is fine.
-        if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch') && runner.os == 'ubuntu-latest' }}
+        if: ${( github.event_name == 'push' || github.event_name == 'workflow_dispatch') && runner.os == 'ubuntu-latest' }}
         uses: peaceiris/actions-gh-pages@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
