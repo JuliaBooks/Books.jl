@@ -1,11 +1,11 @@
 @memoize function default_metadata()::Dict
-    path = joinpath(DEFAULTS_DIR, "metadata.yml")
+    path = joinpath(DEFAULTS_DIR, "Metadata.yml")
     data = YAML.load_file(path)
 end
 
 function user_metadata()
-    path = "metadata.yml"
-    isfile(path) ? YAML.load_file(path) : error("Couldn't find metadata.yml")
+    path = "Metadata.yml"
+    isfile(path) ? YAML.load_file(path) : error("Couldn't find Metadata.yml")
 end
 
 """
@@ -31,7 +31,7 @@ override(d1::Dict, d2::Dict) = Dict(d1..., d2...)
 """
     write_metadata()
 
-Write `metadata.yml` for Pandoc to $(Books.GENERATED_DIR).
+Write `Metadata.yml` for Pandoc to $(Books.GENERATED_DIR).
 The file is a combination of Books.jl default settings and the user-defined settings.
 """
 function write_metadata()
@@ -39,7 +39,7 @@ function write_metadata()
     user = user_metadata()
     combined = override(default, user)
     mkpath(GENERATED_DIR)
-    path = joinpath(GENERATED_DIR, "metadata.yml")
+    path = joinpath(GENERATED_DIR, "Metadata.yml")
     YAML.write_file(path, combined)
 end
 
@@ -57,19 +57,19 @@ function project_info(path, project::AbstractString)
 end
 
 @memoize function default_config(project::AbstractString)
-    path = joinpath(DEFAULTS_DIR, "config.toml")
+    path = joinpath(DEFAULTS_DIR, "Config.toml")
     project_info(path, project)
 end
 
 function user_config(project::AbstractString)
-    path = "config.toml"
+    path = "Config.toml"
     isfile(path) ? project_info(path, project) : nothing
 end
 
 """
     config(project::AbstractString)
 
-Read user `config.toml` and `$DEFAULTS_DIR/config.toml` and combine the information.
+Read user `Config.toml` and `$DEFAULTS_DIR/Config.toml` and combine the information.
 
 # Example
 ```jldoctest
@@ -87,7 +87,7 @@ function config(project::AbstractString)
     default = default_config(project)
     user = user_config(project)
     combined =
-        isnothing(user) && isnothing(default) ? error("Project $project not defined in config.toml") :
+        isnothing(user) && isnothing(default) ? error("Project $project not defined in Config.toml") :
         isnothing(user) ? default :
         isnothing(default) ? user :
         override(default, user)

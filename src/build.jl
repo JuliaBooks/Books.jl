@@ -8,7 +8,7 @@ include_files_lua = joinpath(PROJECT_ROOT, "src", "include-files.lua")
 include_files = "--lua-filter=$include_files_lua"
 crossref = "--filter=pandoc-crossref"
 citeproc = "--citeproc"
-metadata_path = joinpath(GENERATED_DIR, "metadata.yml")
+metadata_path = joinpath(GENERATED_DIR, "Metadata.yml")
 metadata = "--metadata-file=$metadata_path"
 
 function csl()
@@ -44,7 +44,8 @@ function pandoc_html(project::AbstractString, url_prefix)
     template = "--template=$html_template_path"
     output_filename = joinpath(BUILD_DIR, "index.html")
     output = "--output=$output_filename"
-    html_inputs = ["index.md"; inputs(project)]
+    index_path = joinpath("contents", "index.md")
+    html_inputs = [index_path; inputs(project)]
     filename = "style.css"
     css_path = pandoc_file(filename)
     cp(css_path, joinpath(BUILD_DIR, filename); force=true)

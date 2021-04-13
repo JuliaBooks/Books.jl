@@ -106,7 +106,7 @@ html_page_names(bodies) = html_page_name.(bodies)
 html_href(text, link, level) = """<a class="menu-level-$level" href="$link">$text</a>"""
 html_li(text) = """<li>$text</li>"""
 
-function pandoc_metadata(file="metadata.yml")::Dict
+function pandoc_metadata(file="Metadata.yml")::Dict
     data = YAML.load_file(file)
 end
 

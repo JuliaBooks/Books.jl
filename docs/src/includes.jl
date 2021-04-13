@@ -21,13 +21,13 @@ generate_example() = code_block(raw"""
 gen_function_docs() = Books.doctest(@doc gen(::Function))
 
 function default_metadata()
-    path = joinpath(Books.DEFAULTS_DIR, "metadata.yml")
+    path = joinpath(Books.DEFAULTS_DIR, "Metadata.yml")
     text = read(path, String)
     code_block(text)
 end
 
 function default_config()
-    path = joinpath(Books.DEFAULTS_DIR, "config.toml")
+    path = joinpath(Books.DEFAULTS_DIR, "Config.toml")
     text = read(path, String)
     code_block(text)
 end
