@@ -52,6 +52,7 @@ To use other settings, for example the settings for `dev`, use `pdf(project="dev
 
 Below, the default configuration is shown.
 When not defining a `Config.toml` file or omitting any of the settings, such as `port`, these defaults will be used.
+You don't have to copy all these defaults, only _override_ the settings that you want to change.
 The benefit of multiple projects is, for example, that you can run a `dev` project locally which contains more information than the `default` project.
 One example could be where you write a paper, book or report and have a page with some notes.
 
@@ -61,6 +62,15 @@ The `pdf_filename` is used by `pdf()` and the `port` setting is used by `serve()
 ```{.include}
 _gen/default_config.md
 ```
+
+Here, the `extra_directories` allows you to specify directories which need to be moved into `build`, which makes them available for the local server and online.
+This is, for instance, useful for images like @fig:book_store.
+
+<pre>
+![Book store.](images/book-store.jpg){#fig:book_store}
+</pre>
+
+![Book store.](images/book-store.jpg){#fig:book_store}
 
 ### About contents {#sec:about_contents}
 

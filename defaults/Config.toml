@@ -17,7 +17,14 @@
   # Port used by serve().
   port = 8010
 
-  # Alternative project, used when calling, for example, serve(project="develop").
+  # Extra directories to be copied.
+  extra_directories = [
+    "images"
+  ]
+
+
+
+  # Alternative project, used when calling, for example, serve(project="dev").
   [projects.dev]
   contents = [
     "introduction",
@@ -29,3 +36,8 @@
   output_filename = "analysis-with-notes"
 
   port = 8011
+
+  # Extra directories to be copied.
+  extra_directories = [
+    "images"
+  ]

@@ -26,6 +26,30 @@ function inputs(project)
     [joinpath("contents", "$content.md") for content in C]
 end
 
+"""
+    copy_extra_directory(dir)
+
+Copy an extra directory such as "images" into build.
+"""
+function copy_extra_directory(dir)
+    if !isdir(dir)
+        error("Couldn't find $dir even though it was listed in `extra_directories`")
+    end
+    from = dir
+    to = joinpath(BUILD_DIR, dir)
+    cp(from, to; force=true)
+end
+
+"""
+    copy_extra_directories(project)
+
+Copy the extra directories defined for `project`.
+"""
+function copy_extra_directories(project)
+    extra_directories = config(project)["extra_directories"]
+    copy_extra_directory.(extra_directories)
+end
+
 function call_pandoc(args)
     write_metadata()
     pandoc() do pandoc_bin
@@ -40,6 +64,7 @@ function call_pandoc(args)
 end
 
 function pandoc_html(project::AbstractString, url_prefix)
+    copy_extra_directories(project)
     html_template_path = pandoc_file("template.html")
     template = "--template=$html_template_path"
     output_filename = joinpath(BUILD_DIR, "index.html")
@@ -93,12 +118,14 @@ function ci_url_prefix(project)
 end
 
 function html(; project="default")
+    copy_extra_directories(project)
     url_prefix = is_ci() ? ci_url_prefix(project) : ""
     C = config(project)["contents"]
     write_html_pages(url_prefix, C, pandoc_html(project, url_prefix))
 end
 
 function pdf(; project="default")
+    copy_extra_directories(project)
     latex_template_path = pandoc_file("template.tex")
     template = "--template=$latex_template_path"
     file = config(project)["output_filename"]

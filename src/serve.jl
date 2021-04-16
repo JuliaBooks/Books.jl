@@ -19,7 +19,7 @@ For example, calling Pandoc is not neccesary for svg images.
 """
 function rebuild_neccesary(file::AbstractString)::Bool
     _, extension = splitext(file)
-    extension != ".svg"
+    lowercase(extension) != ".svg"
 end
 
 function custom_callback(file::AbstractString, project::AbstractString)
@@ -32,11 +32,11 @@ function custom_callback(file::AbstractString, project::AbstractString)
     LiveServer.file_changed_callback(file)
 end
 
-custom_callback_partial(project::AbstractString) = file -> custom_callback(file, project)
 
-function default_simplewatcher(project)
-    f = custom_callback_partial(project)
-    sw = LiveServer.SimpleWatcher(f)
+function default_simplewatcher(project, extra_directories)
+    # The callback, defined by LiveServer.jl, receives a file.
+    cb = file -> custom_callback(file, project)
+    sw = LiveServer.SimpleWatcher(cb)
 
     for (root, dirs, files) in walkdir(".")
         for file in files
@@ -54,11 +54,10 @@ function serve(; simplewatcher=nothing,
         project="default", verbose=true, dir=BUILD_DIR)
 
     if isnothing(simplewatcher)
-        simplewatcher = default_simplewatcher(project)
+        extra_directories = config(project)["extra_directories"]
+        simplewatcher = default_simplewatcher(project, extra_directories)
     end
-    if !isdir(dir)
-        mkpath(dir)
-    end
+    mkpath(dir)
     html(; project)
     port = config(project)["port"]
     LiveServer.serve(simplewatcher; verbose, port, dir)
