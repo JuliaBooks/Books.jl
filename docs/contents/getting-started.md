@@ -52,6 +52,7 @@ To use other settings, for example the settings for `dev`, use `pdf(project="dev
 
 Below, the default configuration is shown.
 When not defining a `Config.toml` file or omitting any of the settings, such as `port`, these defaults will be used.
+You don't have to copy all these defaults, only _override_ the settings that you want to change.
 The benefit of multiple projects is, for example, that you can run a `dev` project locally which contains more information than the `default` project.
 One example could be where you write a paper, book or report and have a page with some notes.
 
