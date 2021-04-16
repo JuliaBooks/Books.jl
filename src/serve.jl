@@ -8,7 +8,7 @@ ignored_folders = [
 
 function ignore(path)::Bool
     path_startswith(folder) = startswith(path, "./$folder") || startswith(path, folder)
-    any(path_startswith.(ignored_folders)) || endswith(path, "Metadata.yml")
+    any(path_startswith.(ignored_folders)) || endswith(path, "metadata.yml")
 end
 
 """
