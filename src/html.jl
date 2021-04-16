@@ -217,6 +217,8 @@ function fix_links(names, pages, url_prefix)
             elseif startswith(capture, "#ref-")
                 page_link = "references"
                 return uncapture("$url_prefix/$page_link.html$capture")
+            elseif capture == "/"
+                return uncapture("$url_prefix/")
             else
                 return uncapture(capture)
             end
