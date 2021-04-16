@@ -62,6 +62,15 @@ The `pdf_filename` is used by `pdf()` and the `port` setting is used by `serve()
 _gen/default_config.md
 ```
 
+Here, the `extra_directories` allows you to specify directories which need to be moved into `build`, which makes them available for the local server and online.
+This is, for instance, useful for images like @fig:book_store.
+
+<pre>
+![Book store.](images/book-store.jpg){#fig:book_store}
+</pre>
+
+![Book store.](images/book-store.jpg){#fig:book_store}
+
 ### About contents {#sec:about_contents}
 
 The files listed in `contents` are read from the `contents/` directory and passed to Pandoc in the order specified by this list.
