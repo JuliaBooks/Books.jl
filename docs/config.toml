@@ -11,3 +11,8 @@
 
   # Prefix for GitHub Pages links.
   online_url_prefix = "Books.jl"
+
+  # Extra directories to be copied.
+  extra_directories = [
+    "images"
+  ]

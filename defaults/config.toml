@@ -19,11 +19,6 @@
   # Port used by serve().
   port = 8010
 
-  # Extra directories to be copied.
-  extra_directories = [
-    "images"
-  ]
-
 
 
   # Alternative project, used when calling, for example, serve(project="dev").
@@ -41,7 +36,7 @@
 
   port = 8011
 
-  # Extra directories to be copied.
+  # Extra directories to be copied from the project root into build/.
   extra_directories = [
     "images"
   ]
