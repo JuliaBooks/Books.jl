@@ -76,7 +76,8 @@ Read user `config.toml` and `$DEFAULTS_DIR/config.toml` and combine the informat
 julia> cd(joinpath(pkgdir(Books), "docs"))
 
 julia> Books.config("default")
-Dict{String, Any} with 5 entries:
+Dict{String, Any} with 6 entries:
+  "homepage_contents" => "index"
   "port"              => 8010
   "contents"          => ["about", "getting-started", "demo", "references"]
   "output_filename"   => "books"

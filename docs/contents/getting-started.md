@@ -35,8 +35,14 @@ If you also want to override the templates, then see @sec:templates.
 The `metadata.yml` file is read by Pandoc.
 Settings in this file affect the behaviour of Pandoc and get inserted in the templates.
 For more info on templates, see @sec:templates.
-The following default settings are used by Books.jl.
 You can override settings by placing a `metadata.yml` file at the root directory of your project.
+For example, the metadata for this project contains:
+
+```{.include}
+_gen/docs_metadata.md
+```
+
+The following defaults are set by Books.jl.
 
 ```{.include}
 _gen/default_metadata.md
@@ -58,6 +64,13 @@ One example could be where you write a paper, book or report and have a page wit
 
 The meaning of `contents` is discussed in @sec:about_contents.
 The `pdf_filename` is used by `pdf()` and the `port` setting is used by `serve()`.
+For this documentation, the following config is used
+
+```{.include}
+_gen/docs_config.md
+```
+
+Which overrides some settings from the following default settings
 
 ```{.include}
 _gen/default_config.md
@@ -78,10 +91,10 @@ The files listed in `contents` are read from the `contents/` directory and passe
 It doesn't matter whether the files contain headings or at what levels the heading are.
 Pandoc will just place the texts behind each other.
 
-This list doesn't mention `index.md` located in `contents/`.
-`index.md` is added automatically when generating html output and will be the [homepage](/) for the website.
-It typically contains the link to the generated PDF.
-Note that content placed `index.md` is only added to the html output and not to pdf or other outputs.
+This list doesn't mention the [homepage](/) for the website.
+That one is specified on a per project basis with `homepage_contents`, which defaults to `index`.
+The homepage typically contains the link to the generated PDF.
+Note that the homepage is only added to the html output and not to pdf or other outputs.
 
 ## Templates {#sec:templates}
 

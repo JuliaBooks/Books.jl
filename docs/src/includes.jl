@@ -20,8 +20,20 @@ generate_example() = code_block(raw"""
 
 gen_function_docs() = Books.doctest(@doc gen(::Function))
 
+function docs_metadata()
+    path = joinpath(pkgdir(BooksDocs), "metadata.yml")
+    text = read(path, String)
+    code_block(text)
+end
+
 function default_metadata()
     path = joinpath(Books.DEFAULTS_DIR, "metadata.yml")
+    text = read(path, String)
+    code_block(text)
+end
+
+function docs_config()
+    path = joinpath(pkgdir(BooksDocs), "config.toml")
     text = read(path, String)
     code_block(text)
 end
