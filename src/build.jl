@@ -69,7 +69,7 @@ function pandoc_html(project::AbstractString, url_prefix)
     template = "--template=$html_template_path"
     output_filename = joinpath(BUILD_DIR, "index.html")
     output = "--output=$output_filename"
-    homepage = config(project)["homepage"]
+    homepage = config(project)["homepage_contents"]
     index_path = joinpath("contents", "$homepage.md")
     html_inputs = [index_path; inputs(project)]
     filename = "style.css"
