@@ -116,7 +116,7 @@ function evaluate_and_write(f::Function, path, suffix::AbstractString)
         suffix == "sco" ? run_sco(f) :
         run_f(f)
 
-    out::String = convert_output(path, out)
+    out = convert_output(path, out)
     write(path, out)
     nothing
 end
