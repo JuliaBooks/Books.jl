@@ -3,11 +3,6 @@
     data = YAML.load_file(path)
 end
 
-function user_metadata()
-    path = "metadata.yml"
-    isfile(path) ? YAML.load_file(path) : error("Couldn't find metadata.yml")
-end
-
 """
     override(d1::Dict, d2::Dict)
 
@@ -29,18 +24,19 @@ Dict{Symbol, Int64} with 3 entries:
 override(d1::Dict, d2::Dict) = Dict(d1..., d2...)
 
 """
-    write_metadata()
+    write_metadata(user_metadata_path)
 
 Write `metadata.yml` for Pandoc to $(Books.GENERATED_DIR).
 The file is a combination of Books.jl default settings and the user-defined settings.
 """
-function write_metadata()
+function write_metadata(user_metadata_path)
+    user_metadata = isfile(user_metadata_path) ? YAML.load_file(user_metadata_path) : error("Couldn't find metadata.yml")
     default = default_metadata()
-    user = user_metadata()
-    combined = override(default, user)
+    combined = override(default, user_metadata)
     mkpath(GENERATED_DIR)
     path = joinpath(GENERATED_DIR, "metadata.yml")
     YAML.write_file(path, combined)
+    path
 end
 
 """
