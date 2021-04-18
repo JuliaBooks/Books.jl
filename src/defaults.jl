@@ -72,7 +72,7 @@ Read user `config.toml` and `$DEFAULTS_DIR/config.toml` and combine the informat
 julia> cd(joinpath(pkgdir(Books), "docs"))
 
 julia> Books.config("default")
-Dict{String, Any} with 6 entries:
+Dict{String, Any} with 7 entries:
   "homepage_contents" => "index"
   "metadata_path"     => "metadata.yml"
   "port"              => 8010
