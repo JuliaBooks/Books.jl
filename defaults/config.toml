@@ -4,6 +4,8 @@
   [projects.default]
   homepage_contents = "index"
 
+  metadata_path = "metadata.yml"
+
   contents = [
     "introduction",
     "analysis",
@@ -24,6 +26,8 @@
   # Alternative project, used when calling, for example, serve(project="dev").
   [projects.dev]
   homepage_contents = "index"
+
+  metadata_path = "metadata.yml"
 
   contents = [
     "introduction",

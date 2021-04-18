@@ -8,8 +8,6 @@ include_files_lua = joinpath(PROJECT_ROOT, "src", "include-files.lua")
 include_files = "--lua-filter=$include_files_lua"
 crossref = "--filter=pandoc-crossref"
 citeproc = "--citeproc"
-metadata_path = joinpath(GENERATED_DIR, "metadata.yml")
-metadata = "--metadata-file=$metadata_path"
 
 function csl()
     csl_path = pandoc_file("style.csl")
@@ -51,7 +49,6 @@ function copy_extra_directories(project)
 end
 
 function call_pandoc(args)
-    write_metadata()
     pandoc() do pandoc_bin
         pandoc_crossref() do _
             cmd = `$pandoc_bin $args`
@@ -75,6 +72,8 @@ function pandoc_html(project::AbstractString, url_prefix)
     filename = "style.css"
     css_path = pandoc_file(filename)
     cp(css_path, joinpath(BUILD_DIR, filename); force=true)
+    metadata_path = write_metadata(config(project)["metadata_path"])
+    metadata = "--metadata-file=$metadata_path"
 
     args = [
         html_inputs;
@@ -132,6 +131,8 @@ function pdf(; project="default")
     file = config(project)["output_filename"]
     output_filename = joinpath(BUILD_DIR, "$file.pdf")
     output = "--output=$output_filename"
+    metadata_path = write_metadata(config(project)["metadata_path"])
+    metadata = "--metadata-file=$metadata_path"
 
     Tectonic.tectonic() do tectonic_bin
         pdf_engine = "--pdf-engine=$tectonic_bin"
@@ -167,6 +168,8 @@ function docx(; project="default")
     file = config(project)["output_filename"]
     output_filename = joinpath(BUILD_DIR, "$file.docx")
     output = "--output=$output_filename"
+    metadata_path = write_metadata(config(project)["metadata_path"])
+    metadata = "--metadata-file=$metadata_path"
 
     args = [
         inputs(project);
