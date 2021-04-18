@@ -74,6 +74,7 @@ julia> cd(joinpath(pkgdir(Books), "docs"))
 julia> Books.config("default")
 Dict{String, Any} with 6 entries:
   "homepage_contents" => "index"
+  "metadata_path"     => "metadata.yml"
   "port"              => 8010
   "contents"          => ["about", "getting-started", "demo", "references"]
   "output_filename"   => "books"
