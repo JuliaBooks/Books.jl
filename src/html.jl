@@ -128,7 +128,7 @@ function add_menu(splitted=split_html())
     subtitle = "subtitle" in keys(data) ? data["subtitle"] : ""
 
     ids_texts = html_page_name.(bodies)
-    names = first.(ids_texts)
+    names = getproperty.(ids_texts, :id)
     menu_items = []
     skip_homepage(z) = Iterators.peel(z)[2]
     for (name, body) in skip_homepage(zip(names, bodies))
@@ -170,18 +170,18 @@ end
 Return an updated `head` where the title is based on the page `name`.
 
 ```jldoctest
-julia> head = "<!DOCTYPE html><title>Book - Books.jl</title>\n";
+julia> head = "<!DOCTYPE html><title>Book · Books.jl</title>\n";
 
 julia> name = "About";
 
 julia> Books.update_title(head, name)
-"<!DOCTYPE html><title>About - Books.jl</title>\n"
+"<!DOCTYPE html><title>About · Books.jl</title>\n"
 """
 function update_title(head, name)
     rx = r"<title>[^<]*<\/title>"
     function replace_name(match)
-        before_minus, after_minus = split(match, " - ")
-        "<title>$name - $after_minus"
+        before_minus, after_minus = split(match, " · ")
+        "<title>$name · $after_minus"
     end
     replace(head, rx => replace_name)
 end
@@ -202,9 +202,10 @@ end
 function html_pages(chs=chapters(), h=pandoc_html())
     head, menu, bodies, foot = add_menu(split_html(h))
     ids_texts = html_page_name.(bodies)
-    names = first.(ids_texts)
-    pages = create_page.(head, menu, names, bodies, foot)
-    (names = names, pages = pages)
+    id_names = getproperty.(ids_texts, :id)
+    text_names = getproperty.(ids_texts, :text)
+    pages = create_page.(head, menu, text_names, bodies, foot)
+    (names = id_names, pages = pages)
 end
 
 """

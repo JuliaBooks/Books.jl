@@ -48,8 +48,8 @@
     @test tuples[5] == (num = "", id = "id", text = "Getting Started")
 
     ids_texts = B.html_page_name.(bodies)
-    names = first.(ids_texts)
-    @test names == ["welcome", "getting-started", "something", "embedding-code"]
+    id_names = getproperty.(ids_texts, :id)
+    @test id_names == ["welcome", "getting-started", "something", "embedding-code"]
 
     text = "<h1 data-number=\"1\" id=\"前言\"><span class=\"header-section-number\">1</span> 前言</h1>"
     tuples = B.section_infos(text)
