@@ -2,10 +2,12 @@ module BooksDocs
 
 import Latexify
 import Statistics
+import TOML
 
 using Books
 using CodeTracking
 using DataFrames
+using Dates
 using Gadfly
 
 include("includes.jl")

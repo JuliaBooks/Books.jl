@@ -20,8 +20,10 @@ extra_args = [
 ]
 
 function inputs(project)
+    H = config(project)["homepage_contents"]
     C = config(project)["contents"]
-    [joinpath("contents", "$content.md") for content in C]
+    names = [H; C]
+    [joinpath("contents", "$name.md") for name in names]
 end
 
 """
@@ -66,9 +68,6 @@ function pandoc_html(project::AbstractString, url_prefix)
     template = "--template=$html_template_path"
     output_filename = joinpath(BUILD_DIR, "index.html")
     output = "--output=$output_filename"
-    homepage = config(project)["homepage_contents"]
-    index_path = joinpath("contents", "$homepage.md")
-    html_inputs = [index_path; inputs(project)]
     filename = "style.css"
     css_path = pandoc_file(filename)
     cp(css_path, joinpath(BUILD_DIR, filename); force=true)
@@ -76,7 +75,7 @@ function pandoc_html(project::AbstractString, url_prefix)
     metadata = "--metadata-file=$metadata_path"
 
     args = [
-        html_inputs;
+        inputs(project);
         include_files;
         crossref;
         citeproc;
@@ -124,6 +123,17 @@ function html(; project="default")
     write_html_pages(url_prefix, C, pandoc_html(project, url_prefix))
 end
 
+"""
+    ignore_homepage(project, input_paths)
+
+By default, the homepage is only shown to website visitors.
+However, the user can show the homepage also to offline visitors via the configuration option.
+"""
+function ignore_homepage(project, input_paths)
+    override = config(project)["include_homepage_outside_html"]
+    override ? input_paths : input_paths[2:end]
+end
+
 function pdf(; project="default")
     copy_extra_directories(project)
     latex_template_path = pandoc_file("template.tex")
@@ -133,12 +143,13 @@ function pdf(; project="default")
     output = "--output=$output_filename"
     metadata_path = write_metadata(config(project)["metadata_path"])
     metadata = "--metadata-file=$metadata_path"
+    input_files = ignore_homepage(project, inputs(project))
 
     Tectonic.tectonic() do tectonic_bin
         pdf_engine = "--pdf-engine=$tectonic_bin"
 
         args = [
-            inputs(project);
+            input_files;
             include_files;
             crossref;
             citeproc;
@@ -170,9 +181,10 @@ function docx(; project="default")
     output = "--output=$output_filename"
     metadata_path = write_metadata(config(project)["metadata_path"])
     metadata = "--metadata-file=$metadata_path"
+    input_files = ignore_homepage(project, inputs(project))
 
     args = [
-        inputs(project);
+        input_files;
         include_files;
         crossref;
         citeproc;

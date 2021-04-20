@@ -21,6 +21,10 @@
   # Port used by serve().
   port = 8010
 
+  # For large books, it can be nice to show some information on the homepage
+  # which is only visible to online visitors and hidden from book readers (PDF).
+  include_homepage_outside_html = false
+
 
 
   # Alternative project, used when calling, for example, serve(project="dev").
@@ -44,3 +48,5 @@
   extra_directories = [
     "images"
   ]
+
+  include_homepage_outside_html = false
