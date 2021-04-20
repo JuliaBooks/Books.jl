@@ -15,7 +15,7 @@ Returns the filenames mentioned in `{.include}` code blocks.
 function include_filenames(s::AbstractString)::Vector
     matches = eachmatch(include_regex, s)
     nested_filenames = [split(m[1]) for m in matches]
-    vcat(nested_filenames...) 
+    vcat(nested_filenames...)
 end
 
 """

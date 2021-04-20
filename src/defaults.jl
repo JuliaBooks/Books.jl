@@ -71,15 +71,10 @@ Read user `config.toml` and `$DEFAULTS_DIR/config.toml` and combine the informat
 ```jldoctest
 julia> cd(joinpath(pkgdir(Books), "docs"))
 
-julia> Books.config("default")
-Dict{String, Any} with 7 entries:
-  "homepage_contents" => "index"
-  "metadata_path"     => "metadata.yml"
-  "port"              => 8010
-  "contents"          => ["about", "getting-started", "demo", "references"]
-  "output_filename"   => "books"
-  "online_url_prefix" => "Books.jl"
-  "extra_directories" => ["images"]
+julia> c = Books.config("default");
+
+julia> c["port"]
+8012
 ```
 """
 function config(project::AbstractString)

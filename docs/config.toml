@@ -16,3 +16,8 @@
   extra_directories = [
     "images"
   ]
+
+  port = 8012
+
+  # The homepage of docs shows some verion info which is nice for the PDF too.
+  include_homepage_outside_html = true
