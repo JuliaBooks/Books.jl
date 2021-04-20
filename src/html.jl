@@ -86,6 +86,12 @@ function section_infos(text)
     tuples
 end
 
+"""
+    html_page_name(html)
+
+Return page name for a html body.
+For example, returns "about" or "getting-started".
+"""
 function html_page_name(html)
     sections = section_infos(html)
     id = first(sections).id
@@ -93,15 +99,8 @@ function html_page_name(html)
         start = findfirst(':', id) + 1
         id = id[start:end]
     end
-    id
+    (id=id, text=first(sections).text)
 end
-
-"""
-    html_page_names(bodies)
-
-Give the page names for the html bodies.
-"""
-html_page_names(bodies) = html_page_name.(bodies)
 
 html_href(text, link, level) = """<a class="menu-level-$level" href="$link">$text</a>"""
 html_li(text) = """<li>$text</li>"""
@@ -127,8 +126,9 @@ function add_menu(splitted=split_html())
     data = pandoc_metadata()
     title = data["title"]
     subtitle = "subtitle" in keys(data) ? data["subtitle"] : ""
-    
-    names = html_page_names(bodies)
+
+    ids_texts = html_page_name.(bodies)
+    names = first.(ids_texts)
     menu_items = []
     skip_homepage(z) = Iterators.peel(z)[2]
     for (name, body) in skip_homepage(zip(names, bodies))
@@ -164,9 +164,31 @@ function add_menu(splitted=split_html())
     (head = head, menu = menu, bodies = bodies, foot = foot)
 end
 
-function html_pages(chs=chapters(), h=pandoc_html())
-    head, menu, bodies, foot = add_menu(split_html(h))
-    create_page(body) = """
+"""
+    update_title(head, name)
+
+Return an updated `head` where the title is based on the page `name`.
+
+```jldoctest
+julia> head = "<!DOCTYPE html><title>Book - Books.jl</title>\n";
+
+julia> name = "About";
+
+julia> Books.update_title(head, name)
+"<!DOCTYPE html><title>About - Books.jl</title>\n"
+"""
+function update_title(head, name)
+    rx = r"<title>[^<]*<\/title>"
+    function replace_name(match)
+        before_minus, after_minus = split(match, " - ")
+        "<title>$name - $after_minus"
+    end
+    replace(head, rx => replace_name)
+end
+
+function create_page(head, menu, name, body, foot)
+    head = update_title(head, name)
+    page = """
     $head
     <div class="books-outside">
     $menu
@@ -175,8 +197,13 @@ function html_pages(chs=chapters(), h=pandoc_html())
     </div>
     </div>
     """
-    pages = create_page.(bodies)
-    names = html_page_names(bodies)
+end
+
+function html_pages(chs=chapters(), h=pandoc_html())
+    head, menu, bodies, foot = add_menu(split_html(h))
+    ids_texts = html_page_name.(bodies)
+    names = first.(ids_texts)
+    pages = create_page.(head, menu, names, bodies, foot)
     (names = names, pages = pages)
 end
 
