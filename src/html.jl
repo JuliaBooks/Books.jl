@@ -170,18 +170,18 @@ end
 Return an updated `head` where the title is based on the page `name`.
 
 ```jldoctest
-julia> head = "<!DOCTYPE html><title>Book · Books.jl</title>\n";
+julia> head = "<!DOCTYPE html><title>Book - Books.jl</title>\n";
 
 julia> name = "About";
 
 julia> Books.update_title(head, name)
-"<!DOCTYPE html><title>About · Books.jl</title>\n"
+"<!DOCTYPE html><title>About - Books.jl</title>\n"
 """
 function update_title(head, name)
     rx = r"<title>[^<]*<\/title>"
     function replace_name(match)
         before_minus, after_minus = split(match, " · ")
-        "<title>$name · $after_minus"
+        "<title>$name - $after_minus"
     end
     replace(head, rx => replace_name)
 end
