@@ -15,9 +15,9 @@ $$ y = \frac{\sin{x}}{\cos{x}} $$ {#eq:example}
 
 ## Embedding output {#sec:embedding-output}
 
-For embedding code, you can use the `include-files` Lua filter.
-This package can automatically run methods based on the included filenames.
-For example, generate a Markdown file `sum.md` with Julia and include it with
+For embedding code, you can use the `{.include}` code block.
+This package will run your methods based on the filenames in these code blocks.
+For example, to show the Julia version, use
 
 <pre>
 ```{.include}
@@ -38,6 +38,10 @@ _gen/julia_version_example.md
 ```
 
 at the aforementioned path so that it can be included by Pandoc.
+While doing this, it is expected that you also have the browser open and a server running, see @sec:getting-started.
+That way, the page is immediately updated when you run `gen`.
+
+
 Note that it doesn't matter where you define the function `julia_version`, as long as it is in your module.
 To save yourself some typing, and to allow yourself to get some coffee while Julia gets up to speed, you can start Julia for some package `Foo` with
 
@@ -97,20 +101,20 @@ Refer to @tbl:my_table with
 
 > @tbl:my_table
 
-To show multiple objects, use `Outputs`:
+To show multiple objects, pass a `Vector`:
 
 ```{.include}
-_gen/multiple_df_example-sc.md
+_gen/multiple_df_vector-sco.md
 ```
 
-which will appear as
+When you want to control where the various objects are saved, use `Options`.
+This way, you can pass a informative path with plots for which informative captions, cross-reference labels and image names can be determined.
 
 ```{.include}
-_gen/multiple_df_example.md
+_gen/multiple_df_example-sco.md
 ```
 
-To add labels and captions to these tables based on the `path`, use `Outputs(objects; paths)` instead of `Outputs(objects)`.
-To change the labels and/or captions, see @sec:labels-captions.
+To define the labels and/or captions manually, see @sec:labels-captions.
 For showing multiple plots, see @sec:plots.
 
 ## Labels and captions {#sec:labels-captions}
@@ -283,7 +287,7 @@ _gen/example_plot-sco.md
 If the output is a string instead of the output you expected, then check whether you load the related packages in time.
 For example, for this Gadfly plot, you need to load Gadfly.jl together with Books.jl for Requires.jl to work.
 
-For multiple images, use `Outputs(objects; paths)`:
+For multiple images, use `Options.(objects, paths)`:
 
 ```{.include}
 _gen/multiple_example_plots-sc.md

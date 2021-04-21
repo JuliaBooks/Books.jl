@@ -180,7 +180,7 @@ julia> Books.update_title(head, name)
 function update_title(head, name)
     rx = r"<title>[^<]*<\/title>"
     function replace_name(match)
-        before_minus, after_minus = split(match, " · ")
+        before_minus, after_minus = split(match, " - ")
         "<title>$name - $after_minus"
     end
     replace(head, rx => replace_name)

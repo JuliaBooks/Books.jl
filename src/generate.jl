@@ -70,7 +70,7 @@ function method_name(path::AbstractString)
 end
 
 """
-    evaluate_and_write(f::Function, path, suffix::AbstractString)
+    evaluate_and_write(f::Function, path::AbstractString, suffix::AbstractString)
 
 Evaluates `f`, converts the output writes the output to `path`.
 Some output conversions will also write to other files, which the file at `path` links to.
@@ -97,7 +97,7 @@ julia> print(read(path, String))
 : Example {#tbl:example}
 ```
 """
-function evaluate_and_write(f::Function, path, suffix::AbstractString)
+function evaluate_and_write(f::Function, path::AbstractString, suffix::AbstractString)
     function run_f(f)
         println("Running $(f)() for $path")
         f()
@@ -117,7 +117,9 @@ function evaluate_and_write(f::Function, path, suffix::AbstractString)
         run_f(f)
 
     out = convert_output(path, out)
+    out = String(out)
     write(path, out)
+
     nothing
 end
 

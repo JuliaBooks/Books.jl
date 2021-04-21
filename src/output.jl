@@ -15,24 +15,6 @@ code(block::AbstractString; mod=Main, hide_module=false) =
     Code(rstrip(block), mod, hide_module)
 
 """
-    Outputs(objects::AbstractVector; paths::AbstractVector=nothing)
-
-Define `objects` which need to be converted to Markdown.
-This is done via `convert_output(path, out::T)`, where `T` is the appropriate type.
-"""
-struct Outputs
-    objects::AbstractVector
-    paths::AbstractVector
-
-    function Outputs(objects::AbstractVector; paths=nothing)
-        if isnothing(paths)
-            paths = fill(nothing, length(objects))
-        end
-        new(objects, paths)
-    end
-end
-
-"""
     ImageOptions(object; width=nothing, height=nothing)
 
 Struct containing `width` and `height` for an image.
@@ -51,21 +33,49 @@ function convert_output(path, out::ImageOptions; kwargs...)
     convert_output(path, out.object; width, height, kwargs...)
 end
 
+function convert_output(path, outputs::AbstractVector)
+    path = nothing
+    outputs = convert_output.(path, outputs)
+    outputs = String.(outputs)
+    out = join(outputs, "\n\n")
+end
+
 """
     Options(object;
+        filename::Union{AbstractString,Nothing}=nothing,
         caption::Union{AbstractString,Nothing}=nothing,
         label::Union{AbstractString,Nothing}=nothing)
 
 Struct containing an `object` and some meta-information to be passed to the resulting document.
-These options are used by `pandoc-crossref`.
+The `caption` and `label` options are used by `pandoc-crossref`.
 """
 struct Options
     object::Any
+    filename::Union{AbstractString,Nothing}
     caption::Union{AbstractString,Nothing}
     label::Union{AbstractString,Nothing}
 
-    Options(object; caption=nothing, label=nothing) = new(object, caption, label)
+    Options(object; filename=nothing, caption=nothing, label=nothing) =
+        new(object, filename, caption, label)
 end
+
+"""
+    Options(object, filename::AbstractString)
+
+Extra constructor for `Options` which is convenient for broadcasting.
+
+```jldoctest
+julia> objects = [1, 2];
+
+julia> filenames = ["a", "b"];
+
+julia> Options.(objects, filenames)
+2-element Vector{Options}:
+ Options(1, "a", nothing, nothing)
+ Options(2, "b", nothing, nothing)
+```
+"""
+Options(object, filename::AbstractString) = Options(object; filename)
 
 function convert_output(path, out::Code)::String
     block = out.block
@@ -103,17 +113,6 @@ function convert_output(path, out::Code)::String
 end
 
 """
-    convert_output(path, outputs::Outputs)::String
-
-Convert multiple objects, such as DataFrames or plots.
-"""
-function convert_output(path, outputs::Outputs)::String
-    itr = zip(outputs.paths, outputs.objects)
-    converted = [convert_output(path, obj) for (path, obj) in itr]
-    join(converted, "\n\n")
-end
-
-"""
     convert_output(path, options::Options)
 
 Convert `options.object` while taking `options.caption` and `options.label` into account.
@@ -137,8 +136,14 @@ julia> print(Books.convert_output(nothing, options))
 ```
 """
 function convert_output(path, opts::Options)::String
-    convert_output(path, opts.object;
-        caption=opts.caption, label=opts.label)
+    object = opts.object
+    filename = opts.filename
+    if !isnothing(filename)
+        path = filename
+    end
+    caption = opts.caption
+    label = opts.label
+    convert_output(path, object; caption, label)
 end
 
 """

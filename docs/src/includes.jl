@@ -57,8 +57,17 @@ end
 
 my_table() = DataFrame(U = [1, 2], V = [:a, :b], W = [3, 4])
 
-multiple_df_example() =
-    Outputs([DataFrame(Z = [3]), DataFrame(U = [4, 5], V = [6, 7])])
+multiple_df_vector() =
+    [DataFrame(Z = [3]), DataFrame(U = [4, 5], V = [6, 7])]
+
+function multiple_df_example()
+    objects = [
+        DataFrame(X = [3, 4], Y = [5, 6]),
+        DataFrame(U = [7, 8], V = [9, 10])
+    ]
+    filenames = ["a", "b"]
+    Options.(objects, filenames)
+end
 
 sum_example() = code("""
     a = 3
@@ -131,7 +140,7 @@ function multiple_example_plots()
         plot(x=I, y=I),
         plot(x=I, y=I.^3)
     ]
-    Outputs(objects; paths)
+    Options.(objects, paths)
 end
 
 function image_options_plot()

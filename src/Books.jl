@@ -30,7 +30,7 @@ include("showcode.jl")
 include("generate.jl")
 
 export html, pdf, docx, build_all
-export code, Outputs, ImageOptions, Options
+export code, ImageOptions, Options
 export code_block
 export @sc, CodeAndFunction, @sco
 export gen
