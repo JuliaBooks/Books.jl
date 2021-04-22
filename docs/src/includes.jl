@@ -5,7 +5,12 @@ function homepage_intro()
 
     books_version = project_info["version"]
     text = """
-    This website introduces and demonstrates the package [Books.jl](https://github.com/rikhuijzer/Books.jl){target="_blank"} at version $books_version and is available as [**PDF**](/books.pdf){target="_blank"} and [docx](/books.docx){target="_blank"}.
+    This website introduces and demonstrates the package
+    [Books.jl](https://github.com/rikhuijzer/Books.jl){target="_blank"}
+    at version $books_version and is available as
+    [**PDF**](/Books.jl/books.pdf){target="_blank"}
+    and
+    [docx](/Books.jl/books.docx){target="_blank"}.
     These pages were built on $(today()) with Julia $VERSION.
     """
 end
