@@ -25,7 +25,7 @@
   extra_directories = []
 
   # For large books, it can be nice to show some information on the homepage
-  # which is only visible to online visitors and hidden from book readers (PDF).
+  # which is only visible to online visitors and hidden from offline users (PDF).
   include_homepage_outside_html = false
 
 
