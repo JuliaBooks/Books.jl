@@ -1,6 +1,7 @@
 module BooksDocs
 
 import Latexify
+import MCMCChains
 import Statistics
 import TOML
 

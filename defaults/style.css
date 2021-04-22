@@ -1,8 +1,9 @@
 :root {
   --black: hsl(0, 0%, 15%);
   --gray: hsl(0, 0%, 40%);
+  --accent: #3D93F6;
   --normal-size: 19px;
-  --small-size: 15px;
+  --small-size: 14px;
   --tiny-size: 11px;
   --block-background: hsl(0, 0%, 97%);
   --menu-width: 220px;
@@ -134,7 +135,7 @@ body {
 }
 
 a {
-  color: #0645ad;
+  color: var(--accent);
   text-decoration: none;
 }
 

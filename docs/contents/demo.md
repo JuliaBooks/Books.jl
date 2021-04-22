@@ -313,6 +313,10 @@ _gen/combined_options_plot-sco.md
 
 ## Other notes
 
-### Level 3 headings
+When your method returns an output type `T` which is unknown to Books.jl, it will be passed through `show(io::IO, ::MIME"text/plain", object::T)`.
+So, if the package that you're using has defined a new `show` method, this will be used.
+For example, for `MCMCChains`
 
-These are hidden from the website menu.
+```{.include}
+_gen/chain-sco.md
+```

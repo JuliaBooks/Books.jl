@@ -153,3 +153,5 @@ function combined_options_plot()
     imageoptions = image_options_plot()
     Options(imageoptions; caption="Sine function")
 end
+
+chain() = MCMCChains.Chains([1])

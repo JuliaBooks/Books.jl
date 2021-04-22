@@ -147,13 +147,45 @@ function convert_output(path, opts::Options)::String
 end
 
 """
+    convert_output(path, out::AbstractString)
+
+Return `out` as string.
+This avoids the adding of `"` which `show` does by default.
+"""
+convert_output(path, out::AbstractString) = string(out)
+
+convert_output(path, out::Number) = string(out)
+
+"""
     convert_output(path, out)
 
 Fallback method for `out::Any`.
-Other methods are defined via Requires.
-`path` is the path listed in the Pandoc Markdown file.
+This passes the objects through show to use the overrides that package creators might have provided.
+
+# Example
+
+```jldoctest
+julia> using MCMCChains
+
+julia> chn = Chains([1]);
+
+julia> string(chn)
+"MCMC chain (1×1×1 Array{Int64, 3})"
+
+julia> out = Books.convert_output("", chn);
+
+julia> contains(out, "Summary Statistics")
+true
+```
 """
-convert_output(path, out) = string(out)
+function convert_output(path, out)::String
+    io = IOBuffer()
+    mime = MIME("text/plain")
+    show(io, mime, out)
+    out = String(take!(io))
+    # This is required for MCMCChains, but it would be nicer if the user could specify this.
+    out = code_block(out)
+end
 
 """
     prettify_caption(caption)
