@@ -131,7 +131,7 @@ However, the user can show the homepage also to offline visitors via the configu
 """
 function ignore_homepage(project, input_paths)
     c = config(project)
-    override::Bool = config(project, key)
+    override::Bool = config(project, "include_homepage_outside_html")
     override ? input_paths : input_paths[2:end]
 end
 
