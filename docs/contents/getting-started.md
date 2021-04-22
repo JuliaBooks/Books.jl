@@ -76,7 +76,7 @@ Which overrides some settings from the following default settings
 _gen/default_config.md
 ```
 
-Here, the `extra_directories` allows you to specify directories which need to be moved into `build`, which makes them available for the local server and online.
+Here, the `extra_directories` allows you to specify directories which need to be moved into `_build`, which makes them available for the local server and online.
 This is, for instance, useful for images like @fig:book_store.
 
 <pre>

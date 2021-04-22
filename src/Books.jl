@@ -15,7 +15,7 @@ using pandoc_crossref_jll
 const PROJECT_ROOT = pkgdir(Books)
 const GENERATED_DIR = "_gen"
 const DEFAULTS_DIR = joinpath(PROJECT_ROOT, "defaults")
-const BUILD_DIR = "build"
+const BUILD_DIR = "_build"
 mkpath(BUILD_DIR)
 
 include("html.jl")

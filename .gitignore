@@ -18,8 +18,8 @@ docs/site/
 
 Manifest.toml
 
-build/
-docs/build/
+_build/
+docs/_build/
 docs/_gen/
 docs/Manifest.toml
 test/Manifest.toml

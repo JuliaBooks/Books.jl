@@ -178,8 +178,8 @@ This path works for PDF and is fixed for html in the html post-processor.
 
 # Example
 ```jldoctest
-julia> Books.pandoc_image("example_image", "build/im/example_image.png")
-"![](build/im/example_image.png)"
+julia> Books.pandoc_image("example_image", "_build/im/example_image.png")
+"![](_build/im/example_image.png)"
 ```
 """
 function pandoc_image(file, path; caption=nothing, label=nothing)

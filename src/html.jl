@@ -16,9 +16,19 @@ end
     fix_png_image(h::AbstractString, url_prefix)
 
 Fix a single html image string.
+
+```jldoctest
+julia> h = "\\"$(Books.BUILD_DIR)/im/image.png";
+
+julia> url_prefix = "Foo.jl";
+
+julia> Books.fix_png_image(h, url_prefix)
+"\\"Foo.jl/im/image.png"
+```
 """
 function fix_png_image(h::AbstractString, url_prefix)
-    h = replace(h, "\"build/" => "\"$(url_prefix)/")
+    path_prefix = "\"$(BUILD_DIR)/"
+    h = replace(h, path_prefix => "\"$(url_prefix)/")
     h = replace(h, ".png\"" => ".svg\"")
 end
 
@@ -30,7 +40,7 @@ This is neccessary, because LaTeX doesn't accept SVG images.
 Also, add the `url_prefix`.
 """
 function fix_image_urls(h::AbstractString, url_prefix)
-    html_image_src = r"""img src="build\/im\/[^\.]*\.png" """
+    html_image_src = r"""img src="_build\/im\/[^\.]*\.png" """
     fix_png_image_partial(h::AbstractString) = fix_png_image(h, url_prefix)
     replace(h, html_image_src => fix_png_image_partial)
 end

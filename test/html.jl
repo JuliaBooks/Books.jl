@@ -2,9 +2,9 @@
     @test B.split_keepdelim("a. 1 b. 2", r"[a|b]") == SubString{String}["a. 1 ", "b. 2"]
 
     s = """
-        <img src="build/im/example.png" alt="example" />
+        <img src="$(B.BUILD_DIR)/im/example.png" alt="example" />
         and
-        <img src="build/im/bar.png" alt="bar" />
+        <img src="$(B.BUILD_DIR)/im/bar.png" alt="bar" />
         """
     url_prefix = ""
     @test B.fix_image_urls(s, url_prefix) == """

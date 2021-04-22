@@ -21,9 +21,9 @@
   # Port used by serve().
   port = 8010
 
-  # Extra directories to be copied from the project root into build/.
+  # Extra directories to be copied from the project root into `_build/`.
   extra_directories = []
-  
+
   # For large books, it can be nice to show some information on the homepage
   # which is only visible to online visitors and hidden from book readers (PDF).
   include_homepage_outside_html = false
@@ -46,7 +46,7 @@
   output_filename = "analysis-with-notes"
 
   port = 8011
-  
+
   extra_directories = []
 
   include_homepage_outside_html = false
