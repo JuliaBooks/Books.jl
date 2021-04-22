@@ -86,3 +86,29 @@ function config(project::AbstractString)
         isnothing(default) ? user :
         override(default, user)
 end
+
+"""
+    config(project::AbstractString, key::String)
+
+Extension of `config(project::AbstractString)` which returns an output from the default
+project if `key` cannot be found for `project`.
+
+# Example
+```jldoctest
+julia> cd(joinpath(pkgdir(Books), "docs"))
+
+julia> Books.config("default", "port")
+8012
+
+julia> Books.config("notes", "port")
+8012
+```
+"""
+function config(project::AbstractString, key::String)
+    c = config(project)
+    if key in keys(c)
+        return c[key]
+    else
+        return config("default")[key]
+    end
+end

@@ -18,3 +18,10 @@
   ]
 
   port = 8012
+
+  [projects.notes]
+  contents = [
+    "demo",
+    "notes",
+    "references"
+  ]

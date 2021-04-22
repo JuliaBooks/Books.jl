@@ -54,11 +54,11 @@ function serve(; simplewatcher=nothing,
         project="default", verbose=true, dir=BUILD_DIR)
 
     if isnothing(simplewatcher)
-        extra_directories = config(project)["extra_directories"]
+        extra_directories = config(project, "extra_directories")
         simplewatcher = default_simplewatcher(project, extra_directories)
     end
     mkpath(dir)
     html(; project)
-    port = config(project)["port"]
+    port = config(project, "port")
     LiveServer.serve(simplewatcher; verbose, port, dir)
 end

@@ -20,8 +20,8 @@ extra_args = [
 ]
 
 function inputs(project)
-    H = config(project)["homepage_contents"]
-    C = config(project)["contents"]
+    H = config(project, "homepage_contents")
+    C = config(project, "contents")
     names = [H; C]
     [joinpath("contents", "$name.md") for name in names]
 end
@@ -46,7 +46,7 @@ end
 Copy the extra directories defined for `project`.
 """
 function copy_extra_directories(project)
-    extra_directories = config(project)["extra_directories"]
+    extra_directories = config(project, "extra_directories")
     copy_extra_directory.(extra_directories)
 end
 
@@ -71,7 +71,7 @@ function pandoc_html(project::AbstractString, url_prefix)
     filename = "style.css"
     css_path = pandoc_file(filename)
     cp(css_path, joinpath(BUILD_DIR, filename); force=true)
-    metadata_path = write_metadata(config(project)["metadata_path"])
+    metadata_path = write_metadata(config(project, "metadata_path"))
     metadata = "--metadata-file=$metadata_path"
 
     args = [
@@ -109,7 +109,7 @@ julia> cd("docs") do
 "/Books.jl"
 """
 function ci_url_prefix(project)
-    user_setting = config(project)["online_url_prefix"]
+    user_setting = config(project, "online_url_prefix")
     if user_setting != ""
         user_setting = '/' * user_setting
     end
@@ -119,8 +119,8 @@ end
 function html(; project="default")
     copy_extra_directories(project)
     url_prefix = is_ci() ? ci_url_prefix(project) : ""
-    C = config(project)["contents"]
-    write_html_pages(url_prefix, C, pandoc_html(project, url_prefix))
+    c = config(project, "contents")
+    write_html_pages(url_prefix, c, pandoc_html(project, url_prefix))
 end
 
 """
@@ -130,7 +130,8 @@ By default, the homepage is only shown to website visitors.
 However, the user can show the homepage also to offline visitors via the configuration option.
 """
 function ignore_homepage(project, input_paths)
-    override = config(project)["include_homepage_outside_html"]
+    c = config(project)
+    override::Bool = config(project, key)
     override ? input_paths : input_paths[2:end]
 end
 
@@ -138,10 +139,10 @@ function pdf(; project="default")
     copy_extra_directories(project)
     latex_template_path = pandoc_file("template.tex")
     template = "--template=$latex_template_path"
-    file = config(project)["output_filename"]
+    file = config(project, "output_filename")
     output_filename = joinpath(BUILD_DIR, "$file.pdf")
     output = "--output=$output_filename"
-    metadata_path = write_metadata(config(project)["metadata_path"])
+    metadata_path = write_metadata(config(project, "metadata_path"))
     metadata = "--metadata-file=$metadata_path"
     input_files = ignore_homepage(project, inputs(project))
 
@@ -176,10 +177,10 @@ function pdf(; project="default")
 end
 
 function docx(; project="default")
-    file = config(project)["output_filename"]
+    file = config(project, "output_filename")
     output_filename = joinpath(BUILD_DIR, "$file.docx")
     output = "--output=$output_filename"
-    metadata_path = write_metadata(config(project)["metadata_path"])
+    metadata_path = write_metadata(config(project, "metadata_path"))
     metadata = "--metadata-file=$metadata_path"
     input_files = ignore_homepage(project, inputs(project))
 
