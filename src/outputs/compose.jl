@@ -25,7 +25,16 @@ function convert_gadfly_output(path, out;
     im_dir = joinpath(BUILD_DIR, "im")
     mkpath(im_dir)
 
+    if isnothing(path)
+        # Not determining some random name here, because it would require cleanups too.
+        msg = """
+            It is not possible to write an image without specifying a path.
+            Use `Options(p; path=path)` where `p` is a plot object.
+            """
+        throw(ErrorException(msg))
+    end
     file, _ = method_name(path)
+
     println("Writing plot images for $file")
     svg_filename = "$file.svg"
     svg_path = joinpath(im_dir, svg_filename)
