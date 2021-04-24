@@ -6,6 +6,6 @@ MCMCChains = "c7f686f2-ff18-58e9-bc7b-31028e88f75d"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
-DataFrames = "0.22"
+DataFrames = "0.22, 1.0"
 Documenter = "0.26"
 Gadfly = "1.3"
