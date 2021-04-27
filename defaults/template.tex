@@ -421,8 +421,8 @@ $endif$
 \usepackage{float}
 \floatplacement{figure}{$if(float-placement-figure)$$float-placement-figure$$else$H$endif$}
 
-$for(header-includes)$
-$header-includes$
+$for(pdf-header-includes)$
+$pdf-header-includes$
 $endfor$
 $if(lang)$
 \ifxetex
@@ -854,7 +854,7 @@ $else$
   \chead[$if(header-center)$$header-center$$else$$endif$]{$if(header-center)$$header-center$$else$$endif$}
   \rhead[$if(header-left)$$header-left$$else$$title$$endif$]{$if(header-right)$$header-right$$else$$date$$endif$}
   \cfoot[$if(footer-center)$$footer-center$$else$$endif$]{$if(footer-center)$$footer-center$$else$$endif$}
-  \rfoot[$if(footer-left)$$footer-left$$else$$for(author)$\url{$repo$} $endfor$$endif$]{$if(footer-right)$$footer-right$$else$\thepage$endif$}
+  \rfoot[$if(footer-left)$$footer-left$$else$$for(author)$$pdf-footer$ $endfor$$endif$]{$if(footer-right)$$footer-right$$else$\thepage$endif$}
   \renewcommand{\headrulewidth}{0.4pt}
   \renewcommand{\footrulewidth}{0.4pt}
 }

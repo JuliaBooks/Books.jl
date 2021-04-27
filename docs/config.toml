@@ -14,7 +14,8 @@
 
   # Extra directories to be copied.
   extra_directories = [
-    "images"
+    "images",
+    "files"
   ]
 
   port = 8012
