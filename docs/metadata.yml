@@ -6,9 +6,10 @@ author: Rik Huijzer
 pdf-footer: https://github.com/rikhuijzer/Books.jl
 
 # An example additional header include for html.
+# Note that the url will be updated by `Books.fix_links`.
 header-includes:
 - |
   ```{=html}
-  <link rel="stylesheet" href="/files/style.css"/>
+  <link rel="stylesheet" href="files/style.css"/>
   ```
 ---

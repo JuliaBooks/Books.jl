@@ -58,22 +58,31 @@
     names = ["test"]
     page = raw"""
         <!DOCTYPE html>
-        <link rel="stylesheet" href="/files/style.css"/>
+        <link rel="stylesheet" href="files/style.css"/>
         <a href="#sec:foo">Foo</a>
         <h2 data-number="3.5" id="sec:foo"><span class="header-section-number">3.5</span> Foo</h2>
         """
     pages = [page]
     docs_dir = joinpath(pkgdir(Books), "docs")
     cd(docs_dir) do
-        url_prefix = Books.config("default", "online_url_prefix")
+        url_prefix = Books.ci_url_prefix("default")
         @test url_prefix != ""
         actual = Books.fix_links(names, pages, url_prefix) |> last |> first
         expected = """
             <!DOCTYPE html>
-            <link rel="stylesheet" href="$url_prefix/files/style.css"/>
-            <a href="$url_prefix/test.html#sec:foo">Foo</a>
+            <link rel="stylesheet" href="/Books.jl/files/style.css"/>
+            <a href="/Books.jl/test.html#sec:foo">Foo</a>
             <h2 data-number="3.5" id="sec:foo"><span class="header-section-number">3.5</span> Foo</h2>
             """
         @test actual == expected
     end
+    url_prefix = "/"
+    actual = Books.fix_links(names, pages, url_prefix) |> last |> first
+    expected = """
+        <!DOCTYPE html>
+        <link rel="stylesheet" href="/files/style.css"/>
+        <a href="/test.html#sec:foo">Foo</a>
+        <h2 data-number="3.5" id="sec:foo"><span class="header-section-number">3.5</span> Foo</h2>
+        """
+    @test actual == expected
 end

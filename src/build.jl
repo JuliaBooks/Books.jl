@@ -62,7 +62,7 @@ function call_pandoc(args)
     end
 end
 
-function pandoc_html(project::AbstractString, url_prefix)
+function pandoc_html(project::AbstractString)
     copy_extra_directories(project)
     html_template_path = pandoc_file("template.html")
     template = "--template=$html_template_path"
@@ -80,7 +80,6 @@ function pandoc_html(project::AbstractString, url_prefix)
         crossref;
         citeproc;
         "--mathjax";
-        "--metadata=url-prefix:$url_prefix";
         csl();
         metadata;
         template;
@@ -101,7 +100,7 @@ Return the url prefix when `is_ci() == true`.
 julia> cd(pkdir(Books)) do
            Books.ci_url_prefix("default")
        end
-""
+"/"
 
 julia> cd("docs") do
            Books.ci_url_prefix("default")
@@ -110,17 +109,17 @@ julia> cd("docs") do
 """
 function ci_url_prefix(project)
     user_setting = config(project, "online_url_prefix")
-    if user_setting != ""
-        user_setting = '/' * user_setting
+    if !endswith(user_setting, '/')
+        user_setting = user_setting * "/"
     end
     user_setting
 end
 
 function html(; project="default")
     copy_extra_directories(project)
-    url_prefix = is_ci() ? ci_url_prefix(project) : ""
+    url_prefix = is_ci() ? ci_url_prefix(project) : "/"
     c = config(project, "contents")
-    write_html_pages(url_prefix, c, pandoc_html(project, url_prefix))
+    write_html_pages(url_prefix, c, pandoc_html(project))
 end
 
 """
