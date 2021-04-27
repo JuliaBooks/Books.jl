@@ -261,8 +261,7 @@ function fix_links(names, pages, url_prefix)
                 page_link = "references"
                 return uncapture("$url_prefix/$page_link.html$capture")
             else
-                capture = lstrip(capture, '/')
-                return uncapture("$url_prefix/$capture")
+                return uncapture("$url_prefix$capture")
             end
         end
         fixed = replace(page, rx => replace_match)
