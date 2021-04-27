@@ -145,7 +145,7 @@ function add_menu(splitted=split_html())
         tuples = section_infos(body)
         for section in tuples
             num, id, text = section
-            link = "$name.html"
+            link = "/$name.html"
             link_text = "<b>$num</b> $text"
             level = section_level(num)
             if level < 3
