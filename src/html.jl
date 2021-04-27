@@ -241,6 +241,11 @@ function map_ids(names, pages)
     mapping
 end
 
+"""
+    fix_links(names, pages, url_prefix)
+
+Update links by adding `url_prefix` and pointing to the correct page.
+"""
 function fix_links(names, pages, url_prefix)
     mapping = map_ids(names, pages)
     rx = r"href=\"([^\"]*)\""
@@ -255,10 +260,9 @@ function fix_links(names, pages, url_prefix)
             elseif startswith(capture, "#ref-")
                 page_link = "references"
                 return uncapture("$url_prefix/$page_link.html$capture")
-            elseif capture == "/"
-                return uncapture("$url_prefix/")
             else
-                return uncapture(capture)
+                capture = lstrip(capture, '/')
+                return uncapture("$url_prefix/$capture")
             end
         end
         fixed = replace(page, rx => replace_match)
