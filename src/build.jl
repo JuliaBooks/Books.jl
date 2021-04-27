@@ -97,27 +97,25 @@ Return the url prefix when `is_ci() == true`.
 
 # Example
 ```jldoctest
-julia> cd(pkdir(Books)) do
+julia> cd(pkgdir(Books)) do
            Books.ci_url_prefix("default")
        end
-"/"
+""
 
-julia> cd("docs") do
+julia> cd(joinpath(pkgdir(Books), "docs")) do
            Books.ci_url_prefix("default")
        end
 "/Books.jl"
+```
 """
 function ci_url_prefix(project)
     user_setting = config(project, "online_url_prefix")
-    if !endswith(user_setting, '/')
-        user_setting = user_setting * "/"
-    end
     user_setting
 end
 
 function html(; project="default")
     copy_extra_directories(project)
-    url_prefix = is_ci() ? ci_url_prefix(project) : "/"
+    url_prefix = is_ci() ? ci_url_prefix(project) : ""
     c = config(project, "contents")
     write_html_pages(url_prefix, c, pandoc_html(project))
 end

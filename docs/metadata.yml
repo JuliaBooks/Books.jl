@@ -10,6 +10,6 @@ pdf-footer: https://github.com/rikhuijzer/Books.jl
 header-includes:
 - |
   ```{=html}
-  <link rel="stylesheet" href="files/style.css"/>
+  <link rel="stylesheet" href="/files/style.css"/>
   ```
 ---

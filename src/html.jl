@@ -245,10 +245,6 @@ end
     fix_links(names, pages, url_prefix)
 
 Update links by adding `url_prefix` and pointing to the correct page.
-
-This method always changes something, that is, it adds a '/' prefix even for localhost.
-The reason for this is to make it more clear that the user specified link will be updated
-anyway, so the user shouldn't mess too much with absolute links.
 """
 function fix_links(names, pages, url_prefix)
     mapping = map_ids(names, pages)
@@ -260,10 +256,10 @@ function fix_links(names, pages, url_prefix)
             capture = first(match(rx, s).captures)
             if startswith(capture, "#sec:")
                 page_link = mapping[capture]
-                return uncapture("$url_prefix$page_link.html$capture")
+                return uncapture("$url_prefix/$page_link.html$capture")
             elseif startswith(capture, "#ref-")
                 page_link = "references"
-                return uncapture("$url_prefix$page_link.html$capture")
+                return uncapture("$url_prefix/$page_link.html$capture")
             else
                 return uncapture("$url_prefix$capture")
             end
