@@ -421,8 +421,8 @@ $endif$
 \usepackage{float}
 \floatplacement{figure}{$if(float-placement-figure)$$float-placement-figure$$else$H$endif$}
 
-$for(pdf-header-includes)$
-$pdf-header-includes$
+$for(header-includes)$
+$header-includes$
 $endfor$
 $if(lang)$
 \ifxetex

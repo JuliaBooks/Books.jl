@@ -5,7 +5,10 @@ book: false
 author: Rik Huijzer
 pdf-footer: https://github.com/rikhuijzer/Books.jl
 
-# Example additional header include
-html-header-includes: |
+# An example additional header include for html.
+header-includes:
+- |
+  ```{=html}
   <link rel="stylesheet" href="/files/style.css"/>
+  ```
 ---

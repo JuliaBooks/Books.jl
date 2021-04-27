@@ -15,12 +15,12 @@ $endif$
   <title>Book - $pagetitle$</title>
   <link rel="shortcut icon" type="image/png" href="$url-prefix$/favicon.png"/>
   <link rel="stylesheet" href="$url-prefix$/style.css"/>
+$for(header-includes)$
+  $header-includes$
+$endfor$
 $if(math)$
   $math$
 $endif$
-$for(html-header-includes)$
-  $html-header-includes$
-$endfor$
 </head>
 <body>
 <!-- end head -->
