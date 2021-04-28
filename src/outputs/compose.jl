@@ -1,6 +1,3 @@
-import Cairo
-import Fontconfig
-
 using Compose
 
 function write_svg(path, p, width, height)
@@ -20,18 +17,9 @@ Unlike ImageMagick, this program gets the text spacing right.
 """
 function svg2png(svg_path, png_path)
     # 300 dpi should be sufficient for most journals, but shows aliasing.
-    # run(`cairosvg $svg_path -o $png_path --dpi 400`)
-    draw(PNG(path, width, height), p)
-end
+    # -background none for transparency
 
-function write_png(path, p, width, height)
-    if isnothing(width)
-        width = 6inch
-    end
-    if isnothing(height)
-        height = 4inch
-    end
-    draw(PNG(path, width, height), p)
+    # run(`convert -units PixelsPerInch $svg_path -density 400 $png_path`)
 end
 
 function convert_gadfly_output(path, out;
@@ -56,7 +44,7 @@ function convert_gadfly_output(path, out;
 
     png_filename = "$file.png"
     png_path = joinpath(im_dir, png_filename)
-    write_png(png_path, out, width, height)
+    svg2png(svg_path, png_path)
 
     im_link = joinpath("im", svg_filename)
     caption, label = caption_label(path, caption, label)
