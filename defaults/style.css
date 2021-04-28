@@ -415,3 +415,6 @@ html {
   font-size: var(--small-size);
 }
 
+.csl-entry {
+  margin-bottom: var(--small-size);
+}

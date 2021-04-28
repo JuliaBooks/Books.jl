@@ -9,7 +9,7 @@ See @sec:getting-started.
 
 > See @sec:getting-started.
 
-We can refer to citations such as @orwell1945animal and [@orwell1945animal] or to equations such as @eq:example.
+We can refer to citations such as @orwell1945animal and [@orwell1949nineteen] or to equations such as @eq:example.
 
 $$ y = \frac{\sin{x}}{\cos{x}} $$ {#eq:example}
 
