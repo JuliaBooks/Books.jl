@@ -4,9 +4,11 @@ authors = ["Rik Huijzer <t.h.huijzer@rug.nl>"]
 version = "0.4.3"
 
 [deps]
+Cairo = "159f3aea-2a34-519c-b102-8c37f9878175"
 CodeTracking = "da1fd8a2-8d9e-5ec2-8556-3022fb5608a2"
 Compose = "a81c6b42-2e10-5240-aca2-a61377ecd94b"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Fontconfig = "186bb1d3-e1f7-5a2c-a377-96d770f13627"
 Latexify = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
 LiveServer = "16fef848-5104-11e9-1b77-fb7a48bbb589"
 Markdown = "d6f4376e-aef5-505a-96c1-9c027394607a"
@@ -19,9 +21,11 @@ pandoc_crossref_jll = "f96e3c25-ae70-5588-8d8e-4a7ab3ba4c45"
 pandoc_jll = "c5432543-76ad-5c9d-82bf-db097047a5e2"
 
 [compat]
+Cairo = "1.0"
 CodeTracking = "1.0"
 Compose = "0.9"
 DataFrames = "0.22, 1.0"
+Fontconfig = "0.4"
 Latexify = "0.15"
 LiveServer = "0.6"
 Memoize = "0.4"

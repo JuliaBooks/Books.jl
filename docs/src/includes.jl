@@ -75,8 +75,8 @@ function multiple_df_example()
 end
 
 sum_example() = code("""
-    a = 3
-    b = 4
+    a = 2
+    b = 3
 
     a + b
     """)
