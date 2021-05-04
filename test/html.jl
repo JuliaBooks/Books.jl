@@ -70,12 +70,12 @@
         @test url_prefix != ""
         actual = Books.fix_links(names, pages, url_prefix) |> last |> first
         expected = """
-                        <!DOCTYPE html>
-                        <link rel="stylesheet" href="/Books.jl/files/style.css"/>
-                        <a href="/Books.jl/test.html#sec:foo">Foo</a>
-                        <h2 data-number="3.5" id="sec:foo"><span class="header-section-number">3.5</span> Foo</h2>
-                        <p> <a href="https://www.google.com">Jump</a></p>
-                        """
+            <!DOCTYPE html>
+            <link rel="stylesheet" href="/Books.jl/files/style.css"/>
+            <a href="/Books.jl/test.html#sec:foo">Foo</a>
+            <h2 data-number="3.5" id="sec:foo"><span class="header-section-number">3.5</span> Foo</h2>
+            <p> <a href="https://www.google.com">Jump</a></p>
+            """
         @test actual == expected
     end
     url_prefix = ""
