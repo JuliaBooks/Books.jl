@@ -1,5 +1,4 @@
 import YAML
-import URIs
 
 """
     split_keepdelim(str::AbstractString, dlm::Regex)
@@ -8,7 +7,7 @@ Split on regex while keeping the matches.
 Based on https://github.com/JuliaLang/julia/issues/20625#issuecomment-581585151.
 """
 function split_keepdelim(str::AbstractString, dlm::Regex)
-    dlm = string(dlm)[3:end - 1]
+    dlm = string(dlm)[3:end-1]
     rx = Regex("(?=$dlm)")
     split(str, rx)
 end
@@ -80,7 +79,7 @@ function section_infos(text)
         m = match(numbered_rx, line)
         if !isnothing(m)
             number, id = m.captures 
-            line_end = split(line, '>')[end - 1]
+            line_end = split(line, '>')[end-1]
             text = line_end[nextind(line_end, 0, 2):prevind(line_end, end, 4)]
             tuple = (num = number, id = id, text = lstrip(text))
             push!(tuples, tuple)
@@ -88,7 +87,7 @@ function section_infos(text)
         m = match(unnumbered_rx, line)
         if !isnothing(m)
             id = m.captures[1]
-            interesting_region = split(line, '>')[end - 1]
+            interesting_region = split(line, '>')[end-1]
             text = interesting_region[nextind(interesting_region, 0, 1):prevind(interesting_region, end, 4)]
             tuple = (num = "", id = id, text = lstrip(text))
             push!(tuples, tuple)
@@ -110,7 +109,7 @@ function html_page_name(html)
         start = findfirst(':', id) + 1
         id = id[start:end]
     end
-    (id = id, text = first(sections).text)
+    (id=id, text=first(sections).text)
 end
 
 html_href(text, link, level) = """<a class="menu-level-$level" href="$link">$text</a>"""
@@ -237,8 +236,8 @@ function map_ids(names, pages)
                 key = '#' * capture
                 mapping[key] = name
             end
+        end
     end
-end
     mapping
 end
 
