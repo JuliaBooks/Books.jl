@@ -1,4 +1,5 @@
 import YAML
+import URIs
 
 """
     split_keepdelim(str::AbstractString, dlm::Regex)
