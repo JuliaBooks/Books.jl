@@ -15,7 +15,9 @@ DocMeta.setdocmeta!(
 )
 doctest(Books)
 
-include("output.jl")
-include("html.jl")
-include("showcode.jl")
-include("generate.jl")
+@testset "Books.jl" begin
+  include("output.jl")
+  include("html.jl")
+  include("showcode.jl")
+  include("generate.jl")
+end
