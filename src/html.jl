@@ -1,4 +1,5 @@
 import YAML
+import URIs
 
 """
     split_keepdelim(str::AbstractString, dlm::Regex)
@@ -260,8 +261,10 @@ function fix_links(names, pages, url_prefix)
             elseif startswith(capture, "#ref-")
                 page_link = "references"
                 return uncapture("$url_prefix/$page_link.html$capture")
-            else
+            elseif URIs.URI(URIs.unescapeuri(capture)).scheme == ""
                 return uncapture("$url_prefix$capture")
+            else
+                return uncapture(capture)
             end
         end
         fixed = replace(page, rx => replace_match)
