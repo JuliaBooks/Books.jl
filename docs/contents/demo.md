@@ -313,6 +313,12 @@ _gen/combined_options_plot-sco.md
 
 ## Other notes
 
+### Multilingual books
+
+For an example of a multilingual book setup, say English and Chinese, see the book by [Jun Tian](https://github.com/LearnJuliaTheFunWay/LearnJuliaTheFunWay.jl).
+
+### Show
+
 When your method returns an output type `T` which is unknown to Books.jl, it will be passed through `show(io::IO, ::MIME"text/plain", object::T)`.
 So, if the package that you're using has defined a new `show` method, this will be used.
 For example, for `MCMCChains`
