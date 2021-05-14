@@ -13,8 +13,6 @@ DocMeta.setdocmeta!(
     using DataFrames);
   recursive=true
 )
-@show keys(ENV)
-@show ENV
 
 doctest(Books)
 
