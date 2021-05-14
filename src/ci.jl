@@ -48,7 +48,7 @@ function install_extra_fonts(os)
     end
 
     # Update fontconfig cache; not sure if it is necessary.
-    run(`fc-cache --verbose $fonts_dir`)
+    run(`fc-cache -force --verbose $fonts_dir`)
 end
 
 function install_apt_packages()
