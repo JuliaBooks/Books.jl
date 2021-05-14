@@ -93,6 +93,7 @@ function install_non_apt_packages()
 end
 
 function install_dependencies(os::String)
+    os = ENV["OS"]
     if contains(os, "ubuntu")
         install_apt_packages()
         install_non_apt_packages()

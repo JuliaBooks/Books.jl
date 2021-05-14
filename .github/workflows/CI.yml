@@ -42,7 +42,7 @@ jobs:
 
       - name: Install dependencies
         run: julia --project -e 'using Pkg; Pkg.instantiate();
-          using Books; Books.install_dependencies($OS)'
+          using Books; Books.install_dependencies()'
         env:
           OS: ${{ matrix.os }}
 
