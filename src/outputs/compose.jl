@@ -29,7 +29,7 @@ function convert_gadfly_output(path, out;
         # Not determining some random name here, because it would require cleanups too.
         msg = """
             It is not possible to write an image without specifying a path.
-            Use `Options(p; path=path)` where `p` is a plot object.
+            Use `Options(p; filename=filename)` where `p` is a plot object.
             """
         throw(ErrorException(msg))
     end
