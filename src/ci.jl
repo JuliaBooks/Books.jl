@@ -34,8 +34,9 @@ function install_extra_fonts(os)
     run(`git clone --branch=release --depth=1 https://github.com/adobe-fonts/source-code-pro $font_repo_dir`)
     ttf_dir = joinpath(font_repo_dir, "TTF")
     fonts_dir = contains(os, "ubuntu") ?
-        joinpath(homedir(), ".fonts", "source-code-pro") :
+        joinpath(homedir(), ".fonts") :
         joinpath(homedir(), "Library", "Fonts")
+    fonts_dir = joinpath(fonts_dir, "source-code-pro")
 
     files = readdir(ttf_dir)
     mkpath(fonts_dir)
