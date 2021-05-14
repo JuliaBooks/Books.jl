@@ -70,6 +70,9 @@ function install_mac_packages()
     @assert is_ci()
     println("Installing mac packages")
 
+    run(`brew update`)
+    run(`brew install cairo`)
+    run(`brew install pango`)
     run(`python3 -m pip install --upgrade pip`)
     run(`pip3 install cairosvg`)
 end
