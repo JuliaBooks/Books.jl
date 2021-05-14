@@ -17,6 +17,7 @@ jobs:
         version:
           - '1.6'
         os:
+          - macOS-latest
           - ubuntu-latest
 
     steps:
