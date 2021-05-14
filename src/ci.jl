@@ -21,19 +21,21 @@ function nonempty_run(args::Vector)
 end
 
 """
-    install_extra_fonts()
+    install_extra_fonts(os)
 
 Required for Source Code Pro.
 Thanks to https://github.com/AnomalyInnovations/serverless-stack-com.
 """
-function install_extra_fonts()
+function install_extra_fonts(os)
     println("Installing extra fonts")
 
     font_repo_dir = joinpath(homedir(), "source-code-pro")
     rm(font_repo_dir; recursive=true, force=true)
     run(`git clone --branch=release --depth=1 https://github.com/adobe-fonts/source-code-pro $font_repo_dir`)
     ttf_dir = joinpath(font_repo_dir, "TTF")
-    fonts_dir = joinpath(homedir(), ".fonts", "source-code-pro")
+    fonts_dir = contains(os, "ubuntu") ?
+        joinpath(homedir(), ".fonts", "source-code-pro") :
+        joinpath(homedir(), "Library", "Fonts")
 
     files = readdir(ttf_dir)
     mkpath(fonts_dir)
@@ -103,5 +105,5 @@ function install_dependencies()
     elseif contains(os, "macOS")
         install_mac_packages()
     end
-    install_extra_fonts()
+    install_extra_fonts(os)
 end
