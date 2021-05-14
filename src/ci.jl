@@ -92,7 +92,7 @@ function install_non_apt_packages()
     validate_installation("cairosvg")
 end
 
-function install_dependencies(os::String)
+function install_dependencies()
     os = ENV["OS"]
     if contains(os, "ubuntu")
         install_apt_packages()
