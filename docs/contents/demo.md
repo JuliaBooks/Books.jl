@@ -277,8 +277,7 @@ _gen/my_data_mean-sco.md
 Conversions for Gadfly are also included, see @fig:example_plot.
 This is actually a bit tricky, because we want to show vector graphics (SVG) on the web, but these are not supported (well) by LaTeX.
 Therefore, portable network graphics (PNG) images are passed to LaTeX via cairosvg;
-I found that this tool does the best conversions without relying on Cairo.jl.
-(Cairo.jl doesn't work for me on NixOS.)
+I found that this tool does the best conversions without relying on Cairo and/or Fontconfig, which are not so stable in combination with Compose in my experience.
 
 ```{.include}
 _gen/example_plot-sco.md

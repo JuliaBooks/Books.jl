@@ -39,9 +39,11 @@ function convert_gadfly_output(path, out;
     svg_filename = "$file.svg"
     svg_path = joinpath(im_dir, svg_filename)
     write_svg(svg_path, out, width, height)
+
     png_filename = "$file.png"
     png_path = joinpath(im_dir, png_filename)
     svg2png(svg_path, png_path)
+
     im_link = joinpath("im", svg_filename)
     caption, label = caption_label(path, caption, label)
     pandoc_image(file, png_path; caption, label)
