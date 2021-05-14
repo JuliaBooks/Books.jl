@@ -66,6 +66,14 @@ function install_apt_packages()
     end
 end
 
+function install_mac_packages()
+    @assert is_ci()
+    println("Installing mac packages")
+
+    run(`python3 -m pip install --upgrade pip`)
+    run(`pip3 install cairosvg`)
+end
+
 function validate_installation(name::AbstractString; args="--version")
     try
         run(`$name $args`)
@@ -84,8 +92,12 @@ function install_non_apt_packages()
     validate_installation("cairosvg")
 end
 
-function install_dependencies()
-    install_apt_packages()
-    install_non_apt_packages()
+function install_dependencies(os::String)
+    if contains(os, "ubuntu")
+        install_apt_packages()
+        install_non_apt_packages()
+    elseif contains(os, "macOS")
+        install_mac_packages()
+    end
     install_extra_fonts()
 end
