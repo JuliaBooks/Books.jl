@@ -17,9 +17,7 @@ Unlike ImageMagick, this program gets the text spacing right.
 """
 function svg2png(svg_path, png_path)
     # 300 dpi should be sufficient for most journals, but shows aliasing.
-    # -background none for transparency
-
-    # run(`convert -units PixelsPerInch $svg_path -density 400 $png_path`)
+    run(`cairosvg $svg_path -o $png_path --dpi 400`)
 end
 
 function convert_gadfly_output(path, out;
