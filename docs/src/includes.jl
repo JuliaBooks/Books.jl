@@ -8,9 +8,9 @@ function homepage_intro()
     This website introduces and demonstrates the package
     [Books.jl](https://github.com/rikhuijzer/Books.jl){target="_blank"}
     at version $books_version and is available as
-    [**PDF**](/Books.jl/books.pdf){target="_blank"}
+    [**PDF**](/books.pdf){target="_blank"}
     and
-    [docx](/Books.jl/books.docx){target="_blank"}.
+    [docx](/books.docx){target="_blank"}.
     These pages were built on $(today()) with Julia $VERSION.
     """
 end
@@ -160,8 +160,8 @@ function image_options_plot()
 end
 
 function combined_options_plot()
-    p = image_options_plot()
-    Options(p; caption="Sine function")
+    fg = image_options_plot()
+    Options(fg; caption="Sine function")
 end
 
 chain() = MCMCChains.Chains([1])
