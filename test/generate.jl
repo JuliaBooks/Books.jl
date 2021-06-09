@@ -1,4 +1,5 @@
-import Gadfly
+using AlgebraOfGraphics
+using CairoMakie
 using DataFrames
 
 @testset "generate" begin
@@ -28,8 +29,13 @@ using DataFrames
 
     @test contains(B.convert_output(nothing, DataFrame(A = [1])), "---")
 
+    X = 1:30
+    df = (x=X, y=X.*2)
+    xy = data(df) * mapping(:x, :y)
+    fg = draw(xy)
+
     mktemp() do path, io
-        @test contains(B.convert_output(path, Gadfly.plot()), ".png")
+        @test contains(B.convert_output(path, fg), ".png")
     end
     im_dir = joinpath(B.BUILD_DIR, "im")
     rm(im_dir; force=true, recursive=true)

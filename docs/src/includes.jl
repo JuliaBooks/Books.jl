@@ -135,28 +135,33 @@ module_example_definition() = code_block("""
 
 function example_plot()
     I = 1:30
-    Gadfly.plot(x=I, y=I.^2)
+    df = (x=I, y=I.^2)
+    xy = data(df) * mapping(:x, :y)
+    fg = draw(xy)
 end
 
 function multiple_example_plots()
     paths = ["example_plot_$i" for i in 2:3]
     I = 1:30
+    df = (x=I, y=I.*2, z=I.^3)
     objects = [
-        plot(x=I, y=I),
-        plot(x=I, y=I.^3)
+        draw(data(df) * mapping(:x, :y))
+        draw(data(df) * mapping(:x, :z))
     ]
     Options.(objects, paths)
 end
 
 function image_options_plot()
     I = 1:0.1:30
-    p = plot(x=I, y=sin.(I), Geom.line)
-    ImageOptions(p; width=6inch, height=2inch)
+    df = (x=I, y=sin.(I))
+    xy = data(df) * visual(Lines) * mapping(:x, :y)
+    axis = (width = 600, height = 140)
+    draw(xy; axis)
 end
 
 function combined_options_plot()
-    imageoptions = image_options_plot()
-    Options(imageoptions; caption="Sine function")
+    p = image_options_plot()
+    Options(p; caption="Sine function")
 end
 
 chain() = MCMCChains.Chains([1])

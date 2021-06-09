@@ -24,7 +24,6 @@ include("ci.jl")
 include("build.jl")
 include("serve.jl")
 include("output.jl")
-include("outputs/compose.jl")
 include("outputs/dataframes.jl")
 include("showcode.jl")
 include("generate.jl")
@@ -37,7 +36,7 @@ export gen
 export serve
 
 function __init__()
-    @require Gadfly="c91e804a-d5a3-530f-b6f0-dfbca275c004" include("outputs/gadfly.jl")
+    @require AlgebraOfGraphics="cbdf2221-f076-402e-a563-3d30da359d67" include("outputs/aog.jl")
 end
 
 end # module
