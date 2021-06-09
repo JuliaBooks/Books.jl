@@ -5,7 +5,6 @@ version = "0.4.4"
 
 [deps]
 CodeTracking = "da1fd8a2-8d9e-5ec2-8556-3022fb5608a2"
-Compose = "a81c6b42-2e10-5240-aca2-a61377ecd94b"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Latexify = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
 LiveServer = "16fef848-5104-11e9-1b77-fb7a48bbb589"
@@ -21,7 +20,6 @@ pandoc_jll = "c5432543-76ad-5c9d-82bf-db097047a5e2"
 
 [compat]
 CodeTracking = "1.0"
-Compose = "0.9"
 DataFrames = "0.22, 1.0, 1.1"
 Latexify = "0.15"
 LiveServer = "0.6"

@@ -274,7 +274,7 @@ _gen/my_data_mean-sco.md
 
 ## Plots {#sec:plots}
 
-Conversions for Gadfly are also included, see @fig:example_plot.
+Conversions for AlgebraOfGraphics are also included, see @fig:example_plot.
 This is actually a bit tricky, because we want to show vector graphics (SVG) on the web, but these are not supported (well) by LaTeX.
 Therefore, portable network graphics (PNG) images are passed to LaTeX via cairosvg;
 I found that this tool does the best conversions without relying on Cairo and/or Fontconfig, which are not so stable in combination with Compose in my experience.
@@ -284,7 +284,7 @@ _gen/example_plot-sco.md
 ```
 
 If the output is a string instead of the output you expected, then check whether you load the related packages in time.
-For example, for this Gadfly plot, you need to load Gadfly.jl together with Books.jl for Requires.jl to work.
+For example, for this plot, you need to load AlgebraOfGraphics.jl together with Books.jl so that Requires.jl will load the code for handling AlgebraOfGraphics objects.
 
 For multiple images, use `Options.(objects, paths)`:
 
@@ -298,13 +298,13 @@ Resulting in @fig:example_plot_2 and @fig:example_plot_3:
 _gen/multiple_example_plots.md
 ```
 
-For changing the size, use `ImageOptions`:
+For changing the size, use `axis` from AlgebraOfGraphics:
 
 ```{.include}
 _gen/image_options_plot-sco.md
 ```
 
-Or, use the combination for setting captions and size
+And, for adjusting the caption, use `Options`:
 
 ```{.include}
 _gen/combined_options_plot-sco.md

@@ -5,11 +5,12 @@ import MCMCChains
 import Statistics
 import TOML
 
+using AlgebraOfGraphics
 using Books
+using CairoMakie
 using CodeTracking
 using DataFrames
 using Dates
-using Gadfly
 
 include("includes.jl")
 

@@ -167,7 +167,7 @@ This passes the objects through show to use the overrides that package creators 
 ```jldoctest
 julia> using MCMCChains
 
-julia> chn = Chains([1]);
+julia> chn = Chains([1]; info=(start_time=[1.0], stop_time=[1.0]));
 
 julia> string(chn)
 "MCMC chain (1×1×1 Array{Int64, 3})"
