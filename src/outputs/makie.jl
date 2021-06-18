@@ -1,9 +1,9 @@
-@debug "Loading AlgebraOfGraphics.jl support into Books via Requires"
+@debug "Loading Makie.jl support into Books via Requires"
 
-using AlgebraOfGraphics
 using CairoMakie
+import Makie
 
-function convert_output(path, fg::AlgebraOfGraphics.FigureGrid; caption=nothing, label=nothing)
+function convert_output(path, p::Makie.FigureAxisPlot; caption=nothing, label=nothing)
     im_dir = joinpath(BUILD_DIR, "im")
     mkpath(im_dir)
 
@@ -11,7 +11,7 @@ function convert_output(path, fg::AlgebraOfGraphics.FigureGrid; caption=nothing,
         # Not determining some random name here, because it would require cleanups too.
         msg = """
             It is not possible to write an image without specifying a path.
-            Use `Options(p; filename=filename)` where `p` is a AlgebraOfGraphics plot.
+            Use `Options(p; filename=filename)` where `p` is a Makie.jl plot.
             """
         throw(ErrorException(msg))
     end
@@ -22,13 +22,13 @@ function convert_output(path, fg::AlgebraOfGraphics.FigureGrid; caption=nothing,
     svg_path = joinpath(im_dir, svg_filename)
     # Explicit rm due to https://github.com/JuliaIO/FileIO.jl/issues/338.
     rm(svg_path; force=true)
-    AlgebraOfGraphics.save(svg_path, fg)
+    Makie.FileIO.save(svg_path, p)
 
     png_filename = "$file.png"
     png_path = joinpath(im_dir, png_filename)
     rm(png_path; force=true)
     px_per_unit = 3 # Ensure high resolution.
-    AlgebraOfGraphics.save(png_path, fg; px_per_unit)
+    Makie.FileIO.save(png_path, p; px_per_unit)
 
     im_link = joinpath("im", svg_filename)
     caption, label = caption_label(path, caption, label)

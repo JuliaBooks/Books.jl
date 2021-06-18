@@ -164,4 +164,16 @@ function combined_options_plot()
     Options(fg; caption="Sine function")
 end
 
+function plotsjl()
+    p = plot(1:10, 1:2:20)
+    Options(p; caption="An example plot with Plots.jl")
+end
+
+function makiejl()
+    x = range(0, 10, length=100)
+    y = sin.(x)
+    p = lines(x, y)
+    Options(p; caption="An example plot with Makie.jl")
+end
+
 chain() = MCMCChains.Chains([1])
