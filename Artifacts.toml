@@ -1,0 +1,13 @@
+[juliamono]
+git-tree-sha1 = "e354f993a05168872ed11eb2728ac80fbd610a63"
+
+    [[juliamono.download]]
+    sha256 = "8bdd0a3c36891a044b998685b94b6736519a25ace54119577e35a54fe80a7000"
+    url = "https://github.com/cormullion/juliamono/archive/v0.039.tar.gz"
+
+[sourcecodepro]
+git-tree-sha1 = "29fdb884c6e9dc2a312f4a5e2bb3b2dad2350777"
+
+    [[sourcecodepro.download]]
+    sha256 = "87c94be199cd412e145081cf20dce1217196b47e407989465e687ebf0316af9e"
+    url = "https://github.com/adobe-fonts/source-code-pro/archive/refs/tags/2.038R-ro/1.058R-it/1.018R-VAR.zip"

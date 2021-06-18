@@ -23,3 +23,5 @@ docs/_build/
 docs/_gen/
 docs/Manifest.toml
 test/Manifest.toml
+
+**/fonts/

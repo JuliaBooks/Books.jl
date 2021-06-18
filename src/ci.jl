@@ -27,13 +27,14 @@ Required for Source Code Pro.
 Thanks to https://github.com/AnomalyInnovations/serverless-stack-com.
 """
 function install_extra_fonts()
-    println("Installing extra fonts")
-
-    font_repo_dir = joinpath(homedir(), "source-code-pro")
-    rm(font_repo_dir; recursive=true, force=true)
-    run(`git clone --branch=release --depth=1 https://github.com/adobe-fonts/source-code-pro $font_repo_dir`)
-    ttf_dir = joinpath(font_repo_dir, "TTF")
-    fonts_dir = joinpath(homedir(), ".fonts", "source-code-pro")
+    dir = joinpath(Artifacts.artifact"juliamono", "juliamono-0.039")
+    target_dir = "fonts"
+    mkpath(target_dir)
+    # println("Copying Julia Mono fonts into $target_dir")
+    for file in readdir(dir)
+        cp(joinpath(dir, file), joinpath(target_dir, file); force=true)
+    end
+    return
 
     files = readdir(ttf_dir)
     mkpath(fonts_dir)

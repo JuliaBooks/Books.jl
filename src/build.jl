@@ -9,6 +9,8 @@ include_files = "--lua-filter=$include_files_lua"
 crossref = "--filter=pandoc-crossref"
 citeproc = "--citeproc"
 
+install_extra_fonts()
+
 function csl()
     csl_path = pandoc_file("style.csl")
     csl = "--csl=$csl_path"

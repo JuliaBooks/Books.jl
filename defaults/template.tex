@@ -167,6 +167,10 @@ $else$
 $endif$
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\setmainfont{JuliaMono}[%
+  Path      = fonts/, %this only works with the forward slash
+  Extension = .ttf
+]
 $if(mainfont)$
   \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$]{$mainfont$}
 $endif$
