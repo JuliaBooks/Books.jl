@@ -65,4 +65,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           force_orphan: true
           publish_dir: ./docs/_build/
-          cname: books.huijzer.xyz

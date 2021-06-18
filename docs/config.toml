@@ -9,8 +9,8 @@
   ]
   output_filename = "books"
 
-  # Example prefix for GitHub Pages.
-  # online_url_prefix = "/Books.jl"
+  # Prefix for GitHub Pages.
+  online_url_prefix = "/Books.jl"
 
   # Extra directories to be copied.
   extra_directories = [
