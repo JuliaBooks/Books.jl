@@ -11,6 +11,10 @@ using CairoMakie
 using CodeTracking
 using DataFrames
 using Dates
+using Plots
+
+# Defaulting plot to Plots; Makie can use Makie.plot.
+plot = Plots.plot
 
 include("includes.jl")
 

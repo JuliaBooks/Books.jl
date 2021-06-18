@@ -53,6 +53,10 @@ jobs:
         run: |
           cd docs
           julia --project -e 'using BooksDocs; BooksDocs.build()'
+        env:
+          # Fixes 'GKS: can't connect to GKS socket application' errors
+          # and quality of output plots in GR back end.
+          GKSwstype: nul
 
       - name: Deploy to secondary branch
         # Always updates documentation when ubuntu passes, which is fine.

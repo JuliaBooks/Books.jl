@@ -274,10 +274,10 @@ _gen/my_data_mean-sco.md
 
 ## Plots {#sec:plots}
 
-Conversions for AlgebraOfGraphics are also included, see @fig:example_plot.
+An AlgebraOfGraphics plot is shown below in @fig:example_plot.
+For Plots.jl and Makie.jl see, respectively section @sec:plotsjl and @sec:makie.
 This is actually a bit tricky, because we want to show vector graphics (SVG) on the web, but these are not supported (well) by LaTeX.
-Therefore, portable network graphics (PNG) images are passed to LaTeX via cairosvg;
-I found that this tool does the best conversions without relying on Cairo and/or Fontconfig, which are not so stable in combination with Compose in my experience.
+Therefore, portable network graphics (PNG) images are also created and passed to LaTeX when building a PDF.
 
 ```{.include}
 _gen/example_plot-sco.md
@@ -308,6 +308,18 @@ And, for adjusting the caption, use `Options`:
 
 ```{.include}
 _gen/combined_options_plot-sco.md
+```
+
+### Plots {#sec:plotsjl}
+
+```{.include}
+_gen/plotsjl-sco.md
+```
+
+### Makie {#sec:makie}
+
+```{.include}
+_gen/makiejl-sco.md
 ```
 
 ## Other notes
