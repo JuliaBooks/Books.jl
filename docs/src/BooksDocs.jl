@@ -20,7 +20,8 @@ include("includes.jl")
 
 function build()
     Books.gen(; M=BooksDocs, fail_on_error=true)
-    Books.build_all()
+    extra_head = "<!-- Example comment placed in the html header. -->"
+    Books.build_all(; extra_head)
 end
 
 end # module

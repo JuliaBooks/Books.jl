@@ -113,11 +113,11 @@ function ci_url_prefix(project)
     user_setting
 end
 
-function html(; project="default")
+function html(; project="default", extra_head="")
     copy_extra_directories(project)
     url_prefix = is_ci() ? ci_url_prefix(project) : ""
     c = config(project, "contents")
-    write_html_pages(url_prefix, c, pandoc_html(project))
+    write_html_pages(url_prefix, c, pandoc_html(project), extra_head)
 end
 
 """
@@ -196,11 +196,11 @@ function docx(; project="default")
     nothing
 end
 
-function build_all(; project="default")
+function build_all(; project="default", extra_head="")
     mkpath(BUILD_DIR)
     filename = "favicon.png"
     cp(joinpath("pandoc", filename), joinpath(BUILD_DIR, filename); force=true)
-    html(; project)
+    html(; project, extra_head)
     pdf(; project)
     docx(; project)
 end

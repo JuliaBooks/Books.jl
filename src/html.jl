@@ -210,8 +210,15 @@ function create_page(head, menu, name, body, foot)
     """
 end
 
-function html_pages(chs=chapters(), h=pandoc_html())
+function add_extra_head(head, extra_head::AbstractString)
+    before = "\n</head>"
+    after = "\n $extra_head $before"
+    replace(head, before => after)
+end
+
+function html_pages(chs=chapters(), h=pandoc_html(), extra_head="")
     head, menu, bodies, foot = add_menu(split_html(h))
+    head = add_extra_head(head, extra_head)
     ids_texts = html_page_name.(bodies)
     id_names = getproperty.(ids_texts, :id)
     text_names = getproperty.(ids_texts, :text)
@@ -275,9 +282,10 @@ function fix_links(names, pages, url_prefix)
     (names, fixed_pages)
 end
 
-function write_html_pages(url_prefix, chs=chapters(), h=pandoc_html())
+function write_html_pages(url_prefix, chs=chapters(), h=pandoc_html(), extra_head="")
     h = fix_image_urls(h, url_prefix)
-    names, pages = fix_links(html_pages(chs, h)..., url_prefix)
+    names, pages = html_pages(chs, h, extra_head)
+    names, pages = fix_links(names, pages, url_prefix)
     for (i, (name, page)) in enumerate(zip(names, pages))
         name = i == 1 ? "index" : name
         path = joinpath(BUILD_DIR, "$name.html")
