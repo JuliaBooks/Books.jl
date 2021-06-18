@@ -212,7 +212,8 @@ end
 
 function add_extra_head(head, extra_head::AbstractString)
     before = "\n</head>"
-    after = "\n $extra_head $before"
+    # All entries in the head have two spaces in front.
+    after = "\n  $extra_head $before"
     replace(head, before => after)
 end
 
