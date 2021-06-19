@@ -139,8 +139,9 @@ function convert_output(expr, path, opts::Options)::String
     object = opts.object
     filename = opts.filename
     if !isnothing(filename)
-        path = filename
+        expr = filename
     end
+    path = nothing
     caption = opts.caption
     label = opts.label
     convert_output(expr, path, object; caption, label)
@@ -234,10 +235,10 @@ This method sets some reasonable defaults if any of the inputs is missing.
 
 # Examples
 ```jldoctest
-julia> Books.caption_label("a/foo_bar.md", nothing, nothing)
+julia> Books.caption_label("foo_bar()", nothing, nothing)
 (caption = "Foo bar", label = "foo_bar")
 
-julia> Books.caption_label("a/foo_bar.md", "My caption", nothing)
+julia> Books.caption_label("foo_bar()", "My caption", nothing)
 (caption = "My caption", label = "foo_bar")
 
 julia> Books.caption_label(nothing, "cap", nothing)

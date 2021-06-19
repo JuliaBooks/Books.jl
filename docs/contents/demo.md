@@ -117,8 +117,8 @@ To show multiple objects, pass a `Vector`:
 When you want to control where the various objects are saved, use `Options`.
 This way, you can pass a informative path with plots for which informative captions, cross-reference labels and image names can be determined.
 
-```{.include}
-_gen/multiple_df_example-sco.md
+```jl
+@sco(multiple_df_example)
 ```
 
 To define the labels and/or captions manually, see @sec:labels-captions.
@@ -128,8 +128,8 @@ For showing multiple plots, see @sec:plots.
 
 To set labels and captions, wrap your object in `Options`:
 
-```{.include}
-_gen/options_example-sco.md
+```jl
+@sco(options_example)
 ```
 
 which can be referred to with
@@ -142,8 +142,8 @@ which can be referred to with
 It is also possible to pass only a caption or a label.
 This package will attempt to infer missing information from the `path`, `caption` or `label` when possible:
 
-```{.include}
-_gen/options_example_doctests.md
+```jl
+options_example_doctests()
 ```
 
 ## Function code blocks {#sec:function_code_blocks}
@@ -190,8 +190,14 @@ resulting in
 Since we're using methods as code blocks, we can use the code shown in one code block in another.
 For example, to determine the mean of column A:
 
-```{.include}
-_gen/my_data_mean-sco.md
+```jl
+@sco(my_data_mean)
+```
+
+Or, we can show the output inline, namely `jl my_data_mean()`, by using
+
+```
+`jl my_data_mean()`
 ```
 
 ## Plots {#sec:plots}
@@ -201,8 +207,8 @@ For Plots.jl and Makie.jl see, respectively section @sec:plotsjl and @sec:makie.
 This is actually a bit tricky, because we want to show vector graphics (SVG) on the web, but these are not supported (well) by LaTeX.
 Therefore, portable network graphics (PNG) images are also created and passed to LaTeX when building a PDF.
 
-```{.include}
-_gen/example_plot-sco.md
+```jl
+@sco(example_plot)
 ```
 
 If the output is a string instead of the output you expected, then check whether you load the related packages in time.
@@ -210,38 +216,38 @@ For example, for this plot, you need to load AlgebraOfGraphics.jl together with 
 
 For multiple images, use `Options.(objects, paths)`:
 
-```{.include}
-_gen/multiple_example_plots-sc.md
+```jl
+@sc(multiple_example_plots)
 ```
 
 Resulting in @fig:example_plot_2 and @fig:example_plot_3:
 
-```{.include}
-_gen/multiple_example_plots.md
+```jl
+multiple_example_plots()
 ```
 
 For changing the size, use `axis` from AlgebraOfGraphics:
 
-```{.include}
-_gen/image_options_plot-sco.md
+```jl
+@sco(image_options_plot)
 ```
 
 And, for adjusting the caption, use `Options`:
 
-```{.include}
-_gen/combined_options_plot-sco.md
+```jl
+@sco(combined_options_plot)
 ```
 
 ### Plots {#sec:plotsjl}
 
-```{.include}
-_gen/plotsjl-sco.md
+```jl
+@sco(plotsjl)
 ```
 
 ### Makie {#sec:makie}
 
-```{.include}
-_gen/makiejl-sco.md
+```jl
+@sco(makiejl)
 ```
 
 ## Other notes
@@ -254,8 +260,8 @@ For an example of a multilingual book setup, say English and Chinese, see the bo
 
 When your method returns an output type `T` which is unknown to Books.jl, it will be passed through `show(io::IO, ::MIME"text/plain", object::T)`.
 So, if the package that you're using has defined a new `show` method, this will be used.
-For example, for `MCMCChains`
+For example, for `MCMCChains`,
 
-```{.include}
-_gen/chain-sco.md
+```jl
+@sco(chain)
 ```

@@ -8,7 +8,7 @@ Convert `out` to Markdown table and set some `pandoc-crossref` metadata.
 
 # Example
 ```jldoctest
-julia> df = DataFrame(A = [1])
+julia> df = DataFrame(A = [1]);
 
 julia> print(Books.convert_output("my_table()", nothing, df))
 |   A |

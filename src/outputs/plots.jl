@@ -6,7 +6,7 @@ function convert_output(expr, path, p::Plots.Plot; caption=nothing, label=nothin
     im_dir = joinpath(BUILD_DIR, "im")
     mkpath(im_dir)
 
-    if isnothing(path)
+    if isnothing(expr)
         # Not determining some random name here, because it would require cleanups too.
         msg = """
             It is not possible to write an image without specifying a path or filename.
@@ -26,6 +26,6 @@ function convert_output(expr, path, p::Plots.Plot; caption=nothing, label=nothin
     Plots.savefig(p, png_path)
 
     im_link = joinpath("im", svg_filename)
-    caption, label = caption_label(path, caption, label)
+    caption, label = caption_label(expr, caption, label)
     pandoc_image(file, png_path; caption, label)
 end

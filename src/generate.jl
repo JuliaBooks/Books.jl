@@ -148,11 +148,11 @@ function evaluate_and_write(f::Function)
 end
 
 """
-    evaluate_include(expr::String, M, fail_on_error)
+    evaluate_include(expr::String, M::Module, fail_on_error::Bool)
 
 For a `path` included in a Markdown file, run the corresponding function and write the output to `path`.
 """
-function evaluate_include(expr::String, M, fail_on_error)
+function evaluate_include(expr::String, M::Module, fail_on_error::Bool)
     if isnothing(M)
         # This code isn't really working.
         M = caller_module()
@@ -215,7 +215,7 @@ julia> module Foo
        end;
 
 julia> gen(Foo.version)
-Running `version()` for _gen/version.md
+Writing output of `version()` to _gen/version-ob--cb-.md
 Updating html
 ```
 """

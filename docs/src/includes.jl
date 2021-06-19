@@ -39,6 +39,7 @@ gen_function_docs() = Books.doctest(@doc gen(::Function))
 function docs_metadata()
     path = joinpath(pkgdir(BooksDocs), "metadata.yml")
     text = read(path, String)
+    text = replace(text, '`' => "\\`")
     code_block(text)
 end
 
@@ -96,7 +97,7 @@ function my_data_mean()
 end
 
 options_example() = Options(DataFrame(A = [1], B = [2], C = [3]);
-                        caption="My DataFrame", label="foo")
+                        caption="My DataFrame.", label="foo")
 
 options_example_doctests() = Books.doctest(@doc Books.caption_label)
 
@@ -141,14 +142,14 @@ function example_plot()
 end
 
 function multiple_example_plots()
-    paths = ["example_plot_$i" for i in 2:3]
+    filenames = ["example_plot_$i" for i in 2:3]
     I = 1:30
     df = (x=I, y=I.*2, z=I.^3)
     objects = [
         draw(data(df) * mapping(:x, :y))
         draw(data(df) * mapping(:x, :z))
     ]
-    Options.(objects, paths)
+    Options.(objects, filenames)
 end
 
 function image_options_plot()
@@ -161,19 +162,19 @@ end
 
 function combined_options_plot()
     fg = image_options_plot()
-    Options(fg; caption="Sine function")
+    Options(fg; caption="Sine function.")
 end
 
 function plotsjl()
     p = plot(1:10, 1:2:20)
-    Options(p; caption="An example plot with Plots.jl")
+    Options(p; caption="An example plot with Plots.jl.")
 end
 
 function makiejl()
     x = range(0, 10, length=100)
     y = sin.(x)
     p = lines(x, y)
-    Options(p; caption="An example plot with Makie.jl")
+    Options(p; caption="An example plot with Makie.jl.")
 end
 
 chain() = MCMCChains.Chains([1])
