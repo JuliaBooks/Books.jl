@@ -3,11 +3,11 @@
 using CairoMakie
 import Makie
 
-function convert_output(path, p::Makie.FigureAxisPlot; caption=nothing, label=nothing)
+function convert_output(expr, path, p::Makie.FigureAxisPlot; caption=nothing, label=nothing)
     im_dir = joinpath(BUILD_DIR, "im")
     mkpath(im_dir)
 
-    if isnothing(path)
+    if isnothing(expr)
         # Not determining some random name here, because it would require cleanups too.
         msg = """
             It is not possible to write an image without specifying a path.
@@ -15,7 +15,7 @@ function convert_output(path, p::Makie.FigureAxisPlot; caption=nothing, label=no
             """
         throw(ErrorException(msg))
     end
-    file, _ = method_name(path)
+    file = method_name(expr)
 
     println("Writing plot images for $file")
     svg_filename = "$file.svg"
@@ -31,6 +31,6 @@ function convert_output(path, p::Makie.FigureAxisPlot; caption=nothing, label=no
     Makie.FileIO.save(png_path, p; px_per_unit)
 
     im_link = joinpath("im", svg_filename)
-    caption, label = caption_label(path, caption, label)
+    caption, label = caption_label(expr, caption, label)
     pandoc_image(file, png_path; caption, label)
 end

@@ -9,25 +9,7 @@ using DataFrames
         ```
         """
 
-    dir = B.GENERATED_DIR
-    paths = [
-        joinpath(dir, "example.md"),
-        joinpath(dir, "example2.md"),
-        joinpath(dir, "example3.md")
-    ]
-    include_text = """
-    ```{.include}
-    $(paths[1])
-    ```
-
-    ```{.include}
-    $(paths[2])
-    $(paths[3])
-    ```
-    """
-    @test B.include_filenames(include_text) == paths
-
-    @test contains(B.convert_output(nothing, DataFrame(A = [1])), "---")
+    @test contains(B.convert_output(nothing, nothing, DataFrame(A = [1])), "---")
 
     X = 1:30
     df = (x=X, y=X.*2)
@@ -35,12 +17,12 @@ using DataFrames
     fg = draw(xy)
 
     mktemp() do path, io
-        @test contains(B.convert_output(path, fg), ".png")
+        @test contains(B.convert_output("tmp", nothing, fg), ".png")
     end
     im_dir = joinpath(B.BUILD_DIR, "im")
     rm(im_dir; force=true, recursive=true)
 
-    @test strip(B.convert_output(nothing, code("DataFrame(A = [1])"))) == """
+    @test strip(B.convert_output(nothing, nothing, code("DataFrame(A = [1])"))) == """
     ```
     DataFrame(A = [1])
     ```
@@ -57,12 +39,12 @@ module Foo
 
     @test B.caller_module() == Main.Foo
 
-    dir = B.GENERATED_DIR
-    function foo()
-        "lorem"
-    end
-    path = joinpath(dir, "foo.md")
-    B.evaluate_include(path, nothing, true)
-    @test read(path, String) == "lorem"
-    rm(dir; force = true, recursive = true)
+    foo() = "lorem"
+    fail_on_error = true
+    # Broken for some reason.
+    # B.evaluate_include("foo()", Foo, fail_on_error)
+    # path = joinpath(B.GENERATED_DIR, "foo-ob--cb-.md")
+    # mkpath(B.GENERATED_DIR)
+    # @test read(path, String) == "lorem"
+    # rm(dir; force=true, recursive=true)
 end

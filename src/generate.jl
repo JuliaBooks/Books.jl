@@ -1,4 +1,3 @@
-include_regex = r"```{\.include}([\w\W]*?)```"
 
 """
     code_block(s)
@@ -7,15 +6,56 @@ Wrap `s` in a Markdown code block with triple backticks.
 """
 code_block(s) = "```\n$s\n```\n"
 
-"""
-    include_filenames(s::AbstractString)::Vector
+function extract_codeblock_expr(s)
+end
 
-Returns the filenames mentioned in `{.include}` code blocks.
+extract_expr_example() = """
+    lorem
+    ```jl
+    foo(3)
+    ```
+    ipsum `jl bar()` dolar
+    """
+
 """
-function include_filenames(s::AbstractString)::Vector
-    matches = eachmatch(include_regex, s)
-    nested_filenames = [split(m[1]) for m in matches]
-    vcat(nested_filenames...)
+    extract_expr(s::AbstractString)::Vector
+
+Returns the filenames mentioned in the `jl` code blocks.
+Here, `s` is the contents of a Markdown file.
+
+```jldoctest
+julia> s = Books.extract_expr_example();
+
+julia> Books.extract_expr(s)
+2-element Vector{String}:
+ "foo(3)"
+ "bar()"
+```
+"""
+function extract_expr(s::AbstractString)::Vector
+    codeblock_pattern = r"```jl\s*([\w\W]*?)```"
+    matches = eachmatch(codeblock_pattern, s)
+    function clean(m)
+        m = m[1]
+        m = strip(m)
+        m = string(m)::String
+    end
+    from_codeblocks = clean.(matches)
+
+    inline_pattern = r" `jl ([^`]*)`"
+    matches = eachmatch(inline_pattern, s)
+    from_inline = clean.(matches)
+    E = [from_codeblocks; from_inline]
+
+    function check_parse_errors(expr)
+        try
+            Meta.parse(expr)
+        catch e
+            error("Exception occured when trying to parse `$expr`")
+        end
+    end
+    check_parse_errors.(E)
+    E
 end
 
 """
@@ -37,120 +77,95 @@ function caller_module()
 end
 
 """
-    method_name(path::AbstractString)
+    method_name(expr::String)
 
-Return method name and suffix for a Markdown file.
-Here, the suffix is used to allow users to specify that, for example, `@sc` has to be called on the method.
+Return file name for `expr`.
+This is used for things like how to call an image file and a caption.
 
-# Example
+# Examples
 ```jldoctest
-julia> path = "_gen/foo_bar.md";
+julia> Books.method_name("@some_macro(foo)")
+"foo"
 
-julia> Books.method_name(path)
-("foo_bar", "")
+julia> Books.method_name("foo()")
+"foo"
 
-julia> path = "_gen/foo_bar-sc.md";
-
-julia> Books.method_name(path)
-("foo_bar", "sc")
+julia> Books.method_name("foo(3)")
+"foo_3"
 ```
 """
-function method_name(path::AbstractString)
-    name, extension = splitext(basename(path))
-    suffix = ""
-    if contains(name, '-')
-        parts = split(name, '-')
-        if length(parts) != 2
-            error("Path name is expected to contain at most one - (minus)")
-        end
-        name = parts[1]
-        suffix = parts[2]
-    end
-    (name, suffix)
+function method_name(expr::String)
+    remove_macros(expr) = replace(expr, r"@[\w\_]*" => "")
+    expr = remove_macros(expr)
+    expr = replace(expr, '(' => '_')
+    expr = replace(expr, ')' => "")
+    expr = strip(expr, '_')
 end
 
 """
-    evaluate_and_write(f::Function, path::AbstractString, suffix::AbstractString)
+    escape_expr(expr::String)
 
-Evaluates `f`, converts the output writes the output to `path`.
-Some output conversions will also write to other files, which the file at `path` links to.
-For example, this happens with plots.
-
-# Example
-```jldoctest
-julia> using DataFrames
-
-julia> example_table() = DataFrame(A = [1, 2], B = [3, 4])
-example_table (generic function with 1 method)
-
-julia> path = joinpath(tempdir(), "example.md");
-
-julia> Books.evaluate_and_write(example_table, path, "")
-Running example_table() for /tmp/example.md
-
-julia> print(read(path, String))
-|   A |   B |
-| ---:| ---:|
-|   1 |   3 |
-|   2 |   4 |
-
-: Example {#tbl:example}
-```
+Escape an expression to the corresponding path.
+The logic in this method should match the logic in the Lua filter.
 """
-function evaluate_and_write(f::Function, path::AbstractString, suffix::AbstractString)
-    function run_f(f)
-        println("Running $(f)() for $path")
-        f()
-    end
-    function run_sc(f)
-        println("Obtaining source code for $f()")
-        @sc(f)
-    end
-    function run_sco(f)
-        println("Obtaining source code and output for $f()")
-        @sco(f)
-    end
+function escape_expr(expr::String)
+    replace_map = [
+        '(' => "-ob-",
+        ')' => "-cb-",
+        '"' => "-dq-",
+        ':' => "-fc-",
+        ';' => "-sc-",
+        '@' => "-ax-"
+    ]
+    escaped = reduce(replace, replace_map; init=expr)
+    joinpath(GENERATED_DIR, "$escaped.md")
+end
 
-    out =
-        suffix == "sc" ? run_sc(f) :
-        suffix == "sco" ? run_sco(f) :
-        run_f(f)
+function evaluate_and_write(M::Module, expr::String)
+    path = escape_expr(expr)
+    println("Writing output of `$expr` to $path")
 
-    out = convert_output(path, out)
-    out = String(out)
+    ex = Meta.parse(expr)
+    out = Core.eval(M, ex)
+    out = convert_output(expr, path, out)
+    out = string(out)::String
     write(path, out)
 
     nothing
 end
 
-function evaluate_and_write(M::Module, path)
-    method, suffix = method_name(path)
-    f = getproperty(M, Symbol(method))
-    evaluate_and_write(f, path, suffix)
+function evaluate_and_write(f::Function)
+    function_name = Base.nameof(f)
+    expr = "$(function_name)()"
+    path = escape_expr(expr)
+    println("Writing output of `$expr` to $path")
+    out = f()
+    out = convert_output(expr, path, out)
+    out = string(out)::String
+    write(path, out)
+
+    nothing
 end
 
 """
-    evaluate_include(path, M, fail_on_error)
+    evaluate_include(expr::String, M::Module, fail_on_error::Bool)
 
-For a `path` included in a chapter file, run the corresponding function and write the output to `path`.
+For a `path` included in a Markdown file, run the corresponding function and write the output to `path`.
 """
-function evaluate_include(path, M, fail_on_error)
-    if dirname(path) != GENERATED_DIR
-        println("Not running code for $path")
-        return nothing
-    end
+function evaluate_include(expr::String, M::Module, fail_on_error::Bool)
     if isnothing(M)
+        # This code isn't really working.
         M = caller_module()
     end
-    mkpath(dirname(path))
     if fail_on_error
-        evaluate_and_write(M, path)
+        evaluate_and_write(M, expr)
     else
         try
-            evaluate_and_write(M, path)
+            evaluate_and_write(M, expr)
         catch e
             @error """
-            Failed to run code for $path:
+            Failed to run code for $path.
+            Details:
             $(rethrow())
             """
         end
@@ -170,14 +185,15 @@ After calling the methods, this method will also call `html()` to update the sit
 The module `M` is used to locate the method defined, as a string, in the `.include` via `getproperty`.
 """
 function gen(; M=nothing, fail_on_error=false, project="default", call_html=true)
+    mkpath(GENERATED_DIR)
     paths = inputs(project)
     first_file = first(paths)
     if !isfile(first_file)
         error("Couldn't find $first_file. Is there a valid project in your current working directory?")
     end
-    included_paths = vcat([include_filenames(read(path, String)) for path in paths]...)
-    f(path) = evaluate_include(path, M, fail_on_error)
-    foreach(f, included_paths)
+    included_expr = vcat([extract_expr(read(path, String)) for path in paths]...)
+    f(expr) = evaluate_include(expr, M, fail_on_error)
+    foreach(f, included_expr)
     if call_html
         println("Updating html")
         html(; project)
@@ -199,14 +215,14 @@ julia> module Foo
        end;
 
 julia> gen(Foo.version)
-Running version() for _gen/version.md
+Writing output of `version()` to _gen/version-ob--cb-.md
 Updating html
 ```
 """
-function gen(f::Function; fail_on_error=false, project="default", call_html=true)
+function gen(f::Function; project="default", call_html=true)
     path = joinpath(GENERATED_DIR, "$f.md")
-    suffix = ""
-    evaluate_and_write(f, path, suffix)
+    mkpath(GENERATED_DIR)
+    evaluate_and_write(f)
     if call_html
         println("Updating html")
         html(; project)

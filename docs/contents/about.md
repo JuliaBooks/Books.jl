@@ -16,14 +16,14 @@ To create single pages and PDFs containing code blocks, see [Weave.jl](https://g
 One of the main differences with Franklin.jl, Weave.jl and knitr (Bookdown) is that this package completely decouples the computations from the building of the output.
 The benefit of this is that you can spawn two separate processes, namely the one to serve your webpages:
 
-```{.include}
-_gen/serve_example.md
+```jl
+serve_example()
 ```
 
 and the one where you do the computations for your package `Foo`:
 
-```{.include}
-_gen/generate_example.md
+```jl
+generate_example()
 ```
 
 This way, the website remains responsive when the computations are running.

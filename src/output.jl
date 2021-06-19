@@ -27,15 +27,15 @@ struct ImageOptions
     ImageOptions(object; width=nothing, height=nothing) = new(object, width, height)
 end
 
-function convert_output(path, out::ImageOptions; kwargs...)
+function convert_output(expr, path, out::ImageOptions; kwargs...)
     width = out.width
     height = out.height
-    convert_output(path, out.object; width, height, kwargs...)
+    convert_output(expr, path, out.object; width, height, kwargs...)
 end
 
-function convert_output(path, outputs::AbstractVector)
+function convert_output(expr, path, outputs::AbstractVector)
     path = nothing
-    outputs = convert_output.(path, outputs)
+    outputs = convert_output.(nothing, nothing, outputs)
     outputs = String.(outputs)
     out = join(outputs, "\n\n")
 end
@@ -77,7 +77,7 @@ julia> Options.(objects, filenames)
 """
 Options(object, filename::AbstractString) = Options(object; filename)
 
-function convert_output(path, out::Code)::String
+function convert_output(expr, path, out::Code)::String
     block = out.block
     mod = out.mod
     ans = try
@@ -85,7 +85,7 @@ function convert_output(path, out::Code)::String
     catch e
         string(e)
     end
-    shown_output = convert_output(path, ans)
+    shown_output = convert_output(expr, path, ans)
     if isa(ans, AbstractString) || isa(ans, Number)
         shown_output = code_block(shown_output)
     end
@@ -113,7 +113,7 @@ function convert_output(path, out::Code)::String
 end
 
 """
-    convert_output(path, options::Options)
+    convert_output(expr, path, options::Options)
 
 Convert `options.object` while taking `options.caption` and `options.label` into account.
 This method needs to pass the options correctly to the resulting type, because the syntax depends on the type;
@@ -127,7 +127,7 @@ julia> caption = "My DataFrame";
 
 julia> options = Options(df; caption);
 
-julia> print(Books.convert_output(nothing, options))
+julia> print(Books.convert_output(nothing, nothing, options))
 |   A |
 | ---:|
 |   1 |
@@ -135,29 +135,30 @@ julia> print(Books.convert_output(nothing, options))
 : My DataFrame
 ```
 """
-function convert_output(path, opts::Options)::String
+function convert_output(expr, path, opts::Options)::String
     object = opts.object
     filename = opts.filename
     if !isnothing(filename)
-        path = filename
+        expr = filename
     end
+    path = nothing
     caption = opts.caption
     label = opts.label
-    convert_output(path, object; caption, label)
+    convert_output(expr, path, object; caption, label)
 end
 
 """
-    convert_output(path, out::AbstractString)
+    convert_output(expr, path, out::AbstractString)
 
 Return `out` as string.
 This avoids the adding of `"` which `show` does by default.
 """
-convert_output(path, out::AbstractString) = string(out)
+convert_output(expr, path, out::AbstractString) = string(out)
 
-convert_output(path, out::Number) = string(out)
+convert_output(expr, path, out::Number) = string(out)
 
 """
-    convert_output(path, out)
+    convert_output(expr, path, out)
 
 Fallback method for `out::Any`.
 This passes the objects through show to use the overrides that package creators might have provided.
@@ -172,13 +173,13 @@ julia> chn = Chains([1]; info=(start_time=[1.0], stop_time=[1.0]));
 julia> string(chn)
 "MCMC chain (1×1×1 Array{Int64, 3})"
 
-julia> out = Books.convert_output("", chn);
+julia> out = Books.convert_output("", "", chn);
 
 julia> contains(out, "Summary Statistics")
 true
 ```
 """
-function convert_output(path, out)::String
+function convert_output(expr, path, out)::String
     io = IOBuffer()
     mime = MIME("text/plain")
     show(io, mime, out)
@@ -227,17 +228,17 @@ function pandoc_image(file, path; caption=nothing, label=nothing)
 end
 
 """
-    caption_label(path, caption, label)
+    caption_label(expr, caption, label)
 
 Return `caption` and `label` for the inputs.
 This method sets some reasonable defaults if any of the inputs is missing.
 
 # Examples
 ```jldoctest
-julia> Books.caption_label("a/foo_bar.md", nothing, nothing)
+julia> Books.caption_label("foo_bar()", nothing, nothing)
 (caption = "Foo bar", label = "foo_bar")
 
-julia> Books.caption_label("a/foo_bar.md", "My caption", nothing)
+julia> Books.caption_label("foo_bar()", "My caption", nothing)
 (caption = "My caption", label = "foo_bar")
 
 julia> Books.caption_label(nothing, "cap", nothing)
@@ -250,13 +251,13 @@ julia> Books.caption_label(nothing, nothing, nothing)
 (caption = nothing, label = nothing)
 ```
 """
-function caption_label(path, caption, label)
-    if isnothing(path) && isnothing(caption) && isnothing(label)
+function caption_label(expr, caption, label)
+    if isnothing(expr) && isnothing(caption) && isnothing(label)
         return (caption=nothing, label=nothing)
     end
 
-    if !isnothing(path)
-        name, suffix = method_name(path)
+    if !isnothing(expr)
+        name = method_name(expr)
         if isnothing(label)
             label = name
         end
