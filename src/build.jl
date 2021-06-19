@@ -4,7 +4,7 @@ function pandoc_file(filename)
     isfile(user_path) ? user_path : fallback_path
 end
 
-include_lua_filter = joinpath(PROJECT_ROOT, "src", "include-output.lua")
+include_lua_filter = joinpath(PROJECT_ROOT, "src", "include-codeblocks.lua")
 include_files = "--lua-filter=$include_lua_filter"
 crossref = "--filter=pandoc-crossref"
 citeproc = "--citeproc"

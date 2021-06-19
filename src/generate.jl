@@ -1,4 +1,3 @@
-include_regex = r"```{\.include}([\w\W]*?)```"
 
 """
     code_block(s)
@@ -7,13 +6,37 @@ Wrap `s` in a Markdown code block with triple backticks.
 """
 code_block(s) = "```\n$s\n```\n"
 
-"""
-    include_filenames(s::AbstractString)::Vector
+function extract_codeblock_expr(s)
+    codeblock_pattern = r"```jl\s*\n([\w\W]*?)\n```"
+    matches = eachmatch(codeblock_pattern, s)
+    @show matches
+    [m[1] for m in matches]
+end
 
-Returns the filenames mentioned in `{.include}` code blocks.
 """
-function include_filenames(s::AbstractString)::Vector
-    matches = eachmatch(include_regex, s)
+    extract_expr(s::AbstractString)::Vector
+
+Returns the filenames mentioned in the `jl` code blocks.
+Here, `s` is the contents of a Markdown file.
+
+```jldoctest
+julia> s = raw"lorem\n```jl\n foo(3)\n``` ipsum `jl bar()` dolar"
+
+julia> Books.extract_expr(s)
+2-element Vector{String}:
+ "foo(3)"
+ "bar()"
+```
+"""
+function extract_expr(s::AbstractString)::Vector
+    extract_codeblock_expr(s)
+
+    code_pattern = raw"`jl [^`]*`"
+    rx = Regex(codeblock_pattern * '|' * code_pattern)
+
+    matches = eachmatch(rx, s)
+    @show matches
+    [@show m for m in matches]
     nested_filenames = [split(m[1]) for m in matches]
     vcat(nested_filenames...)
 end
@@ -132,7 +155,7 @@ end
 """
     evaluate_include(path, M, fail_on_error)
 
-For a `path` included in a chapter file, run the corresponding function and write the output to `path`.
+For a `path` included in a Markdown file, run the corresponding function and write the output to `path`.
 """
 function evaluate_include(path, M, fail_on_error)
     if dirname(path) != GENERATED_DIR
@@ -175,9 +198,9 @@ function gen(; M=nothing, fail_on_error=false, project="default", call_html=true
     if !isfile(first_file)
         error("Couldn't find $first_file. Is there a valid project in your current working directory?")
     end
-    included_paths = vcat([include_filenames(read(path, String)) for path in paths]...)
-    f(path) = evaluate_include(path, M, fail_on_error)
-    foreach(f, included_paths)
+    included_expr = vcat([extract_expr(read(path, String)) for path in paths]...)
+    f(expr) = evaluate_include(expr, M, fail_on_error)
+    foreach(f, included_expr)
     if call_html
         println("Updating html")
         html(; project)
@@ -199,7 +222,7 @@ julia> module Foo
        end;
 
 julia> gen(Foo.version)
-Running version() for _gen/version.md
+Running `version()` for _gen/version.md
 Updating html
 ```
 """
