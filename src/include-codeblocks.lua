@@ -88,6 +88,13 @@ function transclude_codeblock(cb)
     if line:sub(1,2) ~= '//' then
 
       path = md_path(line)
+      if 60 < path:len() then
+        msg = "ERROR: The text `" .. line .. "` is too long to be converted to a filename"
+        msg = { pandoc.CodeBlock(msg) }
+        blocks:extend(msg)
+        -- Lua has no continue.
+        goto skip_to_next
+      end
 
       local fh = io.open(path)
       if not fh then
@@ -115,6 +122,7 @@ function transclude_codeblock(cb)
         fh:close()
       end
     end
+    ::skip_to_next::
   end
   return blocks
 end
@@ -154,7 +162,11 @@ function transclude_code(c)
     tmp = pandoc.RawInline(format, text)
     print(tmp)
     -- return { pandoc.Span(contents.blocks) }
-    return contents.blocks
+    -- c.text = text
+    c.blocks = contents.blocks
+    -- So, I can output it like normally via `return pandoc.read(el.text, 'markdown').blocks`
+    -- Unfortunately, that returns blocks which is a subtype of RawBlock.
+    return c
   end
 
   return c
@@ -164,6 +176,9 @@ return {
   { Meta = get_vars },
   {
     Header = update_last_level,
-    Code = transclude_code
+    CodeBlock = transclude_codeblock,
+    -- Due to the type system of Pandoc, a Code element cannot contain Block subtypes.
+    -- These subtypes will start to exist once your gonna parse Markdown.
+    -- Code = transclude_code
   }
 }
