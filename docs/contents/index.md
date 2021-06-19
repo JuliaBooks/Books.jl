@@ -14,7 +14,7 @@ Foo ```jl homepage_intro()``` bar
 
 `jl baz()`
 
-Lorem content: `jl var(3)` ipsum
+Lorem content: ```jl var(3)``` ipsum
 
 ```jl
 foo("bar")

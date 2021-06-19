@@ -7,11 +7,15 @@ Wrap `s` in a Markdown code block with triple backticks.
 code_block(s) = "```\n$s\n```\n"
 
 function extract_codeblock_expr(s)
-    codeblock_pattern = r"```jl\s*\n([\w\W]*?)\n```"
-    matches = eachmatch(codeblock_pattern, s)
-    @show matches
-    [m[1] for m in matches]
 end
+
+extract_expr_example() = """
+    lorem
+    ```jl
+    foo(3)
+    ```
+    ipsum `jl bar()` dolar
+    """
 
 """
     extract_expr(s::AbstractString)::Vector
@@ -20,7 +24,7 @@ Returns the filenames mentioned in the `jl` code blocks.
 Here, `s` is the contents of a Markdown file.
 
 ```jldoctest
-julia> s = raw"lorem\n```jl\n foo(3)\n``` ipsum `jl bar()` dolar"
+julia> s = Books.extract_expr_example();
 
 julia> Books.extract_expr(s)
 2-element Vector{String}:
@@ -29,16 +33,24 @@ julia> Books.extract_expr(s)
 ```
 """
 function extract_expr(s::AbstractString)::Vector
-    extract_codeblock_expr(s)
+    codeblock_pattern = r"```jl\s*([\w\W]*?)```"
+    matches = eachmatch(codeblock_pattern, s)
+    function clean(m)
+        m = m[1]
+        m = strip(m)
+        m = string(m)::String
+    end
+    from_codeblocks = clean.(matches)
 
-    code_pattern = raw"`jl [^`]*`"
-    rx = Regex(codeblock_pattern * '|' * code_pattern)
+    inline_pattern = r" `jl ([^`]*)`"
+    matches = eachmatch(inline_pattern, s)
+    from_inline = clean.(matches)
+    E = [from_codeblocks; from_inline]
 
-    matches = eachmatch(rx, s)
-    @show matches
-    [@show m for m in matches]
-    nested_filenames = [split(m[1]) for m in matches]
-    vcat(nested_filenames...)
+    # Check the user defined expressions for parse errors.
+    Core.eval.(E)
+
+    E
 end
 
 """
@@ -83,9 +95,6 @@ function method_name(path::AbstractString)
     suffix = ""
     if contains(name, '-')
         parts = split(name, '-')
-        if length(parts) != 2
-            error("Path name is expected to contain at most one - (minus)")
-        end
         name = parts[1]
         suffix = parts[2]
     end
@@ -93,87 +102,68 @@ function method_name(path::AbstractString)
 end
 
 """
-    evaluate_and_write(f::Function, path::AbstractString, suffix::AbstractString)
+    escape_expr(expr::String)
 
-Evaluates `f`, converts the output writes the output to `path`.
-Some output conversions will also write to other files, which the file at `path` links to.
-For example, this happens with plots.
-
-# Example
-```jldoctest
-julia> using DataFrames
-
-julia> example_table() = DataFrame(A = [1, 2], B = [3, 4])
-example_table (generic function with 1 method)
-
-julia> path = joinpath(tempdir(), "example.md");
-
-julia> Books.evaluate_and_write(example_table, path, "")
-Running example_table() for /tmp/example.md
-
-julia> print(read(path, String))
-|   A |   B |
-| ---:| ---:|
-|   1 |   3 |
-|   2 |   4 |
-
-: Example {#tbl:example}
-```
+Escape an expression to the corresponding path.
+The logic in this method should match the logic in the Lua filter.
 """
-function evaluate_and_write(f::Function, path::AbstractString, suffix::AbstractString)
-    function run_f(f)
-        println("Running $(f)() for $path")
-        f()
-    end
-    function run_sc(f)
-        println("Obtaining source code for $f()")
-        @sc(f)
-    end
-    function run_sco(f)
-        println("Obtaining source code and output for $f()")
-        @sco(f)
-    end
+function escape_expr(expr::String)
+    replace_map = [
+        '(' => "-ob-",
+        ')' => "-cb-",
+        '"' => "-dq-",
+        ':' => "-fc-",
+        ';' => "-sc-",
+    ]
+    escaped = reduce(replace, replace_map; init=expr)
+    joinpath(GENERATED_DIR, "$escaped.md")
+end
 
-    out =
-        suffix == "sc" ? run_sc(f) :
-        suffix == "sco" ? run_sco(f) :
-        run_f(f)
+function evaluate_and_write(M::Module, expr::String)
+    path = escape_expr(expr)
+    println("Writing output of `$expr` to $path")
 
+    ex = Meta.parse(expr)
+    out = Core.eval(M, ex)
     out = convert_output(path, out)
-    out = String(out)
+    out = string(out)::String
     write(path, out)
 
     nothing
 end
 
-function evaluate_and_write(M::Module, path)
-    method, suffix = method_name(path)
-    f = getproperty(M, Symbol(method))
-    evaluate_and_write(f, path, suffix)
+function evaluate_and_write(f::Function)
+    function_name = string(Base.nameof(f))::String
+    expr = function_name * "()"
+    path = escape_expr(expr)
+    println("Writing output of `$expr` to $path")
+    out = f()
+    out = convert_output(path, out)
+    out = string(out)::String
+    write(path, out)
+
+    nothing
 end
 
 """
-    evaluate_include(path, M, fail_on_error)
+    evaluate_include(expr::String, M, fail_on_error)
 
 For a `path` included in a Markdown file, run the corresponding function and write the output to `path`.
 """
-function evaluate_include(path, M, fail_on_error)
-    if dirname(path) != GENERATED_DIR
-        println("Not running code for $path")
-        return nothing
-    end
+function evaluate_include(expr::String, M, fail_on_error)
     if isnothing(M)
+        # This code isn't really working.
         M = caller_module()
     end
-    mkpath(dirname(path))
     if fail_on_error
-        evaluate_and_write(M, path)
+        evaluate_and_write(M, expr)
     else
         try
-            evaluate_and_write(M, path)
+            evaluate_and_write(M, expr)
         catch e
             @error """
-            Failed to run code for $path:
+            Failed to run code for $path.
+            Details:
             $(rethrow())
             """
         end

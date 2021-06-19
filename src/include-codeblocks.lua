@@ -140,33 +140,19 @@ function transclude_code(c)
     return
   end
 
-  tmp = c.text
   line = c.text
   line = line:sub(4)
   path = md_path(line)
 
-  c.text = path
-
   local fh = io.open(path)
   if not fh then
-    not_found_error(tmp, path, '`')
+    not_found_error(line, path, '`')
     c.text = "ERROR: Cannot find file at " .. path .. " for `" .. line .. "`"
   else
     text = fh:read("*a")
-    format = "markdown"
-    local contents = pandoc.read(text, format)
+    -- To retain ticks, use `c.text = text` and `return c`.
     -- This conversion to a list is essential.
-    -- return { pandoc.Pandoc(contents) }
-    print(text)
-    print(contents)
-    tmp = pandoc.RawInline(format, text)
-    print(tmp)
-    -- return { pandoc.Span(contents.blocks) }
-    -- c.text = text
-    c.blocks = contents.blocks
-    -- So, I can output it like normally via `return pandoc.read(el.text, 'markdown').blocks`
-    -- Unfortunately, that returns blocks which is a subtype of RawBlock.
-    return c
+    return { pandoc.Str(text) }
   end
 
   return c
@@ -177,8 +163,6 @@ return {
   {
     Header = update_last_level,
     CodeBlock = transclude_codeblock,
-    -- Due to the type system of Pandoc, a Code element cannot contain Block subtypes.
-    -- These subtypes will start to exist once your gonna parse Markdown.
-    -- Code = transclude_code
+    Code = transclude_code
   }
 }
