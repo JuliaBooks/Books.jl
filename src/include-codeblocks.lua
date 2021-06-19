@@ -47,6 +47,7 @@ function md_path(s)
   escaped = escaped:gsub("\"", "-dq-")
   escaped = escaped:gsub(":", "-fc-")
   escaped = escaped:gsub(";", "-sc-")
+  escaped = escaped:gsub("@", "-ax-")
   path_sep = package.config:sub(1,1)
   path = "_gen" .. path_sep .. escaped .. ".md"
   return path
@@ -54,7 +55,8 @@ end
 
 local not_found_error
 function not_found_error(line, path, ticks)
-  io.stderr:write("Cannot find file for " .. ticks .. line .. ticks .. " at " .. path .. "\n")
+  code = ticks .. line .. ticks
+  io.stderr:write("Cannot find file for " .. code .. " at " .. path .. "\n")
 end
 
 --- Filter function for code blocks
@@ -99,7 +101,9 @@ function transclude_codeblock(cb)
       local fh = io.open(path)
       if not fh then
         not_found_error(line, path, '```')
-        msg = "ERROR: Cannot find file at " .. path .. " for `" .. line .. "`"
+        suggestion = "Did you run `gen(; M)` where `M = YourModule`?\n"
+        msg = "ERROR: Cannot find file at " .. path .. " for `" .. line .. "`."
+        msg = msg .. ' ' .. suggestion
         msg = { pandoc.CodeBlock(msg) }
         blocks:extend(msg)
       else
@@ -147,7 +151,10 @@ function transclude_code(c)
   local fh = io.open(path)
   if not fh then
     not_found_error(line, path, '`')
-    c.text = "ERROR: Cannot find file at " .. path .. " for `" .. line .. "`"
+    suggestion = "Did you run `gen(; M)` where `M = YourModule`?"
+    msg = "ERROR: Cannot find file at " .. path .. " for `" .. line .. "`."
+    msg = msg .. ' ' .. suggestion
+    c.text = msg
   else
     text = fh:read("*a")
     -- To retain ticks, use `c.text = text` and `return c`.

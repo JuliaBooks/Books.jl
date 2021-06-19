@@ -47,9 +47,14 @@ function extract_expr(s::AbstractString)::Vector
     from_inline = clean.(matches)
     E = [from_codeblocks; from_inline]
 
-    # Check the user defined expressions for parse errors.
-    Core.eval.(E)
-
+    function check_parse_errors(expr)
+        try
+            Meta.parse(expr)
+        catch e
+            error("Exception occured when trying to parse `$expr`")
+        end
+    end
+    check_parse_errors.(E)
     E
 end
 
@@ -72,33 +77,29 @@ function caller_module()
 end
 
 """
-    method_name(path::AbstractString)
+    method_name(expr::String)
 
-Return method name and suffix for a Markdown file.
-Here, the suffix is used to allow users to specify that, for example, `@sc` has to be called on the method.
+Return file name for `expr`.
+This is used for things like how to call an image file and a caption.
 
-# Example
+# Examples
 ```jldoctest
-julia> path = "_gen/foo_bar.md";
+julia> Books.method_name("@some_macro(foo)")
+"foo"
 
-julia> Books.method_name(path)
-("foo_bar", "")
+julia> Books.method_name("foo()")
+"foo"
 
-julia> path = "_gen/foo_bar-sc.md";
-
-julia> Books.method_name(path)
-("foo_bar", "sc")
+julia> Books.method_name("foo(3)")
+"foo_3"
 ```
 """
-function method_name(path::AbstractString)
-    name, extension = splitext(basename(path))
-    suffix = ""
-    if contains(name, '-')
-        parts = split(name, '-')
-        name = parts[1]
-        suffix = parts[2]
-    end
-    (name, suffix)
+function method_name(expr::String)
+    remove_macros(expr) = replace(expr, r"@[\w\_]*" => "")
+    expr = remove_macros(expr)
+    expr = replace(expr, '(' => '_')
+    expr = replace(expr, ')' => "")
+    expr = strip(expr, '_')
 end
 
 """
@@ -114,6 +115,7 @@ function escape_expr(expr::String)
         '"' => "-dq-",
         ':' => "-fc-",
         ';' => "-sc-",
+        '@' => "-ax-"
     ]
     escaped = reduce(replace, replace_map; init=expr)
     joinpath(GENERATED_DIR, "$escaped.md")
@@ -125,7 +127,7 @@ function evaluate_and_write(M::Module, expr::String)
 
     ex = Meta.parse(expr)
     out = Core.eval(M, ex)
-    out = convert_output(path, out)
+    out = convert_output(expr, path, out)
     out = string(out)::String
     write(path, out)
 
@@ -133,12 +135,12 @@ function evaluate_and_write(M::Module, expr::String)
 end
 
 function evaluate_and_write(f::Function)
-    function_name = string(Base.nameof(f))::String
-    expr = function_name * "()"
+    function_name = Base.nameof(f)
+    expr = "$(function_name)()"
     path = escape_expr(expr)
     println("Writing output of `$expr` to $path")
     out = f()
-    out = convert_output(path, out)
+    out = convert_output(expr, path, out)
     out = string(out)::String
     write(path, out)
 
@@ -183,6 +185,7 @@ After calling the methods, this method will also call `html()` to update the sit
 The module `M` is used to locate the method defined, as a string, in the `.include` via `getproperty`.
 """
 function gen(; M=nothing, fail_on_error=false, project="default", call_html=true)
+    mkpath(GENERATED_DIR)
     paths = inputs(project)
     first_file = first(paths)
     if !isfile(first_file)
@@ -216,10 +219,10 @@ Running `version()` for _gen/version.md
 Updating html
 ```
 """
-function gen(f::Function; fail_on_error=false, project="default", call_html=true)
+function gen(f::Function; project="default", call_html=true)
     path = joinpath(GENERATED_DIR, "$f.md")
-    suffix = ""
-    evaluate_and_write(f, path, suffix)
+    mkpath(GENERATED_DIR)
+    evaluate_and_write(f)
     if call_html
         println("Updating html")
         html(; project)

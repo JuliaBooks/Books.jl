@@ -3,7 +3,7 @@
 using AlgebraOfGraphics
 using CairoMakie
 
-function convert_output(path, fg::AlgebraOfGraphics.FigureGrid; caption=nothing, label=nothing)
+function convert_output(expr, path, fg::AlgebraOfGraphics.FigureGrid; caption=nothing, label=nothing)
     im_dir = joinpath(BUILD_DIR, "im")
     mkpath(im_dir)
 
@@ -15,7 +15,7 @@ function convert_output(path, fg::AlgebraOfGraphics.FigureGrid; caption=nothing,
             """
         throw(ErrorException(msg))
     end
-    file, _ = method_name(path)
+    file = store_filename(expr)
 
     println("Writing plot images for $file")
     svg_filename = "$file.svg"

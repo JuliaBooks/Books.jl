@@ -3,7 +3,7 @@
 using CairoMakie
 import Makie
 
-function convert_output(path, p::Makie.FigureAxisPlot; caption=nothing, label=nothing)
+function convert_output(expr, path, p::Makie.FigureAxisPlot; caption=nothing, label=nothing)
     im_dir = joinpath(BUILD_DIR, "im")
     mkpath(im_dir)
 
@@ -15,7 +15,7 @@ function convert_output(path, p::Makie.FigureAxisPlot; caption=nothing, label=no
             """
         throw(ErrorException(msg))
     end
-    file, _ = method_name(path)
+    file = method_name(expr)
 
     println("Writing plot images for $file")
     svg_filename = "$file.svg"
