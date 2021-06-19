@@ -149,8 +149,12 @@ function transclude_code(c)
     local contents = pandoc.read(text, format)
     -- This conversion to a list is essential.
     -- return { pandoc.Pandoc(contents) }
-    contents = pandoc.RawBlock(format, contents)
-    return { pandoc.Str("bar") }
+    print(text)
+    print(contents)
+    tmp = pandoc.RawInline(format, text)
+    print(tmp)
+    -- return { pandoc.Span(contents.blocks) }
+    return contents.blocks
   end
 
   return c
