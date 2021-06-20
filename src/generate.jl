@@ -92,13 +92,23 @@ julia> Books.method_name("foo()")
 
 julia> Books.method_name("foo(3)")
 "foo_3"
+
+julia> Books.method_name("Options(foo(); caption='b')")
+"Options_foo__captionis-b-"
 ```
 """
 function method_name(expr::String)
     remove_macros(expr) = replace(expr, r"@[\w\_]*" => "")
     expr = remove_macros(expr)
+    # These rewrites are not reversible, because they do not have to be.
     expr = replace(expr, '(' => '_')
     expr = replace(expr, ')' => "")
+    expr = replace(expr, ';' => "_")
+    expr = replace(expr, " " => "")
+    expr = replace(expr, '"' => "-")
+    expr = replace(expr, '\'' => "-")
+    expr = replace(expr, '=' => "is")
+    expr = replace(expr, '.' => "")
     expr = strip(expr, '_')
 end
 

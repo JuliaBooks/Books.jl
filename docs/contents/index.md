@@ -1,6 +1,8 @@
 # Welcome {-}
 
-[//]: # (This file is only included on the website.)
+```{=comment}
+This file is only included on the website.
+```
 
 ```jl
 homepage_intro()

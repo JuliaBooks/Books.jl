@@ -90,7 +90,7 @@ function transclude_codeblock(cb)
     if line:sub(1,2) ~= '//' then
 
       path = md_path(line)
-      if 60 < path:len() then
+      if 100 < path:len() then
         msg = "ERROR: The text `" .. line .. "` is too long to be converted to a filename"
         msg = { pandoc.CodeBlock(msg) }
         blocks:extend(msg)
@@ -158,7 +158,8 @@ function transclude_code(c)
   else
     text = fh:read("*a")
     -- To retain ticks, use `c.text = text` and `return c`.
-    -- This conversion to a list is essential.
+    -- Better would be to parse Markdown and test whether the user only
+    -- embedded inline Markdown elements such as bold and italic.
     return { pandoc.Str(text) }
   end
 

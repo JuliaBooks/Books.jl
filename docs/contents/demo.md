@@ -45,6 +45,14 @@ You can also embed the output inline with single backticks like
 `jl julia_version()`
 ```
 
+or just call Julia's constant `VERSION` directly from within the Markdown file:
+
+```
+This book is built with Julia `jl string(VERSION)`.
+```
+
+This book is built with Julia `jl string(VERSION)`.
+
 While doing this, it is expected that you also have the browser open and a server running, see @sec:getting-started.
 That way, the page is immediately updated when you run `gen`.
 
@@ -236,6 +244,18 @@ And, for adjusting the caption, use `Options`:
 
 ```jl
 @sco(combined_options_plot)
+```
+
+or the caption can be specified in the Markdown file:
+
+<pre>
+```jl
+Options(image_options_plot(); caption="Label specified in Markdown.")
+```
+</pre>
+
+```jl
+Options(image_options_plot(); caption="Label specified in Markdown.")
 ```
 
 ### Plots {#sec:plotsjl}
