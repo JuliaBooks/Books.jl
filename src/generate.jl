@@ -183,7 +183,7 @@ function evaluate_include(expr::String, M::Module, fail_on_error::Bool)
 end
 
 """
-    gen(; M=nothing, fail_on_error=false, project="default")
+    gen(paths::Vector; M=nothing, fail_on_error=false, project="default")
 
 Populate the files in `$(Books.GENERATED_DIR)/` by calling the required methods.
 These methods are specified by the filename and will output to that filename.
@@ -194,13 +194,10 @@ After calling the methods, this method will also call `html()` to update the sit
 
 The module `M` is used to locate the method defined, as a string, in the `.include` via `getproperty`.
 """
-function gen(; M=nothing, fail_on_error=false, project="default", call_html=true)
+function gen(paths::Vector; M=nothing, fail_on_error=false, project="default", call_html=true)
     mkpath(GENERATED_DIR)
-    paths = inputs(project)
-    first_file = first(paths)
-    if !isfile(first_file)
-        error("Couldn't find $first_file. Is there a valid project in your current working directory?")
-    end
+    # Allow user to pass `index.md` instead of `contents/index.md`.
+    paths = [contains(dirname(p), "contents") ? p : joinpath("contents", p) for p in paths]
     included_expr = vcat([extract_expr(read(path, String)) for path in paths]...)
     f(expr) = evaluate_include(expr, M, fail_on_error)
     foreach(f, included_expr)
@@ -208,6 +205,15 @@ function gen(; M=nothing, fail_on_error=false, project="default", call_html=true
         println("Updating html")
         html(; project)
     end
+end
+
+function gen(; M=nothing, fail_on_error=false, project="default", call_html=true)
+    paths = inputs(project)
+    first_file = first(paths)
+    if !isfile(first_file)
+        error("Couldn't find $first_file. Is there a valid project in $(pwd())?")
+    end
+    gen(paths; M, fail_on_error, project, call_html)
 end
 
 """
@@ -224,9 +230,10 @@ julia> module Foo
        version() = "This book is built with Julia \$VERSION"
        end;
 
-julia> gen(Foo.version)
+julia> call_html = false; # To avoid Pandoc errors breaking this jldoctest.
+
+julia> gen(Foo.version; call_html)
 Writing output of `version()` to _gen/version-ob--cb-.md
-Updating html
 ```
 """
 function gen(f::Function; project="default", call_html=true)

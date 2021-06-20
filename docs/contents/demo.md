@@ -32,7 +32,13 @@ julia_version() = "This book is built with Julia $VERSION."
 ```
 
 Next, ensure that you call `using Books; gen(; M)`, where `M = YourModule`.
-This will place the text
+Alternatively, if you work on a large project and want to only generate the output for one or more Markdown files in `contents/`, such as `index.md`, use
+
+```jl
+markdown_gen_example()
+```
+
+Calling `gen` will place the text
 
 ```jl
 julia_version_example()

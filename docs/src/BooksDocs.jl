@@ -1,5 +1,6 @@
 module BooksDocs
 
+import IOCapture
 import Latexify
 import MCMCChains
 import Statistics

@@ -109,6 +109,24 @@ code_example_table() = code("""
 
 julia_version() = "This method is defined to work around a bug in the regex."
 
+function markdown_gen_example()
+    c = IOCapture.capture() do
+        M = BooksDocs
+        # Update html set to false to avoid Pandoc errors.
+        gen(["index.md"]; M, call_html=false)
+    end
+
+    """
+    ```
+    gen(["index.md"]; M)
+    ```
+
+    ```
+    $(c.output)
+    ```
+    """
+end
+
 julia_version_example() = """
 ```
 This book is built with Julia $VERSION.
