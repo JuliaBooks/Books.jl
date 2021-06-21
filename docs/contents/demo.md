@@ -138,6 +138,57 @@ This way, you can pass a informative path with plots for which informative capti
 To define the labels and/or captions manually, see @sec:labels-captions.
 For showing multiple plots, see @sec:plots.
 
+Most things can be done via functions.
+However, defining a struct is not possible, because `@sco` cannot locate the struct definition inside the module.
+Therefore, it is also possible to pass code and specify that you want to evaluate and show code (sc) without showing the output:
+
+<pre>
+```jl
+sc("
+struct Point
+    x
+    y
+end
+")
+```
+</pre>
+
+```jl
+sc("
+struct Point
+    x
+    y
+end
+")
+```
+
+and show code and output (sco).
+For exaple,
+
+<pre>
+```jl
+sco("p = Point(1, 2)")
+```
+</pre>
+
+shows as
+
+```jl
+sco("p = Point(1, 2)")
+```
+
+Note that this is starting to look a lot like R Markdown where the syntax would be something like
+
+<pre>
+```{r, results='hide'}
+x = rnorm(100)
+```
+</pre>
+
+I guess that there is no perfect way here.
+The benefit of evaluating the user input directly, as Books.jl is doing, seems to be that it is more extensible if I'm not mistaken.
+Possibly, the reasoning is that R Markdown needs to convert the output directly, whereas Julia's better type system allows for converting in much later stages, but I'm not sure.
+
 ## Labels and captions {#sec:labels-captions}
 
 To set labels and captions, wrap your object in `Options`:

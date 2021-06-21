@@ -31,7 +31,7 @@ include("generate.jl")
 export html, pdf, docx, build_all
 export code, ImageOptions, Options
 export code_block
-export @sc, CodeAndFunction, @sco
+export @sc, sc, CodeAndFunction, @sco, sco
 export gen
 export serve
 
