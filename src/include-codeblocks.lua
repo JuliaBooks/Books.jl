@@ -36,19 +36,18 @@ local function shift_headings(blocks, shift_by)
 end
 
 --- Return path of the markdown file for the string `s` given by the user.
+---
+--- We can just drop a lot of info because it will probably still be unique.
+--- Otherwise, Julia can detect duplicate filenames and throw an error.
+---
 --- Ensure that this logic corresponds to the logic inside Books.jl.
+---
 local md_path
 function md_path(s)
-  -- Escape all weird characters to ensure they can be in the file.
-  -- This yields very weird names, but luckily the code is only internal.
-  escaped = s
-  escaped = escaped:gsub("%(", "-ob-")
-  escaped = escaped:gsub("%)", "-cb-")
-  escaped = escaped:gsub("\"", "-dq-")
-  escaped = escaped:gsub(":", "-fc-")
-  escaped = escaped:gsub(";", "-sc-")
-  escaped = escaped:gsub("@", "-ax-")
-  path_sep = package.config:sub(1,1)
+  escaped = string.sub(s, 1, 60)
+  escaped = escaped:gsub("([^a-zA-Z0-9]+)", "_")
+  -- Platform independent path separator.
+  path_sep = package.config:sub(1, 1)
   path = "_gen" .. path_sep .. escaped .. ".md"
   return path
 end
@@ -86,48 +85,38 @@ function transclude_codeblock(cb)
   local buffer_last_heading_level = last_heading_level
 
   local blocks = List:new()
-  for line in cb.text:gmatch('[^\n]+') do
-    if line:sub(1,2) ~= '//' then
 
-      path = md_path(line)
-      if 100 < path:len() then
-        msg = "ERROR: The text `" .. line .. "` is too long to be converted to a filename"
-        msg = { pandoc.CodeBlock(msg) }
-        blocks:extend(msg)
-        -- Lua has no continue.
-        goto skip_to_next
-      end
 
-      local fh = io.open(path)
-      if not fh then
-        not_found_error(line, path, '```')
-        suggestion = "Did you run `gen(; M)` where `M = YourModule`?\n"
-        msg = "ERROR: Cannot find file at " .. path .. " for `" .. line .. "`."
-        msg = msg .. ' ' .. suggestion
-        msg = { pandoc.CodeBlock(msg) }
-        blocks:extend(msg)
-      else
-        local text = fh:read("*a")
-        local contents = pandoc.read(text, format).blocks
-        last_heading_level = 0
-        -- recursive transclusion
-        contents = pandoc.walk_block(
-          -- Here, the contents is added as an Any block.
-          -- Then, the filter is applied again recursively because
-          -- the included file could contain an include again!
-          pandoc.Div(contents),
-          { Header = update_last_level, CodeBlock = transclude }
-          ).content
-        --- reset to level before recursion
-        last_heading_level = buffer_last_heading_level
-        contents = shift_headings(contents, shift_heading_level_by)
-        -- Note that contents has type List.
-        blocks:extend(contents)
-        fh:close()
-      end
-    end
-    ::skip_to_next::
+  path = md_path(cb.text)
+
+  local fh = io.open(path)
+  if not fh then
+    not_found_error(cb.text, path, '```')
+    suggestion = "Did you run `gen(; M)` where `M = YourModule`?\n"
+    msg = "ERROR: Cannot find file at " .. path .. " for `" .. cb.text .. "`."
+    msg = msg .. ' ' .. suggestion
+    msg = { pandoc.CodeBlock(msg) }
+    blocks:extend(msg)
+  else
+    local text = fh:read("*a")
+    local contents = pandoc.read(text, format).blocks
+    last_heading_level = 0
+    -- recursive transclusion
+    contents = pandoc.walk_block(
+      -- Here, the contents is added as an Any block.
+      -- Then, the filter is applied again recursively because
+      -- the included file could contain an include again!
+      pandoc.Div(contents),
+      { Header = update_last_level, CodeBlock = transclude }
+      ).content
+    --- reset to level before recursion
+    last_heading_level = buffer_last_heading_level
+    contents = shift_headings(contents, shift_heading_level_by)
+    -- Note that contents has type List.
+    blocks:extend(contents)
+    fh:close()
   end
+  ::skip_to_next::
   return blocks
 end
 

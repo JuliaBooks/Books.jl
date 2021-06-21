@@ -14,6 +14,10 @@ extract_expr_example() = """
     ```jl
     foo(3)
     ```
+    ```jl
+    foo(3)
+    bar
+    ```
     ipsum `jl bar()` dolar
     """
 
@@ -27,8 +31,9 @@ Here, `s` is the contents of a Markdown file.
 julia> s = Books.extract_expr_example();
 
 julia> Books.extract_expr(s)
-2-element Vector{String}:
+3-element Vector{String}:
  "foo(3)"
+ "foo(3)\\nbar"
  "bar()"
 ```
 """
@@ -49,7 +54,7 @@ function extract_expr(s::AbstractString)::Vector
 
     function check_parse_errors(expr)
         try
-            Meta.parse(expr)
+            Meta.parse("begin $expr end")
         catch e
             error("Exception occured when trying to parse `$expr`")
         end
@@ -100,7 +105,6 @@ julia> Books.method_name("Options(foo(); caption='b')")
 function method_name(expr::String)
     remove_macros(expr) = replace(expr, r"@[\w\_]*" => "")
     expr = remove_macros(expr)
-    # These rewrites are not reversible, because they do not have to be.
     expr = replace(expr, '(' => '_')
     expr = replace(expr, ')' => "")
     expr = replace(expr, ';' => "_")
@@ -119,23 +123,17 @@ Escape an expression to the corresponding path.
 The logic in this method should match the logic in the Lua filter.
 """
 function escape_expr(expr::String)
-    replace_map = [
-        '(' => "-ob-",
-        ')' => "-cb-",
-        '"' => "-dq-",
-        ':' => "-fc-",
-        ';' => "-sc-",
-        '@' => "-ax-"
-    ]
-    escaped = reduce(replace, replace_map; init=expr)
+    escaped = 60 < length(expr) ? expr[1:60] : expr
+    escaped = replace(escaped, r"([^a-zA-Z0-9]+)" => "_")
     joinpath(GENERATED_DIR, "$escaped.md")
 end
 
 function evaluate_and_write(M::Module, expr::String)
     path = escape_expr(expr)
-    println("Writing output of `$expr` to $path")
+    expr_info = replace(expr, '\n' => "\\n")
+    println("Writing output of `$expr_info` to $path")
 
-    ex = Meta.parse(expr)
+    ex = Meta.parse("begin $expr end")
     out = Core.eval(M, ex)
     out = convert_output(expr, path, out)
     out = string(out)::String
@@ -148,7 +146,8 @@ function evaluate_and_write(f::Function)
     function_name = Base.nameof(f)
     expr = "$(function_name)()"
     path = escape_expr(expr)
-    println("Writing output of `$expr` to $path")
+    expr_info = replace(expr, '\n' => "\\n")
+    println("Writing output of `$expr_info` to $path")
     out = f()
     out = convert_output(expr, path, out)
     out = string(out)::String
@@ -242,7 +241,7 @@ julia> module Foo
 julia> call_html = false; # To avoid Pandoc errors breaking this jldoctest.
 
 julia> gen(Foo.version; call_html)
-Writing output of `version()` to _gen/version-ob--cb-.md
+Writing output of `version()` to _gen/version_.md
 ```
 """
 function gen(f::Function; project="default", call_html=true)
