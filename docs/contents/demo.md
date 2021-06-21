@@ -291,3 +291,13 @@ For example, for `MCMCChains`,
 ```jl
 @sco(chain)
 ```
+
+### Note box
+
+To write note boxes, you can use
+
+```
+> **_NOTE:_**  The note content.
+```
+
+> **_NOTE:_**  The note content.

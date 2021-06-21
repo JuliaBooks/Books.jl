@@ -113,7 +113,14 @@ function html_page_name(html)
     (id=id, text=first(sections).text)
 end
 
-html_href(text, link, level) = """<a class="menu-level-$level" href="$link">$text</a>"""
+function html_href(text, link, level)
+    threshold = 33
+    if threshold < length(text)
+        shortened = text[1:threshold]
+        text = shortened * ".."
+    end
+    """<a class="menu-level-$level" href="$link">$text</a>"""
+end
 html_li(text) = """<li>$text</li>"""
 
 function pandoc_metadata(file=joinpath(GENERATED_DIR, "metadata.yml"))::Dict
