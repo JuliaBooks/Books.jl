@@ -291,3 +291,15 @@ For example, for `MCMCChains`,
 ```jl
 @sco(chain)
 ```
+
+### Note box
+
+To write note boxes, you can use
+
+```
+> **_NOTE:_**  The note content.
+```
+
+> **_NOTE:_**  The note content.
+
+This way is fully supported by Pandoc, so it will be correctly converted to outputs such as PDF or DOCX.
