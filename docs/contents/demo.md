@@ -189,6 +189,8 @@ I guess that there is no perfect way here.
 The benefit of evaluating the user input directly, as Books.jl is doing, seems to be that it is more extensible if I'm not mistaken.
 Possibly, the reasoning is that R Markdown needs to convert the output directly, whereas Julia's better type system allows for converting in much later stages, but I'm not sure.
 
+> **Tip**: After you run `gen(; M)` with the `Point` struct defined above, the struct will be available in your REPL.
+
 ## Labels and captions {#sec:labels-captions}
 
 To set labels and captions, wrap your object in `Options`:
