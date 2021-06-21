@@ -183,6 +183,16 @@ function evaluate_include(expr::String, M::Module, fail_on_error::Bool)
 end
 
 """
+    expand_path(p)
+
+Expand path to allow an user to pass `index` instead of `contents/index.md` to `gen`.
+Not allowing `index.md` because that is confusing with entr(f, ["contents"], [M]).
+"""
+function expand_path(p)
+    joinpath("contents", "$p.md")
+end
+
+"""
     gen(paths::Vector; M=nothing, fail_on_error=false, project="default")
 
 Populate the files in `$(Books.GENERATED_DIR)/` by calling the required methods.
@@ -190,14 +200,12 @@ These methods are specified by the filename and will output to that filename.
 This allows the user to easily link code blocks to code.
 The methods are assumed to be in the module `M` of the caller.
 Otherwise, specify another module `M`.
-After calling the methods, this method will also call `html()` to update the site when `call_html=true`.
-
-The module `M` is used to locate the method defined, as a string, in the `.include` via `getproperty`.
+After calling the methods, this method will also call `html()` to update the site when
+`call_html == true`.
 """
 function gen(paths::Vector; M=nothing, fail_on_error=false, project="default", call_html=true)
     mkpath(GENERATED_DIR)
-    # Allow user to pass `index.md` instead of `contents/index.md`.
-    paths = [contains(dirname(p), "contents") ? p : joinpath("contents", p) for p in paths]
+    paths = [contains(dirname(p), "contents") ? p : expand_path(p) for p in paths]
     included_expr = vcat([extract_expr(read(path, String)) for path in paths]...)
     f(expr) = evaluate_include(expr, M, fail_on_error)
     foreach(f, included_expr)
@@ -206,6 +214,7 @@ function gen(paths::Vector; M=nothing, fail_on_error=false, project="default", c
         html(; project)
     end
 end
+gen(path::String; kwargs...) = gen([path]; kwargs...)
 
 function gen(; M=nothing, fail_on_error=false, project="default", call_html=true)
     paths = inputs(project)
@@ -219,7 +228,7 @@ end
 """
     gen(f::Function; fail_on_error=false, project="default", call_html=true)
 
-Populate the file in $(Books.GENERATED_DIR) by calling `func`.
+Populate the file in `Books.GENERATED_DIR` by calling `func`.
 This method is useful during development to quickly see the effect of updating your code.
 Use with Revise.jl and optionally `Revise.entr`.
 After calling `f`, this method will also call `html()` to update the site when `call_html=true`.
