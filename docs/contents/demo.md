@@ -163,7 +163,7 @@ end
 ```
 
 and show code and output (sco).
-For exaple,
+For example,
 
 <pre>
 ```jl
