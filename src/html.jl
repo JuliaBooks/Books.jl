@@ -2,14 +2,14 @@ import YAML
 import URIs
 
 """
-    split_keepdelim(str::AbstractString, dlm::Regex)
+    split_keepdelim(str::AbstractString, delim::Regex)
 
 Split on regex while keeping the matches.
 Based on https://github.com/JuliaLang/julia/issues/20625#issuecomment-581585151.
 """
-function split_keepdelim(str::AbstractString, dlm::Regex)
-    dlm = string(dlm)[3:end-1]
-    rx = Regex("(?=$dlm)")
+function split_keepdelim(str::AbstractString, delim::Regex)
+    delim = string(delim)[3:end-1]
+    rx = Regex("(?=$delim)")
     split(str, rx)
 end
 
@@ -79,7 +79,7 @@ function section_infos(text)
     for line in lines
         m = match(numbered_rx, line)
         if !isnothing(m)
-            number, id = m.captures 
+            number, id = m.captures
             line_end = split(line, '>')[end-1]
             text = line_end[nextind(line_end, 0, 2):prevind(line_end, end, 4)]
             tuple = (num = number, id = id, text = lstrip(text))
@@ -116,7 +116,7 @@ end
 function html_href(text, link, level)
     threshold = 33
     if threshold < length(text)
-        shortened = text[1:threshold]
+        shortened = text[1:threshold]::String
         text = shortened * ".."
     end
     """<a class="menu-level-$level" href="$link">$text</a>"""
@@ -139,7 +139,7 @@ end
 
 Menu including numbered sections.
 """
-function add_menu(splitted=split_html())
+function add_menu(splitted)
     head, bodies, foot = splitted
     data = pandoc_metadata()
     title = data["title"]
@@ -224,7 +224,7 @@ function add_extra_head(head, extra_head::AbstractString)
     replace(head, before => after)
 end
 
-function html_pages(chs=chapters(), h=pandoc_html(), extra_head="")
+function html_pages(h, extra_head="")
     head, menu, bodies, foot = add_menu(split_html(h))
     head = add_extra_head(head, extra_head)
     ids_texts = html_page_name.(bodies)
@@ -247,7 +247,7 @@ function map_ids(names, pages)
         html = page
         matches = eachmatch(rx, html)
         for m in matches
-            capture = first(m.captures)
+            capture = first(m.captures)::SubString{String}
             if startswith(capture, "sec:")
                 key = '#' * capture
                 mapping[key] = name
@@ -269,7 +269,7 @@ function fix_links(names, pages, url_prefix)
     updated_pages = []
     function fix_page(name, page)
         function replace_match(s)
-            capture = first(match(rx, s).captures)
+            capture = first(match(rx, s).captures)::SubString{String}
             if startswith(capture, "#sec:")
                 page_link = mapping[capture]
                 return uncapture("$url_prefix/$page_link.html$capture")
@@ -290,9 +290,9 @@ function fix_links(names, pages, url_prefix)
     (names, fixed_pages)
 end
 
-function write_html_pages(url_prefix, chs=chapters(), h=pandoc_html(), extra_head="")
+function write_html_pages(url_prefix, h::AbstractString, extra_head="")
     h = fix_image_urls(h, url_prefix)
-    names, pages = html_pages(chs, h, extra_head)
+    names, pages = html_pages(h, extra_head)
     names, pages = fix_links(names, pages, url_prefix)
     for (i, (name, page)) in enumerate(zip(names, pages))
         name = i == 1 ? "index" : name
