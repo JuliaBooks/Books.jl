@@ -36,7 +36,7 @@ function extract_expr(s::AbstractString)::Vector
     codeblock_pattern = r"```jl\s*([\w\W]*?)```"
     matches = eachmatch(codeblock_pattern, s)
     function clean(m)
-        m = m[1]
+        m = m[1]::SubString{String}
         m = strip(m)
         m = string(m)::String
     end
@@ -158,11 +158,11 @@ function evaluate_and_write(f::Function)
 end
 
 """
-    evaluate_include(expr::String, M::Module, fail_on_error::Bool)
+    evaluate_include(expr::String, M, fail_on_error::Bool)
 
 For a `path` included in a Markdown file, run the corresponding function and write the output to `path`.
 """
-function evaluate_include(expr::String, M::Module, fail_on_error::Bool)
+function evaluate_include(expr::String, M, fail_on_error::Bool)
     if isnothing(M)
         # This code isn't really working.
         M = caller_module()
@@ -193,7 +193,7 @@ function expand_path(p)
 end
 
 """
-    gen(paths::Vector; M=nothing, fail_on_error=false, project="default")
+    gen(paths::Vector; M=Main, fail_on_error=false, project="default")
 
 Populate the files in `$(Books.GENERATED_DIR)/` by calling the required methods.
 These methods are specified by the filename and will output to that filename.
@@ -203,7 +203,7 @@ Otherwise, specify another module `M`.
 After calling the methods, this method will also call `html()` to update the site when
 `call_html == true`.
 """
-function gen(paths::Vector; M=nothing, fail_on_error=false, project="default", call_html=true)
+function gen(paths::Vector; M=Main, fail_on_error=false, project="default", call_html=true)
     mkpath(GENERATED_DIR)
     paths = [contains(dirname(p), "contents") ? p : expand_path(p) for p in paths]
     included_expr = vcat([extract_expr(read(path, String)) for path in paths]...)
@@ -216,7 +216,7 @@ function gen(paths::Vector; M=nothing, fail_on_error=false, project="default", c
 end
 gen(path::String; kwargs...) = gen([path]; kwargs...)
 
-function gen(; M=nothing, fail_on_error=false, project="default", call_html=true)
+function gen(; M=Main, fail_on_error=false, project="default", call_html=true)
     paths = inputs(project)
     first_file = first(paths)
     if !isfile(first_file)
