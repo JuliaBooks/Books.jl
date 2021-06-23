@@ -89,13 +89,13 @@ This is used for things like how to call an image file and a caption.
 
 # Examples
 ```jldoctest
-julia> Books.method_name("@some_macro(foo)")
+julia> Books.method_name("@some_macro(M.foo)")
 "foo"
 
-julia> Books.method_name("foo()")
+julia> Books.method_name("M.foo()")
 "foo"
 
-julia> Books.method_name("foo(3)")
+julia> Books.method_name("M.foo(3)")
 "foo_3"
 
 julia> Books.method_name("Options(foo(); caption='b')")
@@ -105,6 +105,11 @@ julia> Books.method_name("Options(foo(); caption='b')")
 function method_name(expr::String)
     remove_macros(expr) = replace(expr, r"@[\w\_]*" => "")
     expr = remove_macros(expr)
+    if startswith(expr, '(')
+        expr = strip(expr, ['(', ')'])
+    end
+    remove_modules(expr) = replace(expr, r"^[A-Z][a-zA-Z]*\." => "")
+    expr = remove_modules(expr)
     expr = replace(expr, '(' => '_')
     expr = replace(expr, ')' => "")
     expr = replace(expr, ';' => "_")
@@ -201,11 +206,20 @@ The methods are assumed to be in the module `M` of the caller.
 Otherwise, specify another module `M`.
 After calling the methods, this method will also call `html()` to update the site when
 `call_html == true`.
+
+!!! note
+
+    If there is anthing that you want to have available when running the code blocks,
+    just load them inside your REPL (module `Main`) and call `gen()`.
+    For example, you can define `M = YourModule` to shorten calls to methods in your module.
 """
-function gen(paths::Vector; M=Main, fail_on_error=false, project="default", call_html=true)
+
+function gen(paths::Vector{String};
+        M=Main, fail_on_error=false, project="default", call_html=true)
+
     mkpath(GENERATED_DIR)
     paths = [contains(dirname(p), "contents") ? p : expand_path(p) for p in paths]
-    included_expr = vcat([extract_expr(read(path, String)) for path in paths]...)
+    included_expr = vcat([extract_expr(read(p, String)) for p in paths]...)
     f(expr) = evaluate_include(expr, M, fail_on_error)
     foreach(f, included_expr)
     if call_html
@@ -213,7 +227,16 @@ function gen(paths::Vector; M=Main, fail_on_error=false, project="default", call
         html(; project)
     end
 end
-gen(path::String; kwargs...) = gen([path]; kwargs...)
+
+"""
+    gen(path::AbstractString; kwargs...)
+
+Convenience method for passing `path::AbstractString` instead of `paths::Vector`.
+"""
+function gen(path::AbstractString; kwargs...)
+    path = string(path)::String
+    gen([path]; kwargs...)
+end
 
 function gen(; M=Main, fail_on_error=false, project="default", call_html=true)
     paths = inputs(project)
@@ -222,34 +245,4 @@ function gen(; M=Main, fail_on_error=false, project="default", call_html=true)
         error("Couldn't find $first_file. Is there a valid project in $(pwd())?")
     end
     gen(paths; M, fail_on_error, project, call_html)
-end
-
-"""
-    gen(f::Function; fail_on_error=false, project="default", call_html=true)
-
-Populate the file in `Books.GENERATED_DIR` by calling `func`.
-This method is useful during development to quickly see the effect of updating your code.
-Use with Revise.jl and optionally `Revise.entr`.
-After calling `f`, this method will also call `html()` to update the site when `call_html=true`.
-
-# Example
-```jldoctest
-julia> module Foo
-       version() = "This book is built with Julia \$VERSION"
-       end;
-
-julia> call_html = false; # To avoid Pandoc errors breaking this jldoctest.
-
-julia> gen(Foo.version; call_html)
-Writing output of `version()` to _gen/version_.md
-```
-"""
-function gen(f::Function; project="default", call_html=true)
-    path = joinpath(GENERATED_DIR, "$f.md")
-    mkpath(GENERATED_DIR)
-    evaluate_and_write(f)
-    if call_html
-        println("Updating html")
-        html(; project)
-    end
 end

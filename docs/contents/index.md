@@ -5,7 +5,7 @@ This file is only included on the website.
 ```
 
 ```jl
-homepage_intro()
+M.homepage_intro()
 ```
 
 See @sec:about for more information about this package.

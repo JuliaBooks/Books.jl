@@ -7,19 +7,17 @@ The easiest way to get started is to
 1. serve your book via:
 
 ```jl
-serve_example()
+M.serve_example()
 ```
 
 To generate all the Julia output (see @sec:embedding-output for more information) use
 
-```jl
-generate_example()
 ```
+$ julia --project -e  'using Books; using MyPackage; M = MyPackage'
 
-As the number of outputs increases, you might want to only update one output:
-
-```jl
-gen_function_docs()
+julia> gen()
+[...]
+Updating html
 ```
 
 To avoid code duplication between projects, this package tries to have good defaults for many settings.
@@ -39,13 +37,13 @@ You can override settings by placing a `metadata.yml` file at the root directory
 For example, the metadata for this project contains:
 
 ```jl
-docs_metadata()
+M.docs_metadata()
 ```
 
 The following defaults are set by Books.jl.
 
 ```jl
-default_metadata()
+M.default_metadata()
 ```
 
 ## config.toml {#sec:config}
@@ -67,13 +65,13 @@ The `pdf_filename` is used by `pdf()` and the `port` setting is used by `serve()
 For this documentation, the following config is used
 
 ```jl
-docs_config()
+M.docs_config()
 ```
 
 Which overrides some settings from the following default settings
 
 ```jl
-default_config()
+M.default_config()
 ```
 
 Here, the `extra_directories` allows you to specify directories which need to be moved into `_build`, which makes them available for the local server and online.

@@ -64,7 +64,7 @@ This should be evaluated inside the correct module since it is typically called
 inside `Core.eval(M, ex)` in `generate.jl`.
 """
 function eval_convert(expr::AbstractString, M)
-    ex = Meta.parse(expr)
+    ex = Meta.parse("begin $expr end")
     out = Core.eval(M, ex)
     out = convert_output(expr, nothing, out)
 end

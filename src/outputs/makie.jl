@@ -3,19 +3,11 @@
 using CairoMakie
 import Makie
 
-function convert_output(expr, path, p::Makie.FigureAxisPlot; caption=nothing, label=nothing)
+function convert_output(expr, path, p::Makie.FigureAxisPlot; caption=missing, label=missing)
     im_dir = joinpath(BUILD_DIR, "im")
     mkpath(im_dir)
 
-    if isnothing(expr)
-        # Not determining some random name here, because it would require cleanups too.
-        msg = """
-            It is not possible to write an image without specifying a path.
-            Use `Options(p; filename=filename)` where `p` is a Makie.jl plot.
-            """
-        throw(ErrorException(msg))
-    end
-    file = method_name(expr)
+    file = plotting_filename(expr, path, "Makie.jl")
 
     println("Writing plot images for $file")
     svg_filename = "$file.svg"
