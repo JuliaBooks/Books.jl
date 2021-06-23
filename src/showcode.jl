@@ -77,9 +77,9 @@ Show code and output for `expr`.
 function sco(expr::AbstractString; M=Main)
     out = eval_convert(expr, M)
     code = code_block(lstrip(expr))
-    out = code_block(out)
     """
     $code
+
     $out
     """
 end

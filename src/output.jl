@@ -127,7 +127,7 @@ julia> caption = "My DataFrame";
 
 julia> options = Options(df; caption);
 
-julia> print(Books.convert_output(nothing, nothing, options))
+julia> print(Books.convert_output(missing, missing, options))
 |   A |
 | ---:|
 |   1 |
@@ -231,52 +231,66 @@ end
     caption_label(expr, caption, label)
 
 Return `caption` and `label` for the inputs.
-This method sets some reasonable defaults if any of the inputs is missing.
+This method sets some reasonable defaults if any of the inputs is nothing or missing.
+In this context, `nothing` forces a parameter to be empty, whereas `missing` allows the
+parameter to be inferred.
+The elements of the output named tuple are never of type `Missing`.
 
 # Examples
+
 ```jldoctest
-julia> Books.caption_label("foo_bar()", nothing, nothing)
+julia> Books.caption_label("foo_bar()", missing, missing)
 (caption = "Foo bar", label = "foo_bar")
 
-julia> Books.caption_label("foo_bar()", "My caption", nothing)
+julia> Books.caption_label("foo_bar()", "My caption", missing)
 (caption = "My caption", label = "foo_bar")
 
-julia> Books.caption_label(nothing, "cap", nothing)
-(caption = "cap", label = nothing)
+julia> Books.caption_label("foo_bar()", "My caption", nothing)
+(caption = "My caption", label = nothing)
 
-julia> Books.caption_label(nothing, nothing, "my_label")
+julia> Books.caption_label(missing, "My caption", missing)
+(caption = "My caption", label = nothing)
+
+julia> Books.caption_label(missing, missing, "my_label")
 (caption = "My label", label = "my_label")
 
-julia> Books.caption_label(nothing, nothing, nothing)
+julia> Books.caption_label(missing, missing, missing)
 (caption = nothing, label = nothing)
 ```
 """
 function caption_label(expr, caption, label)
-    if isnothing(expr) && isnothing(caption) && isnothing(label)
+    if ismissing(expr) && ismissing(caption) && ismissing(label)
         return (caption=nothing, label=nothing)
     end
 
-    if !isnothing(expr)
+    original_caption = caption
+    original_label = label
+
+    if !ismissing(expr) && !isnothing(expr)
         name = method_name(expr)
-        if isnothing(label)
+        if ismissing(label)
             label = name
         end
-        if isnothing(caption)
+        if ismissing(caption)
             caption = prettify_caption(name)
         end
-        return (caption=caption, label=label)
     end
 
-    if !isnothing(label)
-        if isnothing(caption)
+    if !ismissing(label) && !isnothing(label)
+        if ismissing(caption)
             caption = prettify_caption(label)
         end
-        return (caption=caption, label=label)
     end
 
-    if !isnothing(caption)
-        return (caption=caption, label=label)
+    if isnothing(original_caption) || ismissing(caption)
+        caption = nothing
     end
+
+    if isnothing(original_label) || ismissing(label)
+        label = nothing
+    end
+
+    return (caption=caption, label=label)
 end
 
 """

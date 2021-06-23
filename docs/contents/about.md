@@ -82,9 +82,16 @@ x = 1 + 1
 which shows the code and output (`sco`) 4 times:
 
 ```jl
+using DataFrames
+sc("")
+```
+
+```jl
 repeat(sco(raw"""
-x = 1 + 1
+df = DataFrame(a=[1, 2], b=[3, 4])
+Options(df, caption="A table", label=nothing)
 """
 ), 4)
 ```
+
 

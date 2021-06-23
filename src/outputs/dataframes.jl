@@ -18,7 +18,7 @@ julia> print(Books.convert_output("my_table()", nothing, df))
 : My table {#tbl:my_table}
 ```
 """
-function convert_output(expr, path, out::DataFrame; caption=nothing, label=nothing)::String
+function convert_output(expr, path, out::DataFrame; caption=missing, label=missing)::String
     table = Latexify.latexify(out; env=:mdtable, latex=false)
     caption, label = caption_label(expr, caption, label)
 
@@ -26,17 +26,12 @@ function convert_output(expr, path, out::DataFrame; caption=nothing, label=nothi
         return string(table)
     end
 
-    if !isnothing(label)
-        return """
-        $table
-        : $caption {#tbl:$label}
-        """
-    end
 
-    if !isnothing(caption)
-        return """
+    label = isnothing(label) ? "" : "{#tbl:$label}"
+    caption = isnothing(caption) ? "" : caption
+
+    return """
         $table
-        : $caption
+        : $caption $label
         """
-    end
 end
