@@ -1,6 +1,6 @@
 # About {#sec:about}
 
-Similar to [Bookdown](https://bookdown.org){target="_blank"} this package is, basically, a wrapper around [Pandoc](https://pandoc.org/){target="_blank"}; similar to [Bookdown](https://bookdown.org){target="_blank"}.
+Similar to [Bookdown](https://bookdown.org){target="_blank"} this package is, basically, a wrapper around [Pandoc](https://pandoc.org/){target="_blank"}.
 For websites, this package allows for:
 
 - Building a website spanning multiple pages.
@@ -19,10 +19,10 @@ The benefit of this is that you can spawn two separate processes, namely the one
 M.serve_example()
 ```
 
-and the one where you do the computations for your package `Foo`:
+and the one where you do the computations for your package:
 
 ```
-$ julia --project -e  'using Books; using Foo; M = Foo'
+$ julia --project -ie 'using Books'
 
 julia> gen()
 [...]
@@ -31,8 +31,60 @@ Updating html
 
 This way, the website remains responsive when the computations are running.
 Thanks to LiveServer.jl and Pandoc, updating the page after changing text or code takes less than a second.
-Also, because the `serve` process does relatively few things, it doesn't often crash.
+Also, because the `serve` process does relatively few things, it almost never crashes.
 
-The decoupling also allows you to have more flexiblity in when you want to run what code.
+As another benefit, the decoupling allows you to have more flexiblity in when you want to run what code.
 In combination with Revise.jl, you can quickly update your code and see the updated output.
+
+Finally, a big difference with this package and other packages is that you decide yourself what you want to show for a code block.
+For example, in R
+
+<pre>
+```{r, results='hide'}
+print("Hello, world!")
+```
+</pre>
+
+shows the code and not the output.
+Instead, in Books, you would write
+
+<pre>
+```jl
+sc(raw"""
+print("Hello, world!")
+"""
+)
+```
+</pre>
+
+which is displayed as
+
+```jl
+sc(raw"""
+print("Hello, world!")
+"""
+)
+```
+
+Here, `sc` is one of the convenience methods exported by Books.jl.
+Although this approach is more verbose in some cases, it is also much more flexible.
+In essence, you can come up with your own pre- or post-processing logic.
+For example, lets write
+
+<pre>
+```jl
+repeat(sco(raw"""
+x = 1 + 1
+"""), 4)
+```
+</pre>
+
+which shows the code and output (`sco`) 4 times:
+
+```jl
+repeat(sco(raw"""
+x = 1 + 1
+"""
+), 4)
+```
 

@@ -64,7 +64,7 @@ This should be evaluated inside the correct module since it is typically called
 inside `Core.eval(M, ex)` in `generate.jl`.
 """
 function eval_convert(expr::AbstractString, M)
-    ex = Meta.parse(expr)
+    ex = Meta.parse("begin $expr end")
     out = Core.eval(M, ex)
     out = convert_output(expr, nothing, out)
 end
@@ -77,6 +77,7 @@ Show code and output for `expr`.
 function sco(expr::AbstractString; M=Main)
     out = eval_convert(expr, M)
     code = code_block(lstrip(expr))
+    out = code_block(out)
     """
     $code
     $out
