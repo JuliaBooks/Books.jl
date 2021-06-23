@@ -15,7 +15,7 @@ julia> print(Books.convert_output("my_table()", nothing, df))
 | ---:|
 |   1 |
 
-: My table {#tbl:my_table}
+: My table. {#tbl:my_table}
 ```
 """
 function convert_output(expr, path, out::DataFrame; caption=missing, label=missing)::String

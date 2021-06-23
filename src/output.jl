@@ -141,7 +141,7 @@ see the `pandoc-crossref` documentation for more information on the syntax.
 ```jldoctest
 julia> df = DataFrame(A = [1]);
 
-julia> caption = "My DataFrame";
+julia> caption = "My DataFrame.";
 
 julia> options = Options(df; caption);
 
@@ -150,7 +150,7 @@ julia> print(Books.convert_output(missing, missing, options))
 | ---:|
 |   1 |
 
-: My DataFrame
+: My DataFrame.
 ```
 """
 function convert_output(expr, path, opts::Options)::String
@@ -262,19 +262,19 @@ The elements of the output named tuple are never of type `Missing`.
 
 ```jldoctest
 julia> Books.caption_label("foo_bar()", missing, missing)
-(caption = "Foo bar", label = "foo_bar")
+(caption = "Foo bar.", label = "foo_bar")
 
-julia> Books.caption_label("foo_bar()", "My caption", missing)
-(caption = "My caption", label = "foo_bar")
+julia> Books.caption_label("foo_bar()", "My caption.", missing)
+(caption = "My caption.", label = "foo_bar")
 
-julia> Books.caption_label("foo_bar()", "My caption", nothing)
-(caption = "My caption", label = nothing)
+julia> Books.caption_label("foo_bar()", "My caption.", nothing)
+(caption = "My caption.", label = nothing)
 
-julia> Books.caption_label(missing, "My caption", missing)
-(caption = "My caption", label = nothing)
+julia> Books.caption_label(missing, "My caption.", missing)
+(caption = "My caption.", label = nothing)
 
 julia> Books.caption_label(missing, missing, "my_label")
-(caption = "My label", label = "my_label")
+(caption = "My label.", label = "my_label")
 
 julia> Books.caption_label(missing, missing, missing)
 (caption = nothing, label = nothing)
