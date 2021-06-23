@@ -45,7 +45,7 @@ M.julia_version_example()
 ```
 
 at the right path so that it can be included by Pandoc.
-You can also embed the output inline with single backticks like
+You can also embed output inline with single backticks like
 
 ```
 `jl julia_version()`
@@ -63,55 +63,46 @@ While doing this, it is expected that you also have the browser open and a serve
 That way, the page is immediately updated when you run `gen`.
 
 Note that it doesn't matter where you define the function `julia_version`, as long as it is in your module.
-To save yourself some typing, and to allow yourself to get some coffee while Julia gets up to speed, you can start Julia for some package `Foo` with
+To save yourself some typing, and to allow yourself to get some coffee while Julia gets up to speed, you can start Julia for your package with
 
 ```
-$ julia --project -ie 'using Books; using Foo; M = Foo; gen()'
+$ julia --project -ie 'using Books; using MyPackage; M = MyPackage'
 ```
 
 which allows you to re-generate all the content by calling
 
 ```
-julia> gen(; M)
-```
-
-Also, it allows you to quickly restart Julia after you have updated some constants such as structs.
-To re-generate only the content for one method like, for example, the method `my_plot`, use
-
-```
-julia> gen(M.my_plot)
-[...]
+julia> gen()
 ```
 
 To run this method automatically when you make a change in your package, ensure that you loaded [Revise.jl](https://github.com/timholy/Revise.jl) before loading your package and run
 
 ```
-julia> f() = gen(M.my_plot);
-
-julia> entr(f, ["contents"], [M])
+julia> entr(gen, ["contents"], [M])
 [...]
 ```
 
-Which will automatically run `f()` whenever one of the files in `contents/` changes or any code in the module `M`.
+where M is the name of your module.
+Which will automatically run `gen()` whenever one of the files in `contents/` changes or any code in the module `M`.
 In the background, `gen` passes the methods through `convert_output(expr::String, path, out::T)` where `T` can, for example, be a DataFrame or a plot.
 To show that a DataFrame is converted to a Markdown table, we define a method
 
 ```jl
-@sc(my_table)
+@sc(M.my_table)
 ```
 
 and add its output to the Markdown file with
 
 <pre>
 ```jl
-my_table()
+M.my_table()
 ```
 </pre>
 
 Then, it will show as
 
 ```jl
-my_table()
+M.my_table()
 ```
 
 where the caption and the label are inferred from the `path`.
@@ -125,14 +116,14 @@ Refer to @tbl:my_table with
 To show multiple objects, pass a `Vector`:
 
 ```jl
-@sco(multiple_df_vector)
+@sco(M.multiple_df_vector)
 ```
 
 When you want to control where the various objects are saved, use `Options`.
 This way, you can pass a informative path with plots for which informative captions, cross-reference labels and image names can be determined.
 
 ```jl
-@sco(multiple_df_example)
+@sco(M.multiple_df_example)
 ```
 
 To define the labels and/or captions manually, see @sec:labels-captions.
@@ -189,14 +180,14 @@ I guess that there is no perfect way here.
 The benefit of evaluating the user input directly, as Books.jl is doing, seems to be that it is more extensible if I'm not mistaken.
 Possibly, the reasoning is that R Markdown needs to convert the output directly, whereas Julia's better type system allows for converting in much later stages, but I'm not sure.
 
-> **Tip**: After you run `gen(; M)` with the `Point` struct defined above, the struct will be available in your REPL.
+> **Tip**: After you run `gen()` with the `Point` struct defined above, the struct will be available in your REPL.
 
 ## Labels and captions {#sec:labels-captions}
 
 To set labels and captions, wrap your object in `Options`:
 
 ```jl
-@sco(options_example)
+@sco(M.options_example)
 ```
 
 which can be referred to with
@@ -210,10 +201,10 @@ It is also possible to pass only a caption or a label.
 This package will attempt to infer missing information from the `path`, `caption` or `label` when possible:
 
 ```jl
-options_example_doctests()
+M.options_example_doctests()
 ```
 
-## Function code blocks {#sec:function_code_blocks}
+## Obtaining function definitions {#sec:function_code_blocks}
 
 So, instead of passing a string which `Books.jl` will evaluate, `Books.jl` can also obtain the code for a method directly.
 (Thanks to `CodeTracking.@code_string`.)
@@ -221,7 +212,7 @@ For example, we can define the following method:
 
 <pre>
 ```jl
-my_data()
+M.my_data()
 ```
 </pre>
 
@@ -230,41 +221,41 @@ This macro is exported by Books, so ensure that you have `using Books` in your p
 
 <pre>
 ```jl
-@sco(my_data)
+@sco(M.my_data)
 ```
 </pre>
 
 This gives
 
 ```jl
-@sco(my_data)
+@sco(M.my_data)
 ```
 
-To only show the source code, use the `-sc` suffix:
+To only show the source code, use `@sc`:
 
 <pre>
 ```jl
-@sc(my_data)
+@sc(M.my_data)
 ```
 </pre>
 
 resulting in
 
 ```jl
-@sc(my_data)
+@sc(M.my_data)
 ```
 
 Since we're using methods as code blocks, we can use the code shown in one code block in another.
 For example, to determine the mean of column A:
 
 ```jl
-@sco(my_data_mean)
+@sco(M.my_data_mean)
 ```
 
-Or, we can show the output inline, namely `jl my_data_mean()`, by using
+Or, we can show the output inline, namely `jl M.my_data_mean()`, by using
 
 ```
-`jl my_data_mean()`
+`jl M.my_data_mean()`
 ```
 
 ## Plots {#sec:plots}
@@ -275,7 +266,7 @@ This is actually a bit tricky, because we want to show vector graphics (SVG) on 
 Therefore, portable network graphics (PNG) images are also created and passed to LaTeX when building a PDF.
 
 ```jl
-@sco(example_plot)
+@sco(M.example_plot)
 ```
 
 If the output is a string instead of the output you expected, then check whether you load the related packages in time.
@@ -284,49 +275,49 @@ For example, for this plot, you need to load AlgebraOfGraphics.jl together with 
 For multiple images, use `Options.(objects, paths)`:
 
 ```jl
-@sc(multiple_example_plots)
+@sc(M.multiple_example_plots)
 ```
 
 Resulting in @fig:example_plot_2 and @fig:example_plot_3:
 
 ```jl
-multiple_example_plots()
+M.multiple_example_plots()
 ```
 
 For changing the size, use `axis` from AlgebraOfGraphics:
 
 ```jl
-@sco(image_options_plot)
+@sco(M.image_options_plot)
 ```
 
 And, for adjusting the caption, use `Options`:
 
 ```jl
-@sco(combined_options_plot)
+@sco(M.combined_options_plot)
 ```
 
 or the caption can be specified in the Markdown file:
 
 <pre>
 ```jl
-Options(image_options_plot(); caption="Label specified in Markdown.")
+Options(M.image_options_plot(); caption="Label specified in Markdown.")
 ```
 </pre>
 
 ```jl
-Options(image_options_plot(); caption="Label specified in Markdown.")
+Options(M.image_options_plot(); caption="Label specified in Markdown.")
 ```
 
 ### Plots {#sec:plotsjl}
 
 ```jl
-@sco(plotsjl)
+@sco(M.plotsjl)
 ```
 
 ### Makie {#sec:makie}
 
 ```jl
-@sco(makiejl)
+@sco(M.makiejl)
 ```
 
 ## Other notes
@@ -342,7 +333,7 @@ So, if the package that you're using has defined a new `show` method, this will 
 For example, for `MCMCChains`,
 
 ```jl
-@sco(chain)
+@sco(M.chain)
 ```
 
 ### Note box

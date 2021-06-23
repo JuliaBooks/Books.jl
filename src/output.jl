@@ -42,20 +42,20 @@ end
 
 """
     Options(object;
-        filename::Union{AbstractString,Nothing}=nothing,
-        caption::Union{AbstractString,Nothing}=nothing,
-        label::Union{AbstractString,Nothing}=nothing)
+        filename::Union{AbstractString,Nothing,Missing}=missing,
+        caption::Union{AbstractString,Nothing,Missing}=missing,
+        label::Union{AbstractString,Nothing,Missing}=missing)
 
 Struct containing an `object` and some meta-information to be passed to the resulting document.
 The `caption` and `label` options are used by `pandoc-crossref`.
 """
 struct Options
     object::Any
-    filename::Union{AbstractString,Nothing}
-    caption::Union{AbstractString,Nothing}
-    label::Union{AbstractString,Nothing}
+    filename::Union{AbstractString,Nothing,Missing}
+    caption::Union{AbstractString,Nothing,Missing}
+    label::Union{AbstractString,Nothing,Missing}
 
-    Options(object; filename=nothing, caption=nothing, label=nothing) =
+    Options(object; filename=missing, caption=missing, label=missing) =
         new(object, filename, caption, label)
 end
 
@@ -71,8 +71,8 @@ julia> filenames = ["a", "b"];
 
 julia> Options.(objects, filenames)
 2-element Vector{Options}:
- Options(1, "a", nothing, nothing)
- Options(2, "b", nothing, nothing)
+ Options(1, "a", missing, missing)
+ Options(2, "b", missing, missing)
 ```
 """
 Options(object, filename::AbstractString) = Options(object; filename)
@@ -112,6 +112,24 @@ function convert_output(expr, path, out::Code)::String
     """
 end
 
+function plotting_filename(expr, path, package::String)
+    if path isa AbstractString
+        file = basename(path)
+        file, _ = splitext(file)
+        file = string(file)::String
+    elseif expr isa AbstractString
+        file = method_name(expr)
+    else
+        # Not determining some random name here, because it would require cleanups too.
+        msg = """
+            It is not possible to write an image without specifying a path.
+            Use `Options(p; filename=filename)` where `p` is a $package plot.
+            """
+        throw(ErrorException(msg))
+    end
+    string(file)::String
+end
+
 """
     convert_output(expr, path, options::Options)
 
@@ -138,10 +156,13 @@ julia> print(Books.convert_output(missing, missing, options))
 function convert_output(expr, path, opts::Options)::String
     object = opts.object
     filename = opts.filename
-    if !isnothing(filename)
+    if !isnothing(filename) || !ismissing(filename)
         expr = filename
+    else
+        # The path is where the md should be written to; not things like images.
+        name, _ = splitext(path)
+        expr = string(basename(name))::String
     end
-    path = nothing
     caption = opts.caption
     label = opts.label
     convert_output(expr, path, object; caption, label)
@@ -195,12 +216,13 @@ Return prettier caption.
 
 ```jldoctest
 julia> Books.prettify_caption("example_table")
-"Example table"
+"Example table."
 ```
 """
 function prettify_caption(caption)
     caption = replace(caption, '_' => ' ')
     caption = uppercasefirst(caption)
+    caption = caption * '.'
 end
 
 """

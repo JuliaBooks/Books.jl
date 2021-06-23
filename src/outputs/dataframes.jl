@@ -26,7 +26,6 @@ function convert_output(expr, path, out::DataFrame; caption=missing, label=missi
         return string(table)
     end
 
-
     label = isnothing(label) ? "" : "{#tbl:$label}"
     caption = isnothing(caption) ? "" : caption
 

@@ -6,15 +6,15 @@ import MCMCChains
 import Statistics
 import TOML
 
-using AlgebraOfGraphics
-using Books
-using CairoMakie
-using CodeTracking
-using DataFrames
-using Dates
-using Plots
+using Reexport
+@reexport using AlgebraOfGraphics
+@reexport using Books
+@reexport using CairoMakie
+@reexport using CodeTracking
+@reexport using DataFrames
+@reexport using Dates
+@reexport using Plots
 
-# Defaulting plot to Plots; Makie can use Makie.plot.
 plot = Plots.plot
 
 include("includes.jl")

@@ -79,7 +79,6 @@ function sco(expr::AbstractString; M=Main)
     code = code_block(lstrip(expr))
     """
     $code
-
     $out
     """
 end

@@ -89,13 +89,13 @@ This is used for things like how to call an image file and a caption.
 
 # Examples
 ```jldoctest
-julia> Books.method_name("@some_macro(foo)")
+julia> Books.method_name("@some_macro(M.foo)")
 "foo"
 
-julia> Books.method_name("foo()")
+julia> Books.method_name("M.foo()")
 "foo"
 
-julia> Books.method_name("foo(3)")
+julia> Books.method_name("M.foo(3)")
 "foo_3"
 
 julia> Books.method_name("Options(foo(); caption='b')")
@@ -105,6 +105,11 @@ julia> Books.method_name("Options(foo(); caption='b')")
 function method_name(expr::String)
     remove_macros(expr) = replace(expr, r"@[\w\_]*" => "")
     expr = remove_macros(expr)
+    if startswith(expr, '(')
+        expr = strip(expr, ['(', ')'])
+    end
+    remove_modules(expr) = replace(expr, r"^[A-Z][a-zA-Z]*\." => "")
+    expr = remove_modules(expr)
     expr = replace(expr, '(' => '_')
     expr = replace(expr, ')' => "")
     expr = replace(expr, ';' => "_")

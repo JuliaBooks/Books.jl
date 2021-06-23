@@ -73,25 +73,22 @@ For example, lets write
 
 <pre>
 ```jl
-repeat(sco(raw"""
-x = 1 + 1
-"""), 4)
+code = """
+    df = DataFrame(a=[1, 2], b=[3, 4])
+    Options(df, caption="A table", label=nothing)
+    """
+repeat(sco(code), 4)
 ```
 </pre>
 
 which shows the code and output (`sco`) 4 times:
 
 ```jl
-using DataFrames
-sc("")
-```
-
-```jl
-repeat(sco(raw"""
-df = DataFrame(a=[1, 2], b=[3, 4])
-Options(df, caption="A table", label=nothing)
-"""
-), 4)
+code = """
+    df = DataFrame(a=[1, 2], b=[3, 4])
+    Options(df, caption="A table", label=nothing)
+    """
+repeat(sco(code), 4)
 ```
 
 

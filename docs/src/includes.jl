@@ -23,10 +23,6 @@ serve_example() = code_block(raw"""
       (use CTRL+C to shut down)
     """)
 
-generate_example() = code_block(raw"""
-    [...]
-    """)
-
 gen_function_docs() = Books.doctest(@doc gen(::Function))
 
 function docs_metadata()
@@ -106,16 +102,17 @@ function markdown_gen_example()
     c = IOCapture.capture() do
         M = BooksDocs
         # Update html set to false to avoid Pandoc errors.
-        gen(["index"]; M, call_html=false)
+        gen("index", call_html=false)
     end
 
     """
     ```
-    gen(["index"]; M)
+    gen("index")
     ```
 
     ```
-    $(c.output)
+    $(rstrip(c.output))
+    Updating html
     ```
     """
 end
