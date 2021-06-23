@@ -24,13 +24,6 @@ serve_example() = code_block(raw"""
     """)
 
 generate_example() = code_block(raw"""
-    $ julia --project -e  'using Books; using Foo; M = Foo'
-
-    julia> Books.gen(; M)
-    Running example() for _gen/example.md
-    Running julia_version() for _gen/julia_version.md
-    Running example_plot() for _gen/example_plot.md
-    Writing plot images for example_plot
     [...]
     """)
 

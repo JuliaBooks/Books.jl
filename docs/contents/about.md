@@ -1,7 +1,6 @@
 # About {#sec:about}
 
-Basically, this package is a wrapper around [Pandoc](https://pandoc.org/){target="_blank"}; similar to [Bookdown](https://bookdown.org){target="_blank"}.
-Note that Pandoc does the heavy lifting and this package adds features on top.
+Similar to [Bookdown](https://bookdown.org){target="_blank"} this package is, basically, a wrapper around [Pandoc](https://pandoc.org/){target="_blank"}; similar to [Bookdown](https://bookdown.org){target="_blank"}.
 For websites, this package allows for:
 
 - Building a website spanning multiple pages.
@@ -17,33 +16,23 @@ One of the main differences with Franklin.jl, Weave.jl and knitr (Bookdown) is t
 The benefit of this is that you can spawn two separate processes, namely the one to serve your webpages:
 
 ```jl
-serve_example()
+M.serve_example()
 ```
 
 and the one where you do the computations for your package `Foo`:
 
-```jl
-generate_example()
+```
+$ julia --project -e  'using Books; using Foo; M = Foo'
+
+julia> gen()
+[...]
+Updating html
 ```
 
 This way, the website remains responsive when the computations are running.
 Thanks to LiveServer.jl and Pandoc, updating the page after changing text or code takes less than a second.
 Also, because the `serve` process does relatively few things, it doesn't often crash.
-A drawback of this decoupling is that you need to link your text to the correct computation in the Markdown file, whereas in other packages you would insert the code as a string.
 
-The decoupling also allows the output, which you want to include, to be evaluated inside your package, see @sec:embedding-output.
-This means that you don't have to define all your dependencies in a `@setup` (Documenter.jl) or `# hideall` (Franklin.jl / Literate.jl) code block.
-(Granted, you could work your way around it by only calling methods inside a package.)
-The dependencies, such as `using DataFrames`, are available from your package.
-This provides all the benefits which Julia packages normally have, such as unit testing and live reloading via Revise.jl.
+The decoupling also allows you to have more flexiblity in when you want to run what code.
+In combination with Revise.jl, you can quickly update your code and see the updated output.
 
-As another benefit, all the code which you show in a book can be used via the function name.
-So, this avoids naming code blocks like "J3" and "J4", and allows users to load the code from your package and call the functions themselves.
-This has multiple benefits, namely
-
-1. it allows for explicitly using the output from one code block as input to another code block,
-1. it allows for demonstrating to the reader how to organize code (because, in general the tip is: use functions) _and_
-1. could save the reader from copy and pasting code.
-
-The latter point is due to the fact that the reader can load the package for the book and run the function.
-An example for points 1 and 2 is shown in @sec:function_code_blocks.

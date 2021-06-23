@@ -20,7 +20,7 @@ For example, to show the Julia version, define a code block like
 
 <pre>
 ```jl
-julia_version()
+M.julia_version()
 ```
 </pre>
 
@@ -28,20 +28,20 @@ in a Markdown file.
 Then, in your package, define the method `julia_version()`:
 
 ```
-julia_version() = "This book is built with Julia $VERSION."
+M.julia_version() = "This book is built with Julia $VERSION."
 ```
 
 Next, ensure that you call `using Books; gen(; M)`, where `M = YourModule`.
 Alternatively, if you work on a large project and want to only generate the output for one or more Markdown files in `contents/`, such as `index.md`, use
 
 ```jl
-markdown_gen_example()
+M.markdown_gen_example()
 ```
 
 Calling `gen` will place the text
 
 ```jl
-julia_version_example()
+M.julia_version_example()
 ```
 
 at the right path so that it can be included by Pandoc.
@@ -66,7 +66,7 @@ Note that it doesn't matter where you define the function `julia_version`, as lo
 To save yourself some typing, and to allow yourself to get some coffee while Julia gets up to speed, you can start Julia for some package `Foo` with
 
 ```
-$ julia --project -ie 'using Books; using Foo; M = Foo; gen(; M)'
+$ julia --project -ie 'using Books; using Foo; M = Foo; gen()'
 ```
 
 which allows you to re-generate all the content by calling

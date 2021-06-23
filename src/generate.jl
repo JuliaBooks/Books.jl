@@ -193,7 +193,7 @@ function expand_path(p)
 end
 
 """
-    gen(paths::Vector; M=nothing, fail_on_error=false, project="default")
+    gen(paths::Vector{String}; M=Main, fail_on_error=false, project="default")
 
 Populate the files in `$(Books.GENERATED_DIR)/` by calling the required methods.
 These methods are specified by the filename and will output to that filename.
@@ -202,11 +202,18 @@ The methods are assumed to be in the module `M` of the caller.
 Otherwise, specify another module `M`.
 After calling the methods, this method will also call `html()` to update the site when
 `call_html == true`.
+
+!!! note
+
+    If there is anthing that you want to have available when running the code blocks,
+    just load them inside your REPL (module `Main`) and call `gen()`.
+    For example, you can define `M = YourModule` to shorten calls to methods in your module.
 """
-function gen(paths::Vector; M=nothing, fail_on_error=false, project="default", call_html=true)
+function gen(paths::Vector{String};
+        M=Main, fail_on_error=false, project="default", call_html=true)
     mkpath(GENERATED_DIR)
     paths = [contains(dirname(p), "contents") ? p : expand_path(p) for p in paths]
-    included_expr = vcat([extract_expr(read(path, String)) for path in paths]...)
+    included_expr = vcat([extract_expr(read(p, String)) for p in paths]...)
     f(expr) = evaluate_include(expr, M, fail_on_error)
     foreach(f, included_expr)
     if call_html
@@ -214,43 +221,22 @@ function gen(paths::Vector; M=nothing, fail_on_error=false, project="default", c
         html(; project)
     end
 end
-gen(path::String; kwargs...) = gen([path]; kwargs...)
 
-function gen(; M=nothing, fail_on_error=false, project="default", call_html=true)
+"""
+    gen(path::AbstractString; kwargs...)
+
+Convenience method for passing `path::AbstractString` instead of `paths::Vector{AbstractString}`.
+"""
+function gen(path::AbstractString; kwargs...)
+    path = string(path)::String
+    gen([path]; kwargs...)
+end
+
+function gen(; M=Main, fail_on_error=false, project="default", call_html=true)
     paths = inputs(project)
     first_file = first(paths)
     if !isfile(first_file)
         error("Couldn't find $first_file. Is there a valid project in $(pwd())?")
     end
     gen(paths; M, fail_on_error, project, call_html)
-end
-
-"""
-    gen(f::Function; fail_on_error=false, project="default", call_html=true)
-
-Populate the file in `Books.GENERATED_DIR` by calling `func`.
-This method is useful during development to quickly see the effect of updating your code.
-Use with Revise.jl and optionally `Revise.entr`.
-After calling `f`, this method will also call `html()` to update the site when `call_html=true`.
-
-# Example
-```jldoctest
-julia> module Foo
-       version() = "This book is built with Julia \$VERSION"
-       end;
-
-julia> call_html = false; # To avoid Pandoc errors breaking this jldoctest.
-
-julia> gen(Foo.version; call_html)
-Writing output of `version()` to _gen/version-ob--cb-.md
-```
-"""
-function gen(f::Function; project="default", call_html=true)
-    path = joinpath(GENERATED_DIR, "$f.md")
-    mkpath(GENERATED_DIR)
-    evaluate_and_write(f)
-    if call_html
-        println("Updating html")
-        html(; project)
-    end
 end
