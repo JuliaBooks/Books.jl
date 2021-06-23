@@ -14,6 +14,10 @@ extract_expr_example() = """
     ```jl
     foo(3)
     ```
+    ```jl
+    foo(3)
+    bar
+    ```
     ipsum `jl bar()` dolar
     """
 
@@ -27,8 +31,9 @@ Here, `s` is the contents of a Markdown file.
 julia> s = Books.extract_expr_example();
 
 julia> Books.extract_expr(s)
-2-element Vector{String}:
+3-element Vector{String}:
  "foo(3)"
+ "foo(3)\\nbar"
  "bar()"
 ```
 """
@@ -36,7 +41,7 @@ function extract_expr(s::AbstractString)::Vector
     codeblock_pattern = r"```jl\s*([\w\W]*?)```"
     matches = eachmatch(codeblock_pattern, s)
     function clean(m)
-        m = m[1]
+        m = m[1]::SubString{String}
         m = strip(m)
         m = string(m)::String
     end
@@ -49,7 +54,7 @@ function extract_expr(s::AbstractString)::Vector
 
     function check_parse_errors(expr)
         try
-            Meta.parse(expr)
+            Meta.parse("begin $expr end")
         catch e
             error("Exception occured when trying to parse `$expr`")
         end
@@ -100,7 +105,6 @@ julia> Books.method_name("Options(foo(); caption='b')")
 function method_name(expr::String)
     remove_macros(expr) = replace(expr, r"@[\w\_]*" => "")
     expr = remove_macros(expr)
-    # These rewrites are not reversible, because they do not have to be.
     expr = replace(expr, '(' => '_')
     expr = replace(expr, ')' => "")
     expr = replace(expr, ';' => "_")
@@ -119,23 +123,17 @@ Escape an expression to the corresponding path.
 The logic in this method should match the logic in the Lua filter.
 """
 function escape_expr(expr::String)
-    replace_map = [
-        '(' => "-ob-",
-        ')' => "-cb-",
-        '"' => "-dq-",
-        ':' => "-fc-",
-        ';' => "-sc-",
-        '@' => "-ax-"
-    ]
-    escaped = reduce(replace, replace_map; init=expr)
+    escaped = 60 < length(expr) ? expr[1:60] : expr
+    escaped = replace(escaped, r"([^a-zA-Z0-9]+)" => "_")
     joinpath(GENERATED_DIR, "$escaped.md")
 end
 
 function evaluate_and_write(M::Module, expr::String)
     path = escape_expr(expr)
-    println("Writing output of `$expr` to $path")
+    expr_info = replace(expr, '\n' => "\\n")
+    println("Writing output of `$expr_info` to $path")
 
-    ex = Meta.parse(expr)
+    ex = Meta.parse("begin $expr end")
     out = Core.eval(M, ex)
     out = convert_output(expr, path, out)
     out = string(out)::String
@@ -148,7 +146,8 @@ function evaluate_and_write(f::Function)
     function_name = Base.nameof(f)
     expr = "$(function_name)()"
     path = escape_expr(expr)
-    println("Writing output of `$expr` to $path")
+    expr_info = replace(expr, '\n' => "\\n")
+    println("Writing output of `$expr_info` to $path")
     out = f()
     out = convert_output(expr, path, out)
     out = string(out)::String
@@ -158,11 +157,11 @@ function evaluate_and_write(f::Function)
 end
 
 """
-    evaluate_include(expr::String, M::Module, fail_on_error::Bool)
+    evaluate_include(expr::String, M, fail_on_error::Bool)
 
 For a `path` included in a Markdown file, run the corresponding function and write the output to `path`.
 """
-function evaluate_include(expr::String, M::Module, fail_on_error::Bool)
+function evaluate_include(expr::String, M, fail_on_error::Bool)
     if isnothing(M)
         # This code isn't really working.
         M = caller_module()
@@ -193,7 +192,7 @@ function expand_path(p)
 end
 
 """
-    gen(paths::Vector{String}; M=Main, fail_on_error=false, project="default")
+    gen(paths::Vector; M=Main, fail_on_error=false, project="default")
 
 Populate the files in `$(Books.GENERATED_DIR)/` by calling the required methods.
 These methods are specified by the filename and will output to that filename.
@@ -209,8 +208,10 @@ After calling the methods, this method will also call `html()` to update the sit
     just load them inside your REPL (module `Main`) and call `gen()`.
     For example, you can define `M = YourModule` to shorten calls to methods in your module.
 """
+
 function gen(paths::Vector{String};
         M=Main, fail_on_error=false, project="default", call_html=true)
+
     mkpath(GENERATED_DIR)
     paths = [contains(dirname(p), "contents") ? p : expand_path(p) for p in paths]
     included_expr = vcat([extract_expr(read(p, String)) for p in paths]...)
@@ -225,7 +226,7 @@ end
 """
     gen(path::AbstractString; kwargs...)
 
-Convenience method for passing `path::AbstractString` instead of `paths::Vector{AbstractString}`.
+Convenience method for passing `path::AbstractString` instead of `paths::Vector`.
 """
 function gen(path::AbstractString; kwargs...)
     path = string(path)::String

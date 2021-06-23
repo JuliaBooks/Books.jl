@@ -117,7 +117,7 @@ function html(; project="default", extra_head="")
     copy_extra_directories(project)
     url_prefix = is_ci() ? ci_url_prefix(project) : ""
     c = config(project, "contents")
-    write_html_pages(url_prefix, c, pandoc_html(project), extra_head)
+    write_html_pages(url_prefix, pandoc_html(project), extra_head)
 end
 
 """
