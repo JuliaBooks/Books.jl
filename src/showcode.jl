@@ -69,6 +69,14 @@ function eval_convert(expr::AbstractString, M)
     out = convert_output(expr, nothing, out)
 end
 
+function remove_hide_comment(expr::AbstractString)
+    expr = string(expr)::String
+    lines = split(expr, '\n')
+    lines = rstrip.(lines)
+    lines = filter(!endswith("# hide"), lines)
+    expr = join(lines, '\n')
+end
+
 """
     sco(expr::AbstractString; M=Main)
 
@@ -76,7 +84,8 @@ Show code and output for `expr`.
 """
 function sco(expr::AbstractString; M=Main)
     out = eval_convert(expr, M)
-    code = code_block(lstrip(expr))
+    code = remove_hide_comment(expr)
+    code = code_block(strip(code))
     """
     $code
     $out
@@ -90,5 +99,6 @@ Show only code for `expr`, that is, evaluate `expr` but hide the output.
 """
 function sc(expr::AbstractString; M=Main)
     eval_convert(expr, M)
-    code_block(lstrip(expr))
+    code = remove_hide_comment(expr)
+    code = code_block(strip(code))
 end

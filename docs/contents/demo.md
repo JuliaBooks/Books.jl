@@ -347,3 +347,7 @@ To write note boxes, you can use
 > **_NOTE:_**  The note content.
 
 This way is fully supported by Pandoc, so it will be correctly converted to outputs such as PDF or DOCX.
+
+### String interpolation
+
+For string interpolation, add a backslash before the dollar sign when using `sc` or `sco`.
