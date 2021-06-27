@@ -44,7 +44,7 @@ end
 ---
 local md_path
 function md_path(s)
-  n = 120
+  n = 80
   escaped = string.sub(s, 1, n)
   escaped = escaped:gsub("([^a-zA-Z0-9]+)", "_")
   -- Platform independent path separator.
