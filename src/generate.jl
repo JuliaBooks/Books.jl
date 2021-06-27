@@ -128,7 +128,8 @@ Escape an expression to the corresponding path.
 The logic in this method should match the logic in the Lua filter.
 """
 function escape_expr(expr::String)
-    escaped = 100 < length(expr) ? expr[1:100] : expr
+    n = 120
+    escaped = n < length(expr) ? expr[1:n] : expr
     escaped = replace(escaped, r"([^a-zA-Z0-9]+)" => "_")
     joinpath(GENERATED_DIR, "$escaped.md")
 end

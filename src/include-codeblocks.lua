@@ -44,7 +44,8 @@ end
 ---
 local md_path
 function md_path(s)
-  escaped = string.sub(s, 1, 100)
+  n = 120
+  escaped = string.sub(s, 1, n)
   escaped = escaped:gsub("([^a-zA-Z0-9]+)", "_")
   -- Platform independent path separator.
   path_sep = package.config:sub(1, 1)
