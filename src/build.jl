@@ -156,18 +156,17 @@ function pdf(; project="default")
             template;
             "--listings";
             pdf_engine;
-            extra_args;
-            output
+            extra_args
         ]
-        out = call_pandoc(args)
+        output_tex_filename = joinpath(BUILD_DIR, "$file.tex")
+        println("Wrote $output_tex_filename (for debugging purposes)")
+        tex_output = "--output=$output_tex_filename"
+        call_pandoc([args; tex_output])
+
+        out = call_pandoc([args; output])
         if !isnothing(out)
             println("Built $output_filename")
         end
-
-        # For debugging purposes.
-        output_filename = joinpath(BUILD_DIR, "$file.tex")
-        args[end] = "--output=$output_filename"
-        call_pandoc(args)
     end
 
     nothing
