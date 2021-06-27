@@ -33,11 +33,24 @@ function convert_output(expr, path, out::ImageOptions; kwargs...)
     convert_output(expr, path, out.object; width, height, kwargs...)
 end
 
+function convert_output(expr, path, outputs::AbstractVector{AbstractString})
+    out = join(outputs, "\n")
+    out = code_block(out)
+end
+
 function convert_output(expr, path, outputs::AbstractVector)
-    path = nothing
-    outputs = convert_output.(nothing, nothing, outputs)
-    outputs = String.(outputs)
-    out = join(outputs, "\n\n")
+    t = eltype(outputs)
+    # Not doing this distinction in the method signature,
+    # because it would be hard to read.
+    if t <: AbstractString || t <: Number
+        out = string(outputs)::String
+        out = code_block(out)
+    else
+        path = nothing
+        outputs = convert_output.(nothing, nothing, outputs)
+        outputs = String.(outputs)
+        out = join(outputs, "\n\n")
+    end
 end
 
 """
