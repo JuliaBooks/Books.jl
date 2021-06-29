@@ -28,8 +28,12 @@
   text-align: right;
 }
 
+html {
+  min-height: 100%;
+}
+
 @media only screen and (min-width: calc(720px)) {
-  .books-outside {
+  .books-container {
     display: flex;
   }
 
@@ -92,6 +96,7 @@ input:checked ~ .books-menu-content {
 @media only screen and (min-width: 900px) {
   .books-content {
     margin-left: var(--content-left-margin);
+    min-height: 80vh;
   }
 }
 
@@ -130,7 +135,9 @@ body {
   font-size: var(--normal-size);
   line-height: 1.7;
   padding: 1em;
-  margin: auto;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 80vh;
   max-width: var(--max-body-width);
 }
 
@@ -408,8 +415,8 @@ html {
 }
 
 .license {
-  margin-top: 50px;
-  margin-bottom: 10px;
+  position: absolute;
+  bottom: 0;
   text-align: center;
   color: var(--gray);
   font-size: var(--small-size);

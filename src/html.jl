@@ -208,13 +208,15 @@ function create_page(head, menu, name, body, foot)
     head = update_title(head, name)
     page = """
     $head
-    <div class="books-outside">
+    <div class="books-container">
     $menu
     <div class="books-content">
-    $body $foot
+    $body
+    $foot
     </div>
     </div>
     """
+    page = rstrip(page)
 end
 
 function add_extra_head(head, extra_head::AbstractString)
