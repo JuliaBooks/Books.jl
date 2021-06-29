@@ -1,32 +1,44 @@
 """
+    remove_hide_comment(expr::AbstractString)
+
+Remove lines which end with `# hide`.
+"""
+function remove_hide_comment(expr::AbstractString)
+    expr = string(expr)::String
+    lines = split(expr, '\n')
+    lines = rstrip.(lines)
+    lines = filter(!endswith("# hide"), lines)
+    expr = join(lines, '\n')
+end
+
+"""
     @sc(f)
 
-Show code for `f()`; to also show output, use [`@sco`](@ref).
-See the documentation or tests for examples.
+Show code for function `f`; to also show output, use [`@sco`](@ref).
 """
 macro sc(f)
-    println("Obtaining source code for $f()")
+    println("Obtaining source code for $f")
     esc(quote
-        s = Books.CodeTracking.@code_string $(f)()
-        code_block(s)
+        s = Books.CodeTracking.@code_string $(f)
+        s = Books.remove_hide_comment(s)
+        Books.code_block(s)
     end)
 end
 
 """
-    CodeAndFunction(code::AbstractString, f::Function)
+    CodeAndFunction(code::AbstractString, f)
 
 This struct is used by [`@sco`](@ref).
 """
 struct CodeAndFunction
     code::AbstractString
-    f::Function
+    f::Any
 end
 
 """
     @sco(f)
 
 Show code and output for `f()`; to show only code, use [`@sc`](@ref).
-See the documentation or tests for examples.
 """
 macro sco(f)
     esc(quote
@@ -38,22 +50,12 @@ end
 function convert_output(expr, path, cf::CodeAndFunction)
     code = cf.code
     f = cf.f
-    out = f()
+    out = f
     out = convert_output(expr, path, out)
     """
     $code
     $out
     """
-end
-
-
-"""
-    CodeAndOutput(code::AbstractString)
-
-This struct is used by [`sco`](@ref).
-"""
-struct CodeAndOutput
-    code::AbstractString
 end
 
 """
@@ -67,14 +69,6 @@ function eval_convert(expr::AbstractString, M)
     ex = Meta.parse("begin $expr end")
     out = Core.eval(M, ex)
     out = convert_output(expr, nothing, out)
-end
-
-function remove_hide_comment(expr::AbstractString)
-    expr = string(expr)::String
-    lines = split(expr, '\n')
-    lines = rstrip.(lines)
-    lines = filter(!endswith("# hide"), lines)
-    expr = join(lines, '\n')
 end
 
 """

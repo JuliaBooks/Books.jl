@@ -88,7 +88,7 @@ In the background, `gen` passes the methods through `convert_output(expr::String
 To show that a DataFrame is converted to a Markdown table, we define a method
 
 ```jl
-@sc(M.my_table)
+@sc(M.my_table())
 ```
 
 and add its output to the Markdown file with
@@ -116,14 +116,14 @@ Refer to @tbl:my_table with
 To show multiple objects, pass a `Vector`:
 
 ```jl
-@sco(M.multiple_df_vector)
+@sco(M.multiple_df_vector())
 ```
 
 When you want to control where the various objects are saved, use `Options`.
 This way, you can pass a informative path with plots for which informative captions, cross-reference labels and image names can be determined.
 
 ```jl
-@sco(M.multiple_df_example)
+@sco(M.multiple_df_example())
 ```
 
 To define the labels and/or captions manually, see @sec:labels-captions.
@@ -187,7 +187,7 @@ Possibly, the reasoning is that R Markdown needs to convert the output directly,
 To set labels and captions, wrap your object in `Options`:
 
 ```jl
-@sco(M.options_example)
+@sco(M.options_example())
 ```
 
 which can be referred to with
@@ -208,48 +208,46 @@ M.options_example_doctests()
 
 So, instead of passing a string which `Books.jl` will evaluate, `Books.jl` can also obtain the code for a method directly.
 (Thanks to `CodeTracking.@code_string`.)
-For example, we can define the following method:
+For example, inside our package, we can define the following method:
 
-<pre>
 ```jl
-M.my_data()
+@sc(M.my_data())
 ```
-</pre>
 
-To show code and output (sco), use the `@sco` macro.
+To show code and output (sco) for this method, use the `@sco` macro.
 This macro is exported by Books, so ensure that you have `using Books` in your package.
 
 <pre>
 ```jl
-@sco(M.my_data)
+@sco(M.my_data())
 ```
 </pre>
 
 This gives
 
 ```jl
-@sco(M.my_data)
+@sco(M.my_data())
 ```
 
 To only show the source code, use `@sc`:
 
 <pre>
 ```jl
-@sc(M.my_data)
+@sc(M.my_data())
 ```
 </pre>
 
 resulting in
 
 ```jl
-@sc(M.my_data)
+@sc(M.my_data())
 ```
 
 Since we're using methods as code blocks, we can use the code shown in one code block in another.
 For example, to determine the mean of column A:
 
 ```jl
-@sco(M.my_data_mean)
+@sco(M.my_data_mean())
 ```
 
 Or, we can show the output inline, namely `jl M.my_data_mean()`, by using
@@ -257,6 +255,28 @@ Or, we can show the output inline, namely `jl M.my_data_mean()`, by using
 ```
 `jl M.my_data_mean()`
 ```
+
+It is also possible to show methods with parameters.
+
+<pre>
+```jl
+@sc(M.hello(""))
+```
+</pre>
+
+```jl
+@sc(M.hello(""))
+```
+
+```jl
+sco("""
+M.hello("World")
+""")
+```
+
+Here, the `M` can be a bit confusing.
+If this is a problem, you can export the method `hello` to avoid it.
+If you are really sure, you can export all symbols in your module with something like [this](https://discourse.julialang.org/t/exportall/4970/16).
 
 ## Plots {#sec:plots}
 
@@ -266,7 +286,7 @@ This is actually a bit tricky, because we want to show vector graphics (SVG) on 
 Therefore, portable network graphics (PNG) images are also created and passed to LaTeX when building a PDF.
 
 ```jl
-@sco(M.example_plot)
+@sco(M.example_plot())
 ```
 
 If the output is a string instead of the output you expected, then check whether you load the related packages in time.
@@ -275,7 +295,7 @@ For example, for this plot, you need to load AlgebraOfGraphics.jl together with 
 For multiple images, use `Options.(objects, paths)`:
 
 ```jl
-@sc(M.multiple_example_plots)
+@sc(M.multiple_example_plots())
 ```
 
 Resulting in @fig:example_plot_2 and @fig:example_plot_3:
@@ -287,13 +307,13 @@ M.multiple_example_plots()
 For changing the size, use `axis` from AlgebraOfGraphics:
 
 ```jl
-@sco(M.image_options_plot)
+@sco(M.image_options_plot())
 ```
 
 And, for adjusting the caption, use `Options`:
 
 ```jl
-@sco(M.combined_options_plot)
+@sco(M.combined_options_plot())
 ```
 
 or the caption can be specified in the Markdown file:
@@ -311,13 +331,13 @@ Options(M.image_options_plot(); caption="Label specified in Markdown.")
 ### Plots {#sec:plotsjl}
 
 ```jl
-@sco(M.plotsjl)
+@sco(M.plotsjl())
 ```
 
 ### Makie {#sec:makie}
 
 ```jl
-@sco(M.makiejl)
+@sco(M.makiejl())
 ```
 
 ## Other notes
@@ -333,7 +353,7 @@ So, if the package that you're using has defined a new `show` method, this will 
 For example, for `MCMCChains`,
 
 ```jl
-@sco(M.chain)
+@sco(M.chain())
 ```
 
 ### Note box

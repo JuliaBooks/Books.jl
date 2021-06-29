@@ -85,6 +85,8 @@ function my_data_mean()
     Statistics.mean(df.A)
 end
 
+hello(name) = "Hello, $name"
+
 options_example() = Options(DataFrame(A = [1], B = [2], C = [3]);
                         caption="My DataFrame.", label="foo")
 
