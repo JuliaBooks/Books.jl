@@ -5,7 +5,7 @@
     "about",
     "getting-started",
     "demo",
-    "references"
+    "references",
   ]
   output_filename = "books"
 
