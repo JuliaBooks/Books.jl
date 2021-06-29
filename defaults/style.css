@@ -94,7 +94,8 @@ input:checked ~ .books-menu-content {
     margin-left: var(--content-left-margin);
     display: flex;
     flex-direction: column;
-    min-height: 95vh;
+    /* If the text is placed too low, users get a scroll bar even for a near empty page. */
+    min-height: 92vh;
   }
 }
 
