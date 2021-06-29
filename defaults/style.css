@@ -28,10 +28,6 @@
   text-align: right;
 }
 
-html {
-  min-height: 100%;
-}
-
 @media only screen and (min-width: calc(720px)) {
   .books-container {
     display: flex;
@@ -96,7 +92,9 @@ input:checked ~ .books-menu-content {
 @media only screen and (min-width: 900px) {
   .books-content {
     margin-left: var(--content-left-margin);
-    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 95vh;
   }
 }
 
@@ -137,7 +135,6 @@ body {
   padding: 1em;
   margin-left: auto;
   margin-right: auto;
-  min-height: 80vh;
   max-width: var(--max-body-width);
 }
 
@@ -415,8 +412,7 @@ html {
 }
 
 .license {
-  position: absolute;
-  bottom: 0;
+  margin-top: auto;
   text-align: center;
   color: var(--gray);
   font-size: var(--small-size);
