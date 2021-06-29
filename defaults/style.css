@@ -94,7 +94,7 @@ input:checked ~ .books-menu-content {
     margin-left: var(--content-left-margin);
     display: flex;
     flex-direction: column;
-    min-height: 92vh;
+    min-height: 95vh;
   }
 }
 

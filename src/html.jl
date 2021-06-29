@@ -213,8 +213,6 @@ function create_page(head, menu, name, body, foot)
     <div class="books-content">
     $body
     $foot
-    </div>
-    </div>
     """
     page = rstrip(page)
 end
