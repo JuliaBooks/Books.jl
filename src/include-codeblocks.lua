@@ -93,7 +93,7 @@ function transclude_codeblock(cb)
   local fh = io.open(path)
   if not fh then
     not_found_error(cb.text, path, '```')
-    suggestion = "Did you run `gen(; M)` where `M = YourModule`?\n"
+    suggestion = "Did you run `gen()` when having loaded your module?"
     msg = "ERROR: Cannot find file at " .. path .. " for `" .. cb.text .. "`."
     msg = msg .. ' ' .. suggestion
     msg = { pandoc.CodeBlock(msg) }
@@ -141,7 +141,7 @@ function transclude_code(c)
   local fh = io.open(path)
   if not fh then
     not_found_error(line, path, '`')
-    suggestion = "Did you run `gen(; M)` where `M = YourModule`?"
+    suggestion = "Did you run `gen()` when having loaded your module?"
     msg = "ERROR: Cannot find file at " .. path .. " for `" .. line .. "`."
     msg = msg .. ' ' .. suggestion
     c.text = msg
