@@ -68,6 +68,7 @@ function split_html(h::AbstractString)
 
     start = r"<h[1|2]"
     bodies = split_keepdelim(body, start)[2:end]
+    bodies::Vector{String} = string.(bodies)
     (head = head, bodies = bodies, foot = foot)
 end
 
@@ -134,6 +135,51 @@ function section_level(num::AbstractString)
     n_dots + 1
 end
 
+function previous_and_next_buttons(body::String, menu_items::Vector{String}, i::Int)
+    max = length(menu_items)
+    prev = 2 < i ? menu_items[i - 2] : ""
+    prev = strip(prev)
+    text_prev = prev == "" ? "" : "(key ← or h)"
+    next = i < max ? menu_items[i] : ""
+    next = strip(next)
+    text_next = next == "" ? "" : "(key → or l)"
+    # The margins are needed for situations where only next page link is available.
+    keyboard_shortcut_text = """
+        <p id="nav-prev" style="text-align: left; margin-top: 0em; margin-left: 0.4em;">
+            $text_prev
+            <span id="nav-next" style="float: right; margin-right: 0.4em;">
+                $text_next
+            </span>
+        </p>
+    """
+    keyboard_shortcut_text = is_mousetrap_enabled() ? keyboard_shortcut_text : ""
+    """
+    $body
+
+    <div class="bottom-nav">
+        <p id="nav-prev" style="text-align: left;">
+            $prev
+            <span id="nav-next" style="float: right;">
+                $next
+            </span>
+        </p>
+        $keyboard_shortcut_text
+    </div>
+    """
+end
+
+"""
+    add_previous_and_next_buttons(bodies::Vector{String}, menu_items::Vector{String})
+
+Add buttons at bottom of page to navigate to the previous or next section.
+"""
+function add_previous_and_next_buttons(bodies::Vector{String}, menu_items::Vector{String})
+    for (i, body) in enumerate(bodies)
+        bodies[i] = previous_and_next_buttons(body, menu_items, i)
+    end
+    bodies
+end
+
 """
     add_menu([splitted])
 
@@ -147,7 +193,7 @@ function add_menu(splitted)
 
     ids_texts = html_page_name.(bodies)
     names = getproperty.(ids_texts, :id)
-    menu_items = []
+    menu_items::Vector{String} = []
     skip_homepage(z) = Iterators.peel(z)[2]
     for (name, body) in skip_homepage(zip(names, bodies))
         tuples = section_infos(body)
@@ -158,10 +204,12 @@ function add_menu(splitted)
             level = section_level(num)
             if level < 3
                 item = html_href(link_text, link, level)
+                item = string(item)::String
                 push!(menu_items, item)
             end
         end
     end
+    bodies = add_previous_and_next_buttons(bodies, menu_items)
     list = join(html_li.(menu_items), '\n')
     menu = """
     <aside class="books-menu">
@@ -225,7 +273,8 @@ function add_extra_head(head, extra_head::AbstractString)
 end
 
 function html_pages(h, extra_head="")
-    head, menu, bodies, foot = add_menu(split_html(h))
+    h = split_html(h)
+    head, menu, bodies, foot = add_menu(h)
     head = add_extra_head(head, extra_head)
     ids_texts = html_page_name.(bodies)
     id_names = getproperty.(ids_texts, :id)
