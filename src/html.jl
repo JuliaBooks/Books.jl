@@ -137,20 +137,29 @@ end
 
 function previous_and_next_buttons(body::String, menu_items::Vector{String}, i::Int)
     max = length(menu_items)
-    prev = 2 < i ? "< $(menu_items[i - 2])" : ""
+    prev = 2 < i ? menu_items[i - 2] : ""
     prev = strip(prev)
-    next = i < max ? "$(menu_items[i]) >" : ""
+    next = i < max ? menu_items[i] : ""
     next = strip(next)
+    keyboard_shortcut_text = """
+        <p id="nav-prev" style="text-align: left; margin-top: 0em;">
+            (key ←)
+            <span id="nav-next" style="float: right;">
+                (key →)
+            </span>
+        </p>
+    """
     """
     $body
 
     <div class="bottom-nav">
-        <p style="text-align: left;">
+        <p id="nav-prev" style="text-align: left;">
             $prev
-            <span style="float: right;">
+            <span id="nav-next" style="float: right;">
                 $next
             </span>
         </p>
+        $keyboard_shortcut_text
     </div>
     """
 end

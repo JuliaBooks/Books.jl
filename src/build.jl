@@ -62,17 +62,39 @@ function call_pandoc(args)
     end
 end
 
+function copy_css()
+    filename = "style.css"
+    css_path = pandoc_file(filename)
+    cp(css_path, joinpath(BUILD_DIR, filename); force=true)
+end
+
+@memoize function is_mousetrap_enabled()::Bool
+    meta = default_metadata()
+    if "mousetrap" in keys(meta)
+        meta["mousetrap"]
+    else
+        false
+    end
+end
+
+@memoize function copy_mousetrap()
+    if is_mousetrap_enabled()
+        filename = "mousetrap.min.js"
+        from = pandoc_file(filename)
+        cp(from, joinpath(BUILD_DIR, filename); force=true)
+    end
+end
+
 function pandoc_html(project::AbstractString)
     copy_extra_directories(project)
     html_template_path = pandoc_file("template.html")
     template = "--template=$html_template_path"
     output_filename = joinpath(BUILD_DIR, "index.html")
     output = "--output=$output_filename"
-    filename = "style.css"
-    css_path = pandoc_file(filename)
-    cp(css_path, joinpath(BUILD_DIR, filename); force=true)
     metadata_path = write_metadata(config(project, "metadata_path"))
     metadata = "--metadata-file=$metadata_path"
+    copy_css()
+    copy_mousetrap()
 
     args = [
         inputs(project);

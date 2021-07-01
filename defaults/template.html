@@ -16,7 +16,7 @@ $endif$
   <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
   <link rel="stylesheet" href="/style.css"/>
   $if(mousetrap)$
-  <script src="https://craig.global.ssl.fastly.net/js/mousetrap/mousetrap.min.js?a4098"></script>
+  <script src="/mousetrap.min.js"></script>
   $endif$
 $for(header-includes)$
   $header-includes$
@@ -29,7 +29,12 @@ $endif$
 <script>
 $if(mousetrap)$
 Mousetrap.bind('right', function(e) {
-    console.log("foo");
+  var next = document.getElementById('nav-next');
+  next.firstElementChild.click();
+});
+Mousetrap.bind('left', function(e) {
+  var prev = document.getElementById('nav-prev');
+  prev.firstElementChild.click();
 });
 $endif$
 </script>
