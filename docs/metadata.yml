@@ -12,4 +12,5 @@ header-includes:
   ```{=html}
   <link rel="stylesheet" href="/files/style.css"/>
   ```
+mousetrap: true
 ---
