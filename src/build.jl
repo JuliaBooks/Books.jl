@@ -186,6 +186,7 @@ function docx(; project="default")
         include_files;
         crossref;
         citeproc;
+        csl();
         metadata;
         output
     ]
