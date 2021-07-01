@@ -149,6 +149,7 @@ function previous_and_next_buttons(body::String, menu_items::Vector{String}, i::
             </span>
         </p>
     """
+    keyboard_shortcut_text = is_mousetrap_enabled() ? keyboard_shortcut_text : ""
     """
     $body
 
@@ -234,7 +235,7 @@ Return an updated `head` where the title is based on the page `name`.
 ```jldoctest
 julia> head = "<!DOCTYPE html><title>Book - Books.jl</title>\n";
 
-julia> name = "About"
+julia> name = "About";
 
 julia> Books.update_title(head, name)
 "<!DOCTYPE html><title>About - Books.jl</title>\n"
