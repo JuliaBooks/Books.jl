@@ -144,7 +144,6 @@ function previous_and_next_buttons(body::String, menu_items::Vector{String}, i::
     """
     $body
 
-    <br/>
     <div class="bottom-nav">
         <p style="text-align: left;">
             $prev
