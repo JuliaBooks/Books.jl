@@ -46,4 +46,7 @@ eqnPrefix: Equation
 figPrefix: Figure
 tblPrefix: Table
 secPrefix: Section
+
+# Keyboard shortcuts.
+mousetrap: true
 ---
