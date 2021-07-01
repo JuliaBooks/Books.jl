@@ -28,14 +28,18 @@ $endif$
 <body>
 <script>
 $if(mousetrap)$
-Mousetrap.bind('right', function(e) {
+function click_next() {
   var next = document.getElementById('nav-next');
   next.firstElementChild.click();
-});
-Mousetrap.bind('left', function(e) {
+}
+function click_prev() {
   var prev = document.getElementById('nav-prev');
   prev.firstElementChild.click();
-});
+}
+Mousetrap.bind('right', click_next);
+Mousetrap.bind('h', click_prev);
+Mousetrap.bind('left', click_prev);
+Mousetrap.bind('l', click_next);
 $endif$
 </script>
 <!-- end head -->
