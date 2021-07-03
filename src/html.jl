@@ -139,31 +139,21 @@ function previous_and_next_buttons(body::String, menu_items::Vector{String}, i::
     max = length(menu_items)
     prev = 2 < i ? menu_items[i - 2] : ""
     prev = strip(prev)
-    text_prev = prev == "" ? "" : "(key ← or h)"
+    text_prev = prev == "" ? "" : "<kbd>←</kbd>"
     next = i < max ? menu_items[i] : ""
     next = strip(next)
-    text_next = next == "" ? "" : "(key → or l)"
-    # The margins are needed for situations where only next page link is available.
-    keyboard_shortcut_text = """
-        <p id="nav-prev" style="text-align: left; margin-top: 0em; margin-left: 0.4em;">
-            $text_prev
-            <span id="nav-next" style="float: right; margin-right: 0.4em;">
-                $text_next
-            </span>
-        </p>
-    """
-    keyboard_shortcut_text = is_mousetrap_enabled() ? keyboard_shortcut_text : ""
+    text_next = next == "" ? "" : "<kbd>→</kbd>"
+    # Note that changing the element below might require a mousetrap Javascript in template.html update.
     """
     $body
 
     <div class="bottom-nav">
         <p id="nav-prev" style="text-align: left;">
-            $prev
+            $prev $text_prev
             <span id="nav-next" style="float: right;">
-                $next
+                $text_next $next
             </span>
         </p>
-        $keyboard_shortcut_text
     </div>
     """
 end

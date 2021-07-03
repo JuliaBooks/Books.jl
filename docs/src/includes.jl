@@ -177,14 +177,19 @@ end
 
 function plotsjl()
     p = plot(1:10, 1:2:20)
-    Options(p; caption="An example plot with Plots.jl.")
+    caption = "An example plot with Plots.jl"
+    # Label default to `nothing`, which will not create a cross-reference.
+    label = missing
+    Options(p; caption, label)
 end
 
 function makiejl()
     x = range(0, 10, length=100)
     y = sin.(x)
     p = lines(x, y)
-    Options(p; caption="An example plot with Makie.jl.")
+    caption = "An example plot with Makie.jl."
+    label = missing
+    Options(p; caption, label)
 end
 
 chain() = MCMCChains.Chains([1])

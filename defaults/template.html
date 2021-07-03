@@ -18,6 +18,13 @@ $endif$
   $if(mousetrap)$
   <script src="/mousetrap.min.js"></script>
   $endif$
+  <!-- TODO: Add url_prefix. -->
+  <style>
+  @font-face {
+    font-family: JuliaMono-Regular;
+    src: url("/JuliaMono-Regular.woff2");
+  }
+  </style>
 $for(header-includes)$
   $header-includes$
 $endfor$
@@ -30,7 +37,7 @@ $endif$
 $if(mousetrap)$
 function click_next() {
   var next = document.getElementById('nav-next');
-  next.firstElementChild.click();
+  next.firstElementChild.nextElementSibling.click();
 }
 function click_prev() {
   var prev = document.getElementById('nav-prev');
