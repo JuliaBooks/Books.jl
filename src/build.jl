@@ -85,6 +85,12 @@ end
     end
 end
 
+@memoize function copy_juliamono()
+    filename = "JuliaMono-Regular.woff2"
+    from = pandoc_file(filename)
+    cp(from, joinpath(BUILD_DIR, filename); force=true)
+end
+
 function pandoc_html(project::AbstractString)
     copy_extra_directories(project)
     html_template_path = pandoc_file("template.html")

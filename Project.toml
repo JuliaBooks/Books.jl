@@ -20,7 +20,7 @@ pandoc_jll = "c5432543-76ad-5c9d-82bf-db097047a5e2"
 
 [compat]
 CodeTracking = "1.0"
-DataFrames = "0.22, 1.0, 1.1"
+DataFrames = "0.22, 1.0, 1.1, 1.2"
 Latexify = "0.15"
 LiveServer = "0.6"
 Memoize = "0.4"

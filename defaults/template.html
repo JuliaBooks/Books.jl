@@ -18,6 +18,13 @@ $endif$
   $if(mousetrap)$
   <script src="/mousetrap.min.js"></script>
   $endif$
+  <!-- TODO: Add url_prefix. -->
+  <style>
+  @font-face {
+    font-family: JuliaMono-Regular;
+    src: url("/JuliaMono-Regular.woff2");
+  }
+  </style>
 $for(header-includes)$
   $header-includes$
 $endfor$
