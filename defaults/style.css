@@ -438,3 +438,12 @@ html {
 .csl-entry {
   margin-bottom: var(--small-size);
 }
+
+kbd {
+  border: 1px solid;
+  border-radius: 6px;
+  display: inline-block;
+  line-height: 10px;
+  padding: 4px 4px;
+  vertical-align: middle;
+}
