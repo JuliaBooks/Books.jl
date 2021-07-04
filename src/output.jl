@@ -192,6 +192,20 @@ convert_output(expr, path, out::AbstractString) = string(out)
 convert_output(expr, path, out::Number) = string(out)
 
 """
+    catch_show(out)
+
+Catch the output from `show` for object `out`.
+"""
+function catch_show(out)
+    io = IOBuffer()
+    mime = MIME("text/plain")
+    show(io, mime, out)
+    out = String(take!(io))
+    # This is required for MCMCChains, but it would be nicer if the user could specify this.
+    out = output_block(out)
+end
+
+"""
     convert_output(expr, path, out)
 
 Fallback method for `out::Any`.
@@ -214,12 +228,7 @@ true
 ```
 """
 function convert_output(expr, path, out)::String
-    io = IOBuffer()
-    mime = MIME("text/plain")
-    show(io, mime, out)
-    out = String(take!(io))
-    # This is required for MCMCChains, but it would be nicer if the user could specify this.
-    out = output_block(out)
+    catch_show(out)
 end
 
 """
