@@ -115,7 +115,7 @@ Refer to @tbl:my_table with
 To show multiple objects, pass a `Vector`:
 
 ```jl
-@sco(M.multiple_df_vector())
+@sco M.multiple_df_vector()
 ```
 
 When you want to control where the various objects are saved, use `Options`.
@@ -415,8 +415,7 @@ Without `process=string`, the output would automatically be converted to a Markd
 ```jl
 sco("
 df = DataFrame(A = [1], B = [Date(2018)])
-Options(df; caption=nothing, label=nothing) # hide
-"; post=output_block)
+"; process=without_caption_label, post=output_block)
 ```
 
 Without `post=output_block`, the DataFrame would be converted to a string, but not wrapped inside a code block so that Pandoc will treat is as normal Markdown:

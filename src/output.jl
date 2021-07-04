@@ -232,6 +232,15 @@ function convert_output(expr, path, out)::String
 end
 
 """
+    without_caption_label(out::Any)
+
+Convert output, but suppress captions and labels.
+"""
+function without_caption_label(out::Any)
+    convert_output(nothing, nothing, out)
+end
+
+"""
     prettify_caption(caption)
 
 Return prettier caption.
