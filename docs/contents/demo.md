@@ -256,6 +256,7 @@ Or, we can show the output inline, namely `jl M.my_data_mean()`, by using
 ```
 
 It is also possible to show methods with parameters.
+For example,
 
 <pre>
 ```jl
@@ -263,9 +264,13 @@ It is also possible to show methods with parameters.
 ```
 </pre>
 
+shows
+
 ```jl
 @sc(M.hello(""))
 ```
+
+Now, we can show
 
 ```jl
 scob("""
@@ -273,7 +278,7 @@ M.hello("World")
 """)
 ```
 
-Here, the `M` can be a bit confusing.
+Here, the `M` can be a bit confusing for readers.
 If this is a problem, you can export the method `hello` to avoid it.
 If you are really sure, you can export all symbols in your module with something like [this](https://discourse.julialang.org/t/exportall/4970/16).
 
@@ -367,7 +372,7 @@ To write note boxes, you can use
 
 This way is fully supported by Pandoc, so it will be correctly converted to outputs such as PDF or DOCX.
 
-### scob
+### Advanced `sco` options
 
 To enforce output to be embedded inside a code block, use `scob`.
 For example,
@@ -387,3 +392,38 @@ or, with a string
 scob("s = \"Hello\"")
 ```
 
+Another way to change the output is via the keyword arguments `process` and `post` for `sco`.
+
+<pre>
+```jl
+sco("
+df = DataFrame(A = [1], B = [Date(2018)])
+"; process=string, post=output_block)
+```
+</pre>
+
+which shows the following to the reader:
+
+```jl
+sco("
+df = DataFrame(A = [1], B = [Date(2018)])
+"; process=string, post=output_block)
+```
+
+Without `process=string`, the output would automatically be converted to a Markdown table by Books.jl and then wrapped inside a code block, which will cause Pandoc to show the raw output instead of a table.
+
+```jl
+sco("
+df = DataFrame(A = [1], B = [Date(2018)])
+Options(df; caption=nothing, label=nothing) # hide
+"; post=output_block)
+```
+
+Without `post=output_block`, the DataFrame would be converted to a string, but not wrapped inside a code block so that Pandoc will treat is as normal Markdown:
+
+```jl
+sco("
+df = DataFrame(A = [2], B = [Date(2018)])
+Options(df; caption=nothing, label=nothing) # hide
+"; process=string)
+```

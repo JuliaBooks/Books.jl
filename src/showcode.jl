@@ -59,28 +59,37 @@ function convert_output(expr, path, cf::CodeAndFunction)
 end
 
 """
-    eval_convert(expr::AbstractString, M, post::Union{Nothing,Function}=nothing)
+    eval_convert(expr::AbstractString, M,
+    process::Union{Nothing,Function}=nothing,
+    post::Union{Nothing,Function}=identity)
 
-Evaluate `expr` and convert the output.
-This should be evaluated inside the correct module since it is typically called
-inside `Core.eval(M, ex)` in `generate.jl`.
+Evaluate `expr` in module `M` and convert the output.
 """
-function eval_convert(expr::AbstractString, M, post::Union{Nothing,Function}=nothing)
+function eval_convert(expr::AbstractString, M,
+    process::Union{Nothing,Function}=nothing,
+    post::Union{Nothing,Function}=identity)
     ex = Meta.parse("begin $expr end")
     out = Core.eval(M, ex)
-    out = isnothing(post) ? convert_output(expr, nothing, out) : post(out)
+    out = isnothing(process) ? convert_output(expr, nothing, out) : process(out)
+    out = post(out)
 end
 
 """
-    sco(expr::AbstractString; M=Main, post::Union{Nothing,Function}=nothing)
+    sco(expr::AbstractString;
+    M=Main, process::Union{Nothing,Function}=nothing,
+    post::Function=identity)
 
 Show code and output for `expr`.
-Post-process the output by applying `post` or `convert_output` to it.
+Process the output by applying `post` or `convert_output` to it.
+Then, post-process the output by applying `post` to it.
 """
-function sco(expr::AbstractString; M=Main, post::Union{Nothing,Function}=nothing)
+function sco(expr::AbstractString;
+        M=Main,
+        process::Union{Nothing,Function}=nothing,
+        post::Function=identity)
     code = remove_hide_comment(expr)
     code = code_block(strip(code))
-    out = eval_convert(expr, M, post)
+    out = eval_convert(expr, M, process, post)
     """
     $code
     $out
