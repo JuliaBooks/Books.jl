@@ -35,7 +35,7 @@ end
 
 function convert_output(expr, path, outputs::AbstractVector{AbstractString})
     out = join(outputs, "\n")
-    out = code_block(out)
+    out = output_block(out)
 end
 
 function convert_output(expr, path, outputs::AbstractVector)
@@ -44,7 +44,7 @@ function convert_output(expr, path, outputs::AbstractVector)
     # because it would be hard to read.
     if t <: AbstractString || t <: Number
         out = string(outputs)::String
-        out = code_block(out)
+        out = output_block(out)
     else
         path = nothing
         outputs = convert_output.(nothing, nothing, outputs)
@@ -100,7 +100,7 @@ function convert_output(expr, path, out::Code)::String
     end
     shown_output = convert_output(expr, path, ans)
     if isa(ans, AbstractString) || isa(ans, Number)
-        shown_output = code_block(shown_output)
+        shown_output = output_block(shown_output)
     end
 
     mod_info = mod == Main || out.hide_module ? "" :
@@ -219,7 +219,7 @@ function convert_output(expr, path, out)::String
     show(io, mime, out)
     out = String(take!(io))
     # This is required for MCMCChains, but it would be nicer if the user could specify this.
-    out = code_block(out)
+    out = output_block(out)
 end
 
 """
@@ -362,5 +362,5 @@ function doctest(s::Markdown.MD)
     lines = split(content, '\n')
     lines = lines[2:end-1]
     content = join(lines, '\n')
-    code_block(content)
+    output_block(content)
 end

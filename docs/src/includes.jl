@@ -112,7 +112,7 @@ function markdown_gen_example()
     gen("index")
     ```
 
-    ```
+    ```output
     $(rstrip(c.output))
     Updating html
     ```

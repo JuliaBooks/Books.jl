@@ -30,8 +30,8 @@ include("generate.jl")
 
 export html, pdf, docx, build_all
 export code, ImageOptions, Options
-export code_block
-export @sc, sc, CodeAndFunction, @sco, sco
+export code_block, output_block
+export @sc, sc, CodeAndFunction, @sco, sco, scob
 export gen
 export serve
 

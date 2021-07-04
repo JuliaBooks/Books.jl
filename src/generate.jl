@@ -6,6 +6,13 @@ Wrap `s` in a Markdown code block with triple backticks.
 """
 code_block(s) = "```\n$s\n```\n"
 
+"""
+    output_block(s)
+
+Wrap `s` in a Markdown code block with the language description "output".
+"""
+output_block(s) = "```output\n$s\n```\n"
+
 function extract_codeblock_expr(s)
 end
 
