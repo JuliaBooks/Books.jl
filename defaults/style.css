@@ -5,7 +5,8 @@
   --normal-size: 19px;
   --small-size: 14px;
   --tiny-size: 11px;
-  --block-background: hsl(0, 0%, 97%);
+  --block-background: hsl(0, 0%, 94%);
+  --output-background: hsl(120, 100%, 94%);
   --menu-width: 220px;
   --max-body-width: 960px;
   --content-left-margin: 70px;
@@ -226,22 +227,33 @@ hr {
 }
 
 pre, code, kbd, samp {
-  font-family: JuliaMono-Regular;
+  font-family: "JuliaMono-Regular", "SFMono-Regular", "DejaVu Sans Mono";
   font-size: var(--small-size);
   color: #000;
   background: var(--block-background);
-  margin-top: 1.2em;
-  margin-bottom: 1.2em;
-  padding-top: 0.5em;
-  padding-left: 0.2em;
-  padding-bottom: 0.5em;
-  border-radius: 8px;
+  margin-top: 0.6em;
+  margin-bottom: 0.6em;
+  padding-top: 0.3em;
+  padding-left: 0.3em;
+  padding-right: 0.3em;
+  padding-bottom: 0.3em;
+  border-radius: 4px;
 }
 
 pre {
   white-space: pre;
   white-space: pre-wrap;
   word-wrap: break-word;
+  border: 1px solid #dbdbdb;
+}
+
+pre.output {
+  background: hsl(0, 0%, 98%);
+  border: 1px dashed #dbdbdb;
+}
+
+.output code {
+  background: hsl(0, 0%, 98%);
 }
 
 b, strong {

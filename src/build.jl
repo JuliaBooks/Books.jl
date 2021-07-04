@@ -101,6 +101,7 @@ function pandoc_html(project::AbstractString)
     metadata = "--metadata-file=$metadata_path"
     copy_css()
     copy_mousetrap()
+    copy_juliamono()
 
     args = [
         inputs(project);

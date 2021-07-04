@@ -72,18 +72,30 @@ function eval_convert(expr::AbstractString, M)
 end
 
 """
-    sco(expr::AbstractString; M=Main)
+    sco(expr::AbstractString; M=Main, post::Function=identity)
 
 Show code and output for `expr`.
+Post-process the output by applying `post` to it.
 """
-function sco(expr::AbstractString; M=Main)
-    out = eval_convert(expr, M)
+function sco(expr::AbstractString; M=Main, post::Function=identity)
     code = remove_hide_comment(expr)
     code = code_block(strip(code))
+    out = eval_convert(expr, M)
+    out = post(out)
     """
     $code
     $out
     """
+end
+
+"""
+    scob(expr::AbstractString; M=Main)
+
+Show code and output in a block for `expr`.
+"""
+function scob(expr::AbstractString; M=Main)
+    post = output_block
+    sco(expr; M, post)
 end
 
 """

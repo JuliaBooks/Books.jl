@@ -78,8 +78,7 @@ julia> gen()
 To run this method automatically when you make a change in your package, ensure that you loaded [Revise.jl](https://github.com/timholy/Revise.jl) before loading your package and run
 
 ```
-julia> entr(gen, ["contents"], [M])
-[...]
+entr(gen, ["contents"], [M])
 ```
 
 where M is the name of your module.
@@ -269,7 +268,7 @@ It is also possible to show methods with parameters.
 ```
 
 ```jl
-sco("""
+scob("""
 M.hello("World")
 """)
 ```
@@ -368,6 +367,23 @@ To write note boxes, you can use
 
 This way is fully supported by Pandoc, so it will be correctly converted to outputs such as PDF or DOCX.
 
-### String interpolation
+### scob
 
-For string interpolation, add a backslash before the dollar sign when using `sc` or `sco`.
+To enforce output to be embedded inside a code block, use `scob`.
+For example,
+
+```jl
+sco("""
+scob("
+df = DataFrame(A = [1], B = [Date(2018)])
+string(df)
+")
+""")
+```
+
+or, with a string
+
+```jl
+scob("s = \"Hello\"")
+```
+
