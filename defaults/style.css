@@ -227,7 +227,7 @@ hr {
 }
 
 pre, code, kbd, samp {
-  font-family: JuliaMono-Regular;
+  font-family: "JuliaMono-Regular", "SFMono-Regular", "DejaVu Sans Mono";
   font-size: var(--small-size);
   color: #000;
   background: var(--block-background);
