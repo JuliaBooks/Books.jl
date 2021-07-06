@@ -40,16 +40,20 @@ function write_metadata(user_metadata_path)
 end
 
 """
-    project_info(path, project::AbstractString)
+    project_info(path::String, project::AbstractString)
 
 Return project info for TOML file at `path` as raw text or `nothing` if `project` is not defined.
 """
-function project_info(path, project::AbstractString)
+function project_info(path::String, project::AbstractString)
     text = read(path, String)
-    dic = TOML.parse(text)
-    project in keys(dic["projects"]) ?
-        dic["projects"][project] :
+    dic = TOML.parse(text)::Dict{String, Any}
+    projects = dic["projects"]::Dict{String, Any}
+    if project in keys(projects)
+        project = string(project)::String
+        projects[project]::Dict{String, Any}
+    else
         nothing
+    end
 end
 
 @memoize function default_config(project::AbstractString)
@@ -84,7 +88,7 @@ function config(project::AbstractString)
         isnothing(user) && isnothing(default) ? error("Project $project not defined in config.toml") :
         isnothing(user) ? default :
         isnothing(default) ? user :
-        override(default, user)
+        override(default, user)::Dict{String, Any}
 end
 
 """
@@ -105,10 +109,11 @@ julia> Books.config("notes", "port")
 ```
 """
 function config(project::AbstractString, key::String)
-    c = config(project)
+    c = config(project)::Dict{String, Any}
     if key in keys(c)
         return c[key]
     else
+        default = config("default")::Dict{String, Any}
         return config("default")[key]
     end
 end
