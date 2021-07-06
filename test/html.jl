@@ -40,20 +40,20 @@
     <h1 data-number="3" id="id"><span class="header-section-number">3</span> Getting Started</h1>
     <h1 class="unnumbered" id="id"> Getting Started</h1>
     """
-    tuples = B.section_infos(text)
-    @test tuples[1] == (num = "1", id = "sec:intro", text = "Introduction")
-    @test tuples[2] == (num = "1.1", id = "subsection", text = "Subsection")
-    @test tuples[3] == (num = "", id = "references", text = "References")
-    @test tuples[4] == (num = "3", id = "id", text = "Getting Started")
-    @test tuples[5] == (num = "", id = "id", text = "Getting Started")
+    infos = B.section_infos(text)
+    @test infos[1] == Books.SectionInfo("1", "sec:intro", "Introduction")
+    @test infos[2] == Books.SectionInfo("1.1", "subsection", "Subsection")
+    @test infos[3] == Books.SectionInfo("", "references", "References")
+    @test infos[4] == Books.SectionInfo("3", "id", "Getting Started")
+    @test infos[5] == Books.SectionInfo("", "id", "Getting Started")
 
     ids_texts = B.html_page_name.(bodies)
     id_names = getproperty.(ids_texts, :id)
     @test id_names == ["welcome", "getting-started", "something", "embedding-code"]
 
     text = "<h1 data-number=\"1\" id=\"前言\"><span class=\"header-section-number\">1</span> 前言</h1>"
-    tuples = B.section_infos(text)
-    @test tuples[1] == (num = "1", id = "前言", text = "前言")
+    infos = B.section_infos(text)
+    @test infos[1] == Books.SectionInfo("1", "前言", "前言")
 
     names = ["test"]
     page = raw"""
