@@ -72,30 +72,36 @@ function split_html(h::AbstractString)
     (head = head, bodies = bodies, foot = foot)
 end
 
+struct SectionInfo
+    num::String
+    id::String
+    text::String
+end
+
 function section_infos(text)
     lines = split(text, '\n')
     numbered_rx = r"data-number=\"([^\"]*)\" id=\"([^\"([^\"]*)\""
     unnumbered_rx = r"class=\"unnumbered\" id=\"([^\"([^\"]*)\""
-    tuples = []
+    V = Vector{SectionInfo}()
     for line in lines
         m = match(numbered_rx, line)
         if !isnothing(m)
             number, id = m.captures
             line_end = split(line, '>')[end-1]
             text = line_end[nextind(line_end, 0, 2):prevind(line_end, end, 4)]
-            tuple = (num = number, id = id, text = lstrip(text))
-            push!(tuples, tuple)
+            info = SectionInfo(number, id, lstrip(text))
+            push!(V, info)
         end
         m = match(unnumbered_rx, line)
         if !isnothing(m)
             id = m.captures[1]
             interesting_region = split(line, '>')[end-1]
             text = interesting_region[nextind(interesting_region, 0, 1):prevind(interesting_region, end, 4)]
-            tuple = (num = "", id = id, text = lstrip(text))
-            push!(tuples, tuple)
+            info = SectionInfo("", id, lstrip(text))
+            push!(V, info)
         end
     end
-    tuples
+    V
 end
 
 """
@@ -108,10 +114,13 @@ function html_page_name(html)
     sections = section_infos(html)
     id = first(sections).id
     if contains(id, ':')
-        start = findfirst(':', id) + 1
+        start = findfirst(':', id)::Int + 1
         id = id[start:end]
     end
-    (id=id, text=first(sections).text)
+    id = string(id)::String
+    text = first(sections).text
+    text = string(text)::String
+    (; id, text)
 end
 
 function html_href(text, link, level)
@@ -177,18 +186,20 @@ Menu including numbered sections.
 """
 function add_menu(splitted)
     head, bodies, foot = splitted
-    data = pandoc_metadata()
-    title = data["title"]
-    subtitle = "subtitle" in keys(data) ? data["subtitle"] : ""
+    data = pandoc_metadata()::Dict{Any, Any}
+    title = data["title"]::String
+    subtitle = "subtitle" in keys(data) ? data["subtitle"]::String : ""
 
     ids_texts = html_page_name.(bodies)
     names = getproperty.(ids_texts, :id)
     menu_items::Vector{String} = []
     skip_homepage(z) = Iterators.peel(z)[2]
     for (name, body) in skip_homepage(zip(names, bodies))
-        tuples = section_infos(body)
-        for section in tuples
-            num, id, text = section
+        V = section_infos(body)
+        for info in V
+            num = info.num
+            id = info.id
+            text = info.text
             link = "/$name.html"
             link_text = "<b>$num</b> $text"
             level = section_level(num)
