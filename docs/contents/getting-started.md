@@ -6,20 +6,18 @@ The easiest way to get started is to
 1. step inside that directory and
 1. serve your book via:
 
-```{.include}
-_gen/serve_example.md
+```jl
+M.serve_example()
 ```
 
 To generate all the Julia output (see @sec:embedding-output for more information) use
 
-```{.include}
-_gen/generate_example.md
 ```
+$ julia --project -e  'using Books; using MyPackage; M = MyPackage'
 
-As the number of outputs increases, you might want to only update one output:
-
-```{.include}
-_gen/gen_function_docs.md
+julia> gen()
+[...]
+Updating html
 ```
 
 To avoid code duplication between projects, this package tries to have good defaults for many settings.
@@ -38,14 +36,14 @@ For more info on templates, see @sec:templates.
 You can override settings by placing a `metadata.yml` file at the root directory of your project.
 For example, the metadata for this project contains:
 
-```{.include}
-_gen/docs_metadata.md
+```jl
+M.docs_metadata()
 ```
 
 The following defaults are set by Books.jl.
 
-```{.include}
-_gen/default_metadata.md
+```jl
+M.default_metadata()
 ```
 
 ## config.toml {#sec:config}
@@ -66,14 +64,14 @@ The meaning of `contents` is discussed in @sec:about_contents.
 The `pdf_filename` is used by `pdf()` and the `port` setting is used by `serve()`.
 For this documentation, the following config is used
 
-```{.include}
-_gen/docs_config.md
+```jl
+M.docs_config()
 ```
 
 Which overrides some settings from the following default settings
 
-```{.include}
-_gen/default_config.md
+```jl
+M.default_config()
 ```
 
 Here, the `extra_directories` allows you to specify directories which need to be moved into `_build`, which makes them available for the local server and online.

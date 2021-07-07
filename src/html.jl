@@ -2,14 +2,14 @@ import YAML
 import URIs
 
 """
-    split_keepdelim(str::AbstractString, dlm::Regex)
+    split_keepdelim(str::AbstractString, delim::Regex)
 
 Split on regex while keeping the matches.
 Based on https://github.com/JuliaLang/julia/issues/20625#issuecomment-581585151.
 """
-function split_keepdelim(str::AbstractString, dlm::Regex)
-    dlm = string(dlm)[3:end-1]
-    rx = Regex("(?=$dlm)")
+function split_keepdelim(str::AbstractString, delim::Regex)
+    delim = string(delim)[3:end-1]
+    rx = Regex("(?=$delim)")
     split(str, rx)
 end
 
@@ -68,33 +68,40 @@ function split_html(h::AbstractString)
 
     start = r"<h[1|2]"
     bodies = split_keepdelim(body, start)[2:end]
+    bodies::Vector{String} = string.(bodies)
     (head = head, bodies = bodies, foot = foot)
+end
+
+struct SectionInfo
+    num::String
+    id::String
+    text::String
 end
 
 function section_infos(text)
     lines = split(text, '\n')
     numbered_rx = r"data-number=\"([^\"]*)\" id=\"([^\"([^\"]*)\""
     unnumbered_rx = r"class=\"unnumbered\" id=\"([^\"([^\"]*)\""
-    tuples = []
+    V = Vector{SectionInfo}()
     for line in lines
         m = match(numbered_rx, line)
         if !isnothing(m)
-            number, id = m.captures 
+            number, id = m.captures
             line_end = split(line, '>')[end-1]
             text = line_end[nextind(line_end, 0, 2):prevind(line_end, end, 4)]
-            tuple = (num = number, id = id, text = lstrip(text))
-            push!(tuples, tuple)
+            info = SectionInfo(number, id, lstrip(text))
+            push!(V, info)
         end
         m = match(unnumbered_rx, line)
         if !isnothing(m)
             id = m.captures[1]
             interesting_region = split(line, '>')[end-1]
             text = interesting_region[nextind(interesting_region, 0, 1):prevind(interesting_region, end, 4)]
-            tuple = (num = "", id = id, text = lstrip(text))
-            push!(tuples, tuple)
+            info = SectionInfo("", id, lstrip(text))
+            push!(V, info)
         end
     end
-    tuples
+    V
 end
 
 """
@@ -107,13 +114,23 @@ function html_page_name(html)
     sections = section_infos(html)
     id = first(sections).id
     if contains(id, ':')
-        start = findfirst(':', id) + 1
+        start = findfirst(':', id)::Int + 1
         id = id[start:end]
     end
-    (id=id, text=first(sections).text)
+    id = string(id)::String
+    text = first(sections).text
+    text = string(text)::String
+    (; id, text)
 end
 
-html_href(text, link, level) = """<a class="menu-level-$level" href="$link">$text</a>"""
+function html_href(text, link, level)
+    threshold = 33
+    if threshold < length(text)
+        shortened = text[1:threshold]::String
+        text = shortened * ".."
+    end
+    """<a class="menu-level-$level" href="$link">$text</a>"""
+end
 html_li(text) = """<li>$text</li>"""
 
 function pandoc_metadata(file=joinpath(GENERATED_DIR, "metadata.yml"))::Dict
@@ -127,34 +144,73 @@ function section_level(num::AbstractString)
     n_dots + 1
 end
 
+function previous_and_next_buttons(body::String, menu_items::Vector{String}, i::Int)
+    max = length(menu_items)
+    prev = 2 < i ? menu_items[i - 2] : ""
+    prev = strip(prev)
+    text_prev = prev == "" ? "" : "<kbd>←</kbd>"
+    next = i < max ? menu_items[i] : ""
+    next = strip(next)
+    text_next = next == "" ? "" : "<kbd>→</kbd>"
+    # Note that changing the element below might require a mousetrap Javascript in template.html update.
+    """
+    $body
+
+    <div class="bottom-nav">
+        <p id="nav-prev" style="text-align: left;">
+            $prev $text_prev
+            <span id="nav-next" style="float: right;">
+                $text_next $next
+            </span>
+        </p>
+    </div>
+    """
+end
+
+"""
+    add_previous_and_next_buttons(bodies::Vector{String}, menu_items::Vector{String})
+
+Add buttons at bottom of page to navigate to the previous or next section.
+"""
+function add_previous_and_next_buttons(bodies::Vector{String}, menu_items::Vector{String})
+    for (i, body) in enumerate(bodies)
+        bodies[i] = previous_and_next_buttons(body, menu_items, i)
+    end
+    bodies
+end
+
 """
     add_menu([splitted])
 
 Menu including numbered sections.
 """
-function add_menu(splitted=split_html())
+function add_menu(splitted)
     head, bodies, foot = splitted
-    data = pandoc_metadata()
-    title = data["title"]
-    subtitle = "subtitle" in keys(data) ? data["subtitle"] : ""
+    data = pandoc_metadata()::Dict{Any, Any}
+    title = data["title"]::String
+    subtitle = "subtitle" in keys(data) ? data["subtitle"]::String : ""
 
     ids_texts = html_page_name.(bodies)
     names = getproperty.(ids_texts, :id)
-    menu_items = []
+    menu_items::Vector{String} = []
     skip_homepage(z) = Iterators.peel(z)[2]
     for (name, body) in skip_homepage(zip(names, bodies))
-        tuples = section_infos(body)
-        for section in tuples
-            num, id, text = section
+        V = section_infos(body)
+        for info in V
+            num = info.num
+            id = info.id
+            text = info.text
             link = "/$name.html"
             link_text = "<b>$num</b> $text"
             level = section_level(num)
             if level < 3
                 item = html_href(link_text, link, level)
+                item = string(item)::String
                 push!(menu_items, item)
             end
         end
     end
+    bodies = add_previous_and_next_buttons(bodies, menu_items)
     list = join(html_li.(menu_items), '\n')
     menu = """
     <aside class="books-menu">
@@ -201,17 +257,26 @@ function create_page(head, menu, name, body, foot)
     head = update_title(head, name)
     page = """
     $head
-    <div class="books-outside">
+    <div class="books-container">
     $menu
     <div class="books-content">
-    $body $foot
-    </div>
-    </div>
+    $body
+    $foot
     """
+    page = rstrip(page)
 end
 
-function html_pages(chs=chapters(), h=pandoc_html())
-    head, menu, bodies, foot = add_menu(split_html(h))
+function add_extra_head(head, extra_head::AbstractString)
+    before = "\n</head>"
+    # All entries in the head have two spaces in front.
+    after = "\n  $extra_head $before"
+    replace(head, before => after)
+end
+
+function html_pages(h, extra_head="")
+    h = split_html(h)
+    head, menu, bodies, foot = add_menu(h)
+    head = add_extra_head(head, extra_head)
     ids_texts = html_page_name.(bodies)
     id_names = getproperty.(ids_texts, :id)
     text_names = getproperty.(ids_texts, :text)
@@ -232,7 +297,7 @@ function map_ids(names, pages)
         html = page
         matches = eachmatch(rx, html)
         for m in matches
-            capture = first(m.captures)
+            capture = first(m.captures)::SubString{String}
             if startswith(capture, "sec:")
                 key = '#' * capture
                 mapping[key] = name
@@ -254,7 +319,7 @@ function fix_links(names, pages, url_prefix)
     updated_pages = []
     function fix_page(name, page)
         function replace_match(s)
-            capture = first(match(rx, s).captures)
+            capture = first(match(rx, s).captures)::SubString{String}
             if startswith(capture, "#sec:")
                 page_link = mapping[capture]
                 return uncapture("$url_prefix/$page_link.html$capture")
@@ -275,9 +340,10 @@ function fix_links(names, pages, url_prefix)
     (names, fixed_pages)
 end
 
-function write_html_pages(url_prefix, chs=chapters(), h=pandoc_html())
+function write_html_pages(url_prefix, h::AbstractString, extra_head="")
     h = fix_image_urls(h, url_prefix)
-    names, pages = fix_links(html_pages(chs, h)..., url_prefix)
+    names, pages = html_pages(h, extra_head)
+    names, pages = fix_links(names, pages, url_prefix)
     for (i, (name, page)) in enumerate(zip(names, pages))
         name = i == 1 ? "index" : name
         path = joinpath(BUILD_DIR, "$name.html")

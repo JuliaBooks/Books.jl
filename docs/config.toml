@@ -5,11 +5,11 @@
     "about",
     "getting-started",
     "demo",
-    "references"
+    "references",
   ]
   output_filename = "books"
 
-  # Prefix for GitHub Pages links.
+  # Prefix for GitHub Pages.
   online_url_prefix = "/Books.jl"
 
   # Extra directories to be copied.

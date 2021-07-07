@@ -15,6 +15,16 @@ $endif$
   <title>Book - $pagetitle$</title>
   <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
   <link rel="stylesheet" href="/style.css"/>
+  $if(mousetrap)$
+  <script src="/mousetrap.min.js"></script>
+  $endif$
+  <!-- TODO: Add url_prefix. -->
+  <style>
+  @font-face {
+    font-family: JuliaMono-Regular;
+    src: url("/JuliaMono-Regular.woff2");
+  }
+  </style>
 $for(header-includes)$
   $header-includes$
 $endfor$
@@ -23,7 +33,24 @@ $if(math)$
 $endif$
 </head>
 <body>
+<script>
+$if(mousetrap)$
+function click_next() {
+  var next = document.getElementById('nav-next');
+  next.firstElementChild.nextElementSibling.click();
+}
+function click_prev() {
+  var prev = document.getElementById('nav-prev');
+  prev.firstElementChild.click();
+}
+Mousetrap.bind('right', click_next);
+Mousetrap.bind('h', click_prev);
+Mousetrap.bind('left', click_prev);
+Mousetrap.bind('l', click_next);
+$endif$
+</script>
 <!-- end head -->
+
 $body$
 $for(include-after)$
 $include-after$
@@ -31,9 +58,13 @@ $endfor$
 <!-- begin foot -->
 <div class="license">
   $if(html-license)$
+  <br/>
+  <br/>
   $html-license$
   $endif$
   $author$
+</div>
+</div>
 </div>
 </body>
 </html>

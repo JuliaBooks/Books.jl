@@ -1,9 +1,11 @@
 # Welcome {-}
 
-[//]: # (This file is only included on the website.)
+```{=comment}
+This file is only included on the website.
+```
 
-```{.include}
-_gen/homepage_intro.md
+```jl
+M.homepage_intro()
 ```
 
 See @sec:about for more information about this package.

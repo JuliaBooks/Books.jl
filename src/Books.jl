@@ -23,16 +23,17 @@ include("html.jl")
 include("defaults.jl")
 include("ci.jl")
 include("build.jl")
+export html, pdf, docx, build_all
 include("serve.jl")
 include("output.jl")
+export without_caption_label
 include("outputs/dataframes.jl")
 include("showcode.jl")
 include("generate.jl")
-
-export html, pdf, docx, build_all
 export code, ImageOptions, Options
-export code_block
-export @sc, CodeAndFunction, @sco
+
+export code_block, output_block
+export @sc, sc, CodeAndFunction, @sco, sco, scob
 export gen
 export serve
 

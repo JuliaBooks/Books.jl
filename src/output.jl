@@ -27,35 +27,48 @@ struct ImageOptions
     ImageOptions(object; width=nothing, height=nothing) = new(object, width, height)
 end
 
-function convert_output(path, out::ImageOptions; kwargs...)
+function convert_output(expr, path, out::ImageOptions; kwargs...)
     width = out.width
     height = out.height
-    convert_output(path, out.object; width, height, kwargs...)
+    convert_output(expr, path, out.object; width, height, kwargs...)
 end
 
-function convert_output(path, outputs::AbstractVector)
-    path = nothing
-    outputs = convert_output.(path, outputs)
-    outputs = String.(outputs)
-    out = join(outputs, "\n\n")
+function convert_output(expr, path, outputs::AbstractVector{AbstractString})
+    out = join(outputs, "\n")
+    out = output_block(out)
+end
+
+function convert_output(expr, path, outputs::AbstractVector)
+    t = eltype(outputs)
+    # Not doing this distinction in the method signature,
+    # because it would be hard to read.
+    if t <: AbstractString || t <: Number
+        out = string(outputs)::String
+        out = output_block(out)
+    else
+        path = nothing
+        outputs = convert_output.(nothing, nothing, outputs)
+        outputs = String.(outputs)
+        out = join(outputs, "\n\n")
+    end
 end
 
 """
     Options(object;
-        filename::Union{AbstractString,Nothing}=nothing,
-        caption::Union{AbstractString,Nothing}=nothing,
-        label::Union{AbstractString,Nothing}=nothing)
+        filename::Union{AbstractString,Nothing,Missing}=missing,
+        caption::Union{AbstractString,Nothing,Missing}=missing,
+        label::Union{AbstractString,Nothing,Missing}=missing)
 
 Struct containing an `object` and some meta-information to be passed to the resulting document.
 The `caption` and `label` options are used by `pandoc-crossref`.
 """
 struct Options
     object::Any
-    filename::Union{AbstractString,Nothing}
-    caption::Union{AbstractString,Nothing}
-    label::Union{AbstractString,Nothing}
+    filename::Union{AbstractString,Nothing,Missing}
+    caption::Union{AbstractString,Nothing,Missing}
+    label::Union{AbstractString,Nothing,Missing}
 
-    Options(object; filename=nothing, caption=nothing, label=nothing) =
+    Options(object; filename=missing, caption=missing, label=missing) =
         new(object, filename, caption, label)
 end
 
@@ -71,13 +84,13 @@ julia> filenames = ["a", "b"];
 
 julia> Options.(objects, filenames)
 2-element Vector{Options}:
- Options(1, "a", nothing, nothing)
- Options(2, "b", nothing, nothing)
+ Options(1, "a", missing, missing)
+ Options(2, "b", missing, missing)
 ```
 """
 Options(object, filename::AbstractString) = Options(object; filename)
 
-function convert_output(path, out::Code)::String
+function convert_output(expr, path, out::Code)::String
     block = out.block
     mod = out.mod
     ans = try
@@ -85,9 +98,9 @@ function convert_output(path, out::Code)::String
     catch e
         string(e)
     end
-    shown_output = convert_output(path, ans)
+    shown_output = convert_output(expr, path, ans)
     if isa(ans, AbstractString) || isa(ans, Number)
-        shown_output = code_block(shown_output)
+        shown_output = output_block(shown_output)
     end
 
     mod_info = mod == Main || out.hide_module ? "" :
@@ -112,8 +125,26 @@ function convert_output(path, out::Code)::String
     """
 end
 
+function plotting_filename(expr, path, package::String)
+    if path isa AbstractString
+        file = basename(path)
+        file, _ = splitext(file)
+        file = string(file)::String
+    elseif expr isa AbstractString
+        file = method_name(expr)
+    else
+        # Not determining some random name here, because it would require cleanups too.
+        msg = """
+            It is not possible to write an image without specifying a path.
+            Use `Options(p; filename=filename)` where `p` is a $package plot.
+            """
+        throw(ErrorException(msg))
+    end
+    string(file)::String
+end
+
 """
-    convert_output(path, options::Options)
+    convert_output(expr, path, options::Options)
 
 Convert `options.object` while taking `options.caption` and `options.label` into account.
 This method needs to pass the options correctly to the resulting type, because the syntax depends on the type;
@@ -123,41 +154,59 @@ see the `pandoc-crossref` documentation for more information on the syntax.
 ```jldoctest
 julia> df = DataFrame(A = [1]);
 
-julia> caption = "My DataFrame";
+julia> caption = "My DataFrame.";
 
 julia> options = Options(df; caption);
 
-julia> print(Books.convert_output(nothing, options))
+julia> print(Books.convert_output(missing, missing, options))
 |   A |
 | ---:|
 |   1 |
 
-: My DataFrame
+: My DataFrame.
 ```
 """
-function convert_output(path, opts::Options)::String
+function convert_output(expr, path, opts::Options)::String
     object = opts.object
     filename = opts.filename
-    if !isnothing(filename)
-        path = filename
+    if !isnothing(filename) || !ismissing(filename)
+        expr = filename
+    else
+        # The path is where the md should be written to; not things like images.
+        name, _ = splitext(path)
+        expr = string(basename(name))::String
     end
     caption = opts.caption
     label = opts.label
-    convert_output(path, object; caption, label)
+    convert_output(expr, path, object; caption, label)
 end
 
 """
-    convert_output(path, out::AbstractString)
+    convert_output(expr, path, out::AbstractString)
 
 Return `out` as string.
 This avoids the adding of `"` which `show` does by default.
 """
-convert_output(path, out::AbstractString) = string(out)
+convert_output(expr, path, out::AbstractString) = string(out)
 
-convert_output(path, out::Number) = string(out)
+convert_output(expr, path, out::Number) = string(out)
 
 """
-    convert_output(path, out)
+    catch_show(out)
+
+Catch the output from `show` for object `out`.
+"""
+function catch_show(out)
+    io = IOBuffer()
+    mime = MIME("text/plain")
+    show(io, mime, out)
+    out = String(take!(io))
+    # This is required for MCMCChains, but it would be nicer if the user could specify this.
+    out = output_block(out)
+end
+
+"""
+    convert_output(expr, path, out)
 
 Fallback method for `out::Any`.
 This passes the objects through show to use the overrides that package creators might have provided.
@@ -172,19 +221,23 @@ julia> chn = Chains([1]; info=(start_time=[1.0], stop_time=[1.0]));
 julia> string(chn)
 "MCMC chain (1×1×1 Array{Int64, 3})"
 
-julia> out = Books.convert_output("", chn);
+julia> out = Books.convert_output("", "", chn);
 
 julia> contains(out, "Summary Statistics")
 true
 ```
 """
-function convert_output(path, out)::String
-    io = IOBuffer()
-    mime = MIME("text/plain")
-    show(io, mime, out)
-    out = String(take!(io))
-    # This is required for MCMCChains, but it would be nicer if the user could specify this.
-    out = code_block(out)
+function convert_output(expr, path, out)::String
+    catch_show(out)
+end
+
+"""
+    without_caption_label(out::Any)
+
+Convert output, but suppress captions and labels.
+"""
+function without_caption_label(out::Any)
+    convert_output(nothing, nothing, out)
 end
 
 """
@@ -194,12 +247,13 @@ Return prettier caption.
 
 ```jldoctest
 julia> Books.prettify_caption("example_table")
-"Example table"
+"Example table."
 ```
 """
 function prettify_caption(caption)
     caption = replace(caption, '_' => ' ')
     caption = uppercasefirst(caption)
+    caption = caption * '.'
 end
 
 """
@@ -227,55 +281,69 @@ function pandoc_image(file, path; caption=nothing, label=nothing)
 end
 
 """
-    caption_label(path, caption, label)
+    caption_label(expr, caption, label)
 
 Return `caption` and `label` for the inputs.
-This method sets some reasonable defaults if any of the inputs is missing.
+This method sets some reasonable defaults if any of the inputs is nothing or missing.
+In this context, `nothing` forces a parameter to be empty, whereas `missing` allows the
+parameter to be inferred.
+The elements of the output named tuple are never of type `Missing`.
 
 # Examples
+
 ```jldoctest
-julia> Books.caption_label("a/foo_bar.md", nothing, nothing)
-(caption = "Foo bar", label = "foo_bar")
+julia> Books.caption_label("foo_bar()", missing, missing)
+(caption = "Foo bar.", label = "foo_bar")
 
-julia> Books.caption_label("a/foo_bar.md", "My caption", nothing)
-(caption = "My caption", label = "foo_bar")
+julia> Books.caption_label("foo_bar()", "My caption.", missing)
+(caption = "My caption.", label = "foo_bar")
 
-julia> Books.caption_label(nothing, "cap", nothing)
-(caption = "cap", label = nothing)
+julia> Books.caption_label("foo_bar()", "My caption.", nothing)
+(caption = "My caption.", label = nothing)
 
-julia> Books.caption_label(nothing, nothing, "my_label")
-(caption = "My label", label = "my_label")
+julia> Books.caption_label(missing, "My caption.", missing)
+(caption = "My caption.", label = nothing)
 
-julia> Books.caption_label(nothing, nothing, nothing)
+julia> Books.caption_label(missing, missing, "my_label")
+(caption = "My label.", label = "my_label")
+
+julia> Books.caption_label(missing, missing, missing)
 (caption = nothing, label = nothing)
 ```
 """
-function caption_label(path, caption, label)
-    if isnothing(path) && isnothing(caption) && isnothing(label)
+function caption_label(expr, caption, label)
+    if ismissing(expr) && ismissing(caption) && ismissing(label)
         return (caption=nothing, label=nothing)
     end
 
-    if !isnothing(path)
-        name, suffix = method_name(path)
-        if isnothing(label)
+    original_caption = caption
+    original_label = label
+
+    if !ismissing(expr) && !isnothing(expr)
+        name = method_name(expr)
+        if ismissing(label)
             label = name
         end
-        if isnothing(caption)
+        if ismissing(caption)
             caption = prettify_caption(name)
         end
-        return (caption=caption, label=label)
     end
 
-    if !isnothing(label)
-        if isnothing(caption)
+    if !ismissing(label) && !isnothing(label)
+        if ismissing(caption)
             caption = prettify_caption(label)
         end
-        return (caption=caption, label=label)
     end
 
-    if !isnothing(caption)
-        return (caption=caption, label=label)
+    if isnothing(original_caption) || ismissing(caption)
+        caption = nothing
     end
+
+    if isnothing(original_label) || ismissing(label)
+        label = nothing
+    end
+
+    return (caption=caption, label=label)
 end
 
 """
@@ -312,5 +380,5 @@ function doctest(s::Markdown.MD)
     lines = split(content, '\n')
     lines = lines[2:end-1]
     content = join(lines, '\n')
-    code_block(content)
+    output_block(content)
 end

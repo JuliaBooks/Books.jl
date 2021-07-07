@@ -4,8 +4,8 @@ function pandoc_file(filename)
     isfile(user_path) ? user_path : fallback_path
 end
 
-include_files_lua = joinpath(PROJECT_ROOT, "src", "include-files.lua")
-include_files = "--lua-filter=$include_files_lua"
+include_lua_filter = joinpath(PROJECT_ROOT, "src", "include-codeblocks.lua")
+include_files = "--lua-filter=$include_lua_filter"
 crossref = "--filter=pandoc-crossref"
 citeproc = "--citeproc"
 
@@ -22,8 +22,8 @@ extra_args = [
 ]
 
 function inputs(project)
-    H = config(project, "homepage_contents")
-    C = config(project, "contents")
+    H = config(project, "homepage_contents")::String
+    C = config(project, "contents")::Vector{String}
     names = [H; C]
     [joinpath("contents", "$name.md") for name in names]
 end
@@ -48,20 +48,49 @@ end
 Copy the extra directories defined for `project`.
 """
 function copy_extra_directories(project)
-    extra_directories = config(project, "extra_directories")
+    extra_directories = config(project, "extra_directories")::Vector{String}
     copy_extra_directory.(extra_directories)
 end
 
-function call_pandoc(args)
+function call_pandoc(args)::Tuple{Base.Process, String}
     pandoc() do pandoc_bin
         pandoc_crossref() do _
             cmd = `$pandoc_bin $args`
             stdout = IOBuffer()
             p = run(pipeline(cmd; stdout))
-            out = String(take!(stdout))
+            out = String(take!(stdout))::String
             return (p, out)
         end
     end
+end
+
+function copy_css()
+    filename = "style.css"
+    css_path = pandoc_file(filename)
+    cp(css_path, joinpath(BUILD_DIR, filename); force=true)
+end
+
+@memoize function is_mousetrap_enabled()::Bool
+    meta = default_metadata()::Dict
+    if "mousetrap" in keys(meta)
+        meta["mousetrap"]::Bool
+    else
+        false
+    end
+end
+
+@memoize function copy_mousetrap()
+    if is_mousetrap_enabled()
+        filename = "mousetrap.min.js"
+        from = pandoc_file(filename)
+        cp(from, joinpath(BUILD_DIR, filename); force=true)
+    end
+end
+
+@memoize function copy_juliamono()
+    filename = "JuliaMono-Regular.woff2"
+    from = pandoc_file(filename)
+    cp(from, joinpath(BUILD_DIR, filename); force=true)
 end
 
 function pandoc_html(project::AbstractString)
@@ -70,11 +99,12 @@ function pandoc_html(project::AbstractString)
     template = "--template=$html_template_path"
     output_filename = joinpath(BUILD_DIR, "index.html")
     output = "--output=$output_filename"
-    filename = "style.css"
-    css_path = pandoc_file(filename)
-    cp(css_path, joinpath(BUILD_DIR, filename); force=true)
-    metadata_path = write_metadata(config(project, "metadata_path"))
+    metadata_path = config(project, "metadata_path")::String
+    write_metadata(metadata_path)
     metadata = "--metadata-file=$metadata_path"
+    copy_css()
+    copy_mousetrap()
+    copy_juliamono()
 
     args = [
         inputs(project);
@@ -87,7 +117,7 @@ function pandoc_html(project::AbstractString)
         template;
         extra_args;
         # output
-    ]
+    ]::Vector{String}
     _, out = call_pandoc(args)
     out
 end
@@ -115,11 +145,11 @@ function ci_url_prefix(project)
     user_setting
 end
 
-function html(; project="default")
+function html(; project="default", extra_head="")
     copy_extra_directories(project)
-    url_prefix = is_ci() ? ci_url_prefix(project) : ""
+    url_prefix = is_ci() ? ci_url_prefix(project)::String : ""
     c = config(project, "contents")
-    write_html_pages(url_prefix, c, pandoc_html(project))
+    write_html_pages(url_prefix, pandoc_html(project), extra_head)
 end
 
 """
@@ -148,7 +178,8 @@ function pdf(; project="default")
     file = config(project, "output_filename")
     output_filename = joinpath(BUILD_DIR, "$file.pdf")
     output = "--output=$output_filename"
-    metadata_path = write_metadata(config(project, "metadata_path"))
+    metadata_path = config(project, "metadata_path")::String
+    write_metadata(metadata_path)
     metadata = "--metadata-file=$metadata_path"
     input_files = ignore_homepage(project, inputs(project))
     juliamono_template_var = "--variable=juliamono-path:$(juliamono_path())"
@@ -167,18 +198,17 @@ function pdf(; project="default")
             "--listings";
             pdf_engine;
             juliamono_template_var;
-            extra_args;
-            output
+            extra_args
         ]
-        out = call_pandoc(args)
+        output_tex_filename = joinpath(BUILD_DIR, "$file.tex")
+        println("Wrote $output_tex_filename (for debugging purposes)")
+        tex_output = "--output=$output_tex_filename"
+        call_pandoc([args; tex_output])
+
+        out = call_pandoc([args; output])
         if !isnothing(out)
             println("Built $output_filename")
         end
-
-        # For debugging purposes.
-        output_filename = joinpath(BUILD_DIR, "$file.tex")
-        args[end] = "--output=$output_filename"
-        call_pandoc(args)
     end
 
     nothing
@@ -188,7 +218,8 @@ function docx(; project="default")
     file = config(project, "output_filename")
     output_filename = joinpath(BUILD_DIR, "$file.docx")
     output = "--output=$output_filename"
-    metadata_path = write_metadata(config(project, "metadata_path"))
+    metadata_path = config(project, "metadata_path")::String
+    write_metadata(metadata_path)
     metadata = "--metadata-file=$metadata_path"
     input_files = ignore_homepage(project, inputs(project))
 
@@ -197,6 +228,7 @@ function docx(; project="default")
         include_files;
         crossref;
         citeproc;
+        csl();
         metadata;
         output
     ]
@@ -207,11 +239,11 @@ function docx(; project="default")
     nothing
 end
 
-function build_all(; project="default")
+function build_all(; project="default", extra_head="")
     mkpath(BUILD_DIR)
     filename = "favicon.png"
     cp(joinpath("pandoc", filename), joinpath(BUILD_DIR, filename); force=true)
-    html(; project)
+    html(; project, extra_head)
     pdf(; project)
     docx(; project)
 end

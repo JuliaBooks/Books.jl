@@ -15,82 +15,93 @@ $$ y = \frac{\sin{x}}{\cos{x}} $$ {#eq:example}
 
 ## Embedding output {#sec:embedding-output}
 
-For embedding code, you can use the `{.include}` code block.
-This package will run your methods based on the filenames in these code blocks.
-For example, to show the Julia version, use
+For embedding code, you can use the `jl` inline code or code block.
+For example, to show the Julia version, define a code block like
 
 <pre>
-```{.include}
-_gen/julia_version.md
+```jl
+M.julia_version()
 ```
 </pre>
 
+in a Markdown file.
 Then, in your package, define the method `julia_version()`:
-```
-julia_version() = "This book is built with Julia $VERSION."
-```
 
-Next, ensure that you call `using Books; gen(; M = Foo)`, where `Foo` is the name of your module.
-This will place the text
-
-```{.include}
-_gen/julia_version_example.md
+```
+M.julia_version() = "This book is built with Julia $VERSION."
 ```
 
-at the aforementioned path so that it can be included by Pandoc.
+Next, ensure that you call `using Books; gen(; M)`, where `M = YourModule`.
+Alternatively, if you work on a large project and want to only generate the output for one or more Markdown files in `contents/`, such as `index.md`, use
+
+```jl
+M.markdown_gen_example()
+```
+
+Calling `gen` will place the text
+
+```jl
+M.julia_version_example()
+```
+
+at the right path so that it can be included by Pandoc.
+You can also embed output inline with single backticks like
+
+```
+`jl julia_version()`
+```
+
+or just call Julia's constant `VERSION` directly from within the Markdown file:
+
+```
+This book is built with Julia `jl string(VERSION)`.
+```
+
+This book is built with Julia `jl string(VERSION)`.
+
 While doing this, it is expected that you also have the browser open and a server running, see @sec:getting-started.
 That way, the page is immediately updated when you run `gen`.
 
-
 Note that it doesn't matter where you define the function `julia_version`, as long as it is in your module.
-To save yourself some typing, and to allow yourself to get some coffee while Julia gets up to speed, you can start Julia for some package `Foo` with
+To save yourself some typing, and to allow yourself to get some coffee while Julia gets up to speed, you can start Julia for your package with
 
 ```
-$ julia --project -ie 'using Books; using Foo; M = Foo; gen(; M)'
+$ julia --project -ie 'using Books; using MyPackage; M = MyPackage'
 ```
 
 which allows you to re-generate all the content by calling
 
 ```
-julia> gen(; M)
-```
-
-Also, it allows you to quickly restart Julia after you have updated some constants such as structs.
-To re-generate only the content for one method like, for example, the method `my_plot`, use
-
-```
-julia> gen(M.my_plot)
-[...]
+julia> gen()
 ```
 
 To run this method automatically when you make a change in your package, ensure that you loaded [Revise.jl](https://github.com/timholy/Revise.jl) before loading your package and run
 
 ```
-julia> f() = gen(M.my_plot);
-
-julia> entr(f, [], [M])
-[...]
+entr(gen, ["contents"], [M])
 ```
 
-In the background, `gen` passes the methods through `convert_output(path, out::T)` where `T` can, for example, be a DataFrame or a plot.
+where M is the name of your module.
+Which will automatically run `gen()` whenever one of the files in `contents/` changes or any code in the module `M`.
+In the background, `gen` passes the methods through `convert_output(expr::String, path, out::T)` where `T` can, for example, be a DataFrame or a plot.
 To show that a DataFrame is converted to a Markdown table, we define a method
 
-```{.include}
-_gen/my_table-sc.md
+```jl
+@sc(M.my_table())
 ```
 
 and add its output to the Markdown file with
 
 <pre>
-```{.include}
-_gen/my_table.md
+```jl
+M.my_table()
 ```
 </pre>
 
 Then, it will show as
 
-```{.include}
-_gen/my_table.md
+```jl
+M.my_table()
 ```
 
 where the caption and the label are inferred from the `path`.
@@ -103,26 +114,79 @@ Refer to @tbl:my_table with
 
 To show multiple objects, pass a `Vector`:
 
-```{.include}
-_gen/multiple_df_vector-sco.md
+```jl
+@sco M.multiple_df_vector()
 ```
 
 When you want to control where the various objects are saved, use `Options`.
 This way, you can pass a informative path with plots for which informative captions, cross-reference labels and image names can be determined.
 
-```{.include}
-_gen/multiple_df_example-sco.md
+```jl
+@sco(M.multiple_df_example())
 ```
 
 To define the labels and/or captions manually, see @sec:labels-captions.
 For showing multiple plots, see @sec:plots.
 
+Most things can be done via functions.
+However, defining a struct is not possible, because `@sco` cannot locate the struct definition inside the module.
+Therefore, it is also possible to pass code and specify that you want to evaluate and show code (sc) without showing the output:
+
+<pre>
+```jl
+sc("
+struct Point
+    x
+    y
+end
+")
+```
+</pre>
+
+```jl
+sc("
+struct Point
+    x
+    y
+end
+")
+```
+
+and show code and output (sco).
+For example,
+
+<pre>
+```jl
+sco("p = Point(1, 2)")
+```
+</pre>
+
+shows as
+
+```jl
+sco("p = Point(1, 2)")
+```
+
+Note that this is starting to look a lot like R Markdown where the syntax would be something like
+
+<pre>
+```{r, results='hide'}
+x = rnorm(100)
+```
+</pre>
+
+I guess that there is no perfect way here.
+The benefit of evaluating the user input directly, as Books.jl is doing, seems to be that it is more extensible if I'm not mistaken.
+Possibly, the reasoning is that R Markdown needs to convert the output directly, whereas Julia's better type system allows for converting in much later stages, but I'm not sure.
+
+> **Tip**: After you run `gen()` with the `Point` struct defined above, the struct will be available in your REPL.
+
 ## Labels and captions {#sec:labels-captions}
 
 To set labels and captions, wrap your object in `Options`:
 
-```{.include}
-_gen/options_example-sco.md
+```jl
+@sco(M.options_example())
 ```
 
 which can be referred to with
@@ -135,142 +199,88 @@ which can be referred to with
 It is also possible to pass only a caption or a label.
 This package will attempt to infer missing information from the `path`, `caption` or `label` when possible:
 
-```{.include}
-_gen/options_example_doctests.md
+```jl
+M.options_example_doctests()
 ```
 
-## String code blocks {#sec:string_code_blocks}
-
-There are two ways to show code blocks.
-One way is by passing your code as a string.
-This is how similar packages work.
-However, with `Books.jl`, the aim is to work with functions and *not* with code as strings as discussed at the end of @sec:about.
-See @sec:function_code_blocks for a better way for showing code blocks.
-
-Like in @sec:embedding-output, first define a method like
-
-```{.include}
-_gen/sum_example_definition.md
-```
-
-Then, add this method via
-
-<pre>
-```{.include}
-_gen/sum_example.md
-```
-</pre>
-
-which gives as output
-
-```{.include}
-_gen/sum_example.md
-```
-
-Here, how the output should be handled is based on the output type of the function.
-In this case, the output type is of type `Code`.
-Methods for other outputs exist too:
-
-```{.include}
-_gen/example_table_definition.md
-```
-
-shows
-
-```{.include}
-_gen/example_table.md
-```
-
-Alternatively, we can show the same by creating something of type `Code`:
-
-```{.include}
-_gen/code_example_table-sc.md
-```
-
-which shows as
-
-```{.include}
-_gen/code_example_table.md
-```
-
-because the output of the code block is of type DataFrame.
-
-In essence, this package doesn't hide the implementation behind synctactic sugar.
-Instead, this package calls functions and gives you the freedom to decide what to do from there.
-As an example, we can pass `Module` objects to `code` to evaluate the code block in a specific module.
-
-```{.include}
-_gen/module_example_definition.md
-```
-
-When calling `module_example`, it shows as
-
-```{.include}
-_gen/module_example.md
-```
-
-Similarily, we can get the value of x:
-
-```{.include}
-_gen/module_call_x.md
-```
-
-Unsuprisingly, creating a DataFrame will now fail because we haven't loaded DataFrames
-
-```{.include}
-_gen/module_fail.md
-```
-
-Which is easy to fix
-
-```{.include}
-_gen/module_fix.md
-```
-
-## Function code blocks {#sec:function_code_blocks}
+## Obtaining function definitions {#sec:function_code_blocks}
 
 So, instead of passing a string which `Books.jl` will evaluate, `Books.jl` can also obtain the code for a method directly.
 (Thanks to `CodeTracking.@code_string`.)
-For example, we can define the following method:
+For example, inside our package, we can define the following method:
 
-```{.include}
-_gen/my_data-sc.md
+```jl
+@sc(M.my_data())
 ```
 
-and call it by adding the `-sco` (source code and output) suffix to the path:
+To show code and output (sco) for this method, use the `@sco` macro.
+This macro is exported by Books, so ensure that you have `using Books` in your package.
 
 <pre>
-```{.include}
-_gen/my_data-sco.md
+```jl
+@sco(M.my_data())
 ```
 </pre>
 
 This gives
 
-```{.include}
-_gen/my_data-sco.md
+```jl
+@sco(M.my_data())
 ```
 
-To only show the source code, use the `-sc` suffix:
+To only show the source code, use `@sc`:
 
 <pre>
-```{.include}
-_gen/my_data-sc.md
+```jl
+@sc(M.my_data())
 ```
 </pre>
 
-giving
+resulting in
 
-```{.include}
-_gen/my_data-sc.md
+```jl
+@sc(M.my_data())
 ```
 
 Since we're using methods as code blocks, we can use the code shown in one code block in another.
 For example, to determine the mean of column A:
 
-```{.include}
-_gen/my_data_mean-sco.md
+```jl
+@sco(M.my_data_mean())
 ```
+
+Or, we can show the output inline, namely `jl M.my_data_mean()`, by using
+
+```
+`jl M.my_data_mean()`
+```
+
+It is also possible to show methods with parameters.
+For example,
+
+<pre>
+```jl
+@sc(M.hello(""))
+```
+</pre>
+
+shows
+
+```jl
+@sc(M.hello(""))
+```
+
+Now, we can show
+
+```jl
+scob("""
+M.hello("World")
+""")
+```
+
+Here, the `M` can be a bit confusing for readers.
+If this is a problem, you can export the method `hello` to avoid it.
+If you are really sure, you can export all symbols in your module with something like [this](https://discourse.julialang.org/t/exportall/4970/16).
 
 ## Plots {#sec:plots}
 
@@ -279,8 +289,8 @@ For Plots.jl and Makie.jl see, respectively section @sec:plotsjl and @sec:makie.
 This is actually a bit tricky, because we want to show vector graphics (SVG) on the web, but these are not supported (well) by LaTeX.
 Therefore, portable network graphics (PNG) images are also created and passed to LaTeX when building a PDF.
 
-```{.include}
-_gen/example_plot-sco.md
+```jl
+@sco(M.example_plot())
 ```
 
 If the output is a string instead of the output you expected, then check whether you load the related packages in time.
@@ -288,38 +298,50 @@ For example, for this plot, you need to load AlgebraOfGraphics.jl together with 
 
 For multiple images, use `Options.(objects, paths)`:
 
-```{.include}
-_gen/multiple_example_plots-sc.md
+```jl
+@sc(M.multiple_example_plots())
 ```
 
 Resulting in @fig:example_plot_2 and @fig:example_plot_3:
 
-```{.include}
-_gen/multiple_example_plots.md
+```jl
+M.multiple_example_plots()
 ```
 
 For changing the size, use `axis` from AlgebraOfGraphics:
 
-```{.include}
-_gen/image_options_plot-sco.md
+```jl
+@sco(M.image_options_plot())
 ```
 
 And, for adjusting the caption, use `Options`:
 
-```{.include}
-_gen/combined_options_plot-sco.md
+```jl
+@sco(M.combined_options_plot())
+```
+
+or the caption can be specified in the Markdown file:
+
+<pre>
+```jl
+Options(M.image_options_plot(); caption="Label specified in Markdown.")
+```
+</pre>
+
+```jl
+Options(M.image_options_plot(); caption="Label specified in Markdown.")
 ```
 
 ### Plots {#sec:plotsjl}
 
-```{.include}
-_gen/plotsjl-sco.md
+```jl
+@sco(M.plotsjl())
 ```
 
 ### Makie {#sec:makie}
 
-```{.include}
-_gen/makiejl-sco.md
+```jl
+@sco(M.makiejl())
 ```
 
 ## Other notes
@@ -332,8 +354,75 @@ For an example of a multilingual book setup, say English and Chinese, see the bo
 
 When your method returns an output type `T` which is unknown to Books.jl, it will be passed through `show(io::IO, ::MIME"text/plain", object::T)`.
 So, if the package that you're using has defined a new `show` method, this will be used.
-For example, for `MCMCChains`
+For example, for `MCMCChains`,
 
-```{.include}
-_gen/chain-sco.md
+```jl
+@sco(M.chain())
+```
+
+### Note box
+
+To write note boxes, you can use
+
+```
+> **_NOTE:_**  The note content.
+```
+
+> **_NOTE:_**  The note content.
+
+This way is fully supported by Pandoc, so it will be correctly converted to outputs such as PDF or DOCX.
+
+### Advanced `sco` options
+
+To enforce output to be embedded inside a code block, use `scob`.
+For example,
+
+```jl
+sco("""
+scob("
+df = DataFrame(A = [1], B = [Date(2018)])
+string(df)
+")
+""")
+```
+
+or, with a string
+
+```jl
+scob("s = \"Hello\"")
+```
+
+Another way to change the output is via the keyword arguments `process` and `post` for `sco`.
+
+<pre>
+```jl
+sco("
+df = DataFrame(A = [1], B = [Date(2018)])
+"; process=string, post=output_block)
+```
+</pre>
+
+which shows the following to the reader:
+
+```jl
+sco("
+df = DataFrame(A = [1], B = [Date(2018)])
+"; process=string, post=output_block)
+```
+
+Without `process=string`, the output would automatically be converted to a Markdown table by Books.jl and then wrapped inside a code block, which will cause Pandoc to show the raw output instead of a table.
+
+```jl
+sco("
+df = DataFrame(A = [1], B = [Date(2018)])
+"; process=without_caption_label, post=output_block)
+```
+
+Without `post=output_block`, the DataFrame would be converted to a string, but not wrapped inside a code block so that Pandoc will treat is as normal Markdown:
+
+```jl
+sco("
+df = DataFrame(A = [2], B = [Date(2018)])
+Options(df; caption=nothing, label=nothing) # hide
+"; process=string)
 ```

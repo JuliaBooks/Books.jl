@@ -1,7 +1,7 @@
 name = "Books"
 uuid = "939d5c6b-51ae-42e7-97ca-7564d0d4ad91"
 authors = ["Rik Huijzer <t.h.huijzer@rug.nl>"]
-version = "0.5.1"
+version = "0.7.2"
 
 [deps]
 Artifacts = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
@@ -21,7 +21,7 @@ pandoc_jll = "c5432543-76ad-5c9d-82bf-db097047a5e2"
 
 [compat]
 CodeTracking = "1.0"
-DataFrames = "0.22, 1.0, 1.1"
+DataFrames = "0.22, 1.0, 1.1, 1.2"
 Latexify = "0.15"
 LiveServer = "0.6"
 Memoize = "0.4"
