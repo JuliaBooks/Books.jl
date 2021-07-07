@@ -16,7 +16,8 @@ jobs:
       matrix:
         version:
           - "1.6"
-          - "^1.7.0-0"
+          # Fails due to MCMCChains.
+          # - "^1.7.0-0"
         os:
           - ubuntu-latest
 
@@ -27,7 +28,7 @@ jobs:
 
       - uses: julia-actions/setup-julia@v1
         with:
-          version: '1.6'
+          version: ${{ matrix.version }}
 
       - uses: actions/cache@v1
         env:
@@ -40,9 +41,11 @@ jobs:
             ${{ runner.os }}-test-
             ${{ runner.os }}-
 
-      - name: Install dependencies
-        run: julia --project -e 'using Pkg; Pkg.instantiate();
-          using Books; Books.install_dependencies()'
+      - name: Install Julia dependencies
+        uses: julia-actions/julia-buildpkg@latest
+
+      - name: Install extra dependencies
+        run: julia --project -e 'using Books; Books.install_dependencies()'
 
       - uses: julia-actions/julia-runtest@v1
 

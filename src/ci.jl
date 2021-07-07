@@ -23,17 +23,21 @@ end
 """
     install_extra_fonts()
 
-Required for Source Code Pro.
-Thanks to https://github.com/AnomalyInnovations/serverless-stack-com.
+For some reason, this is required since I couldn't get Tectonic to work with `fontconfig` and `Path`.
+Installing fonts globally is the most reliable workaround that I can find.
+The benefit is that it's easy to verify the installation via `fc-list | grep "Julia"`.
 """
 function install_extra_fonts()
-    println("Installing extra fonts")
-
-    font_repo_dir = joinpath(homedir(), "source-code-pro")
-    rm(font_repo_dir; recursive=true, force=true)
-    run(`git clone --branch=release --depth=1 https://github.com/adobe-fonts/source-code-pro $font_repo_dir`)
-    ttf_dir = joinpath(font_repo_dir, "TTF")
-    fonts_dir = joinpath(homedir(), ".fonts", "source-code-pro")
+    name = "juliamono-0.040"
+    dir = joinpath(Artifacts.artifact"juliamono", name)
+    # See `fc-cache --force --verbose` for folders that `fc-cache` inspects.
+    # Don't try to pass a dir to `fc-cache`, this is ignored on my pc for some reason.
+    target_dir = joinpath(homedir(), ".local", "share", "fonts")
+    mkpath(target_dir)
+    for file in readdir(dir)
+        cp(joinpath(dir, file), joinpath(target_dir, file); force=true)
+    end
+    return
 
     files = readdir(ttf_dir)
     mkpath(fonts_dir)
@@ -45,47 +49,9 @@ function install_extra_fonts()
     end
 
     # Update fontconfig cache; not sure if it is necessary.
-    run(`fc-cache --verbose $fonts_dir`)
-end
-
-function install_apt_packages()
-    @assert is_ci()
-    println("Installing apt packages")
-
-    packages = [
-        "python3-pip"
-    ]
-
-    sudo = sudo_prefix()
-    args = [sudo, "apt-get", "-qq", "update"]
-    nonempty_run(args)
-    for package in packages
-        println("Installing $package via apt")
-        args = [sudo, "apt-get", "install", "-y", package]
-        nonempty_run(args)
-    end
-end
-
-function validate_installation(name::AbstractString; args="--version")
-    try
-        run(`$name $args`)
-    catch e
-        error("Could not run $name with args $args")
-    end
-end
-
-function install_non_apt_packages()
-    @assert is_ci()
-    println("Installing non-apt packages")
-
-    sudo = sudo_prefix()
-    args = [sudo, "pip3", "install", "cairosvg"]
-    nonempty_run(args)
-    validate_installation("cairosvg")
+    run(`fc-cache --force --verbose $fonts_dir`)
 end
 
 function install_dependencies()
-    install_apt_packages()
-    install_non_apt_packages()
     install_extra_fonts()
 end
