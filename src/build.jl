@@ -88,7 +88,7 @@ end
 @memoize function copy_juliamono()
     filename = "JuliaMono-Regular.woff2"
     from_path = joinpath(JULIAMONO_PATH, "webfonts", filename)
-    cp(from, joinpath(BUILD_DIR, filename); force=true)
+    cp(from_path, joinpath(BUILD_DIR, filename); force=true)
 end
 
 function pandoc_html(project::AbstractString)
