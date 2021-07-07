@@ -23,14 +23,17 @@ end
 """
     install_extra_fonts()
 
-Required for Source Code Pro.
-Thanks to https://github.com/AnomalyInnovations/serverless-stack-com.
+For some reason, this is required since I couldn't get Tectonic to work with `fontconfig` and `Path`.
+Installing fonts globally is the most reliable workaround that I can find.
+The benefit is that it's easy to verify the installation via `fc-list | grep "Julia"`.
 """
 function install_extra_fonts()
-    dir = joinpath(Artifacts.artifact"juliamono", "juliamono-0.039")
-    target_dir = "fonts"
+    name = "juliamono-0.040"
+    dir = joinpath(Artifacts.artifact"juliamono", name)
+    # See `fc-cache --force --verbose` for folders that `fc-cache` inspects.
+    # Don't try to pass a dir to `fc-cache`, this is ignored on my pc for some reason.
+    target_dir = joinpath(homedir(), ".local", "share", "fonts")
     mkpath(target_dir)
-    # println("Copying Julia Mono fonts into $target_dir")
     for file in readdir(dir)
         cp(joinpath(dir, file), joinpath(target_dir, file); force=true)
     end
@@ -46,7 +49,7 @@ function install_extra_fonts()
     end
 
     # Update fontconfig cache; not sure if it is necessary.
-    run(`fc-cache --verbose $fonts_dir`)
+    run(`fc-cache --force --verbose $fonts_dir`)
 end
 
 function install_apt_packages()

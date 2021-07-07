@@ -134,6 +134,13 @@ function ignore_homepage(project, input_paths)
     override ? input_paths : input_paths[2:end]
 end
 
+function juliamono_path()
+    artifact = Artifacts.artifact"juliamono"
+    dir = joinpath(artifact, "juliamono-0.040")
+    # The forward slash is required by LaTeX.
+    dir * '/'
+end
+
 function pdf(; project="default")
     copy_extra_directories(project)
     latex_template_path = pandoc_file("template.tex")
@@ -144,6 +151,7 @@ function pdf(; project="default")
     metadata_path = write_metadata(config(project, "metadata_path"))
     metadata = "--metadata-file=$metadata_path"
     input_files = ignore_homepage(project, inputs(project))
+    juliamono_template_var = "--variable=juliamono-path:$(juliamono_path())"
 
     Tectonic.tectonic() do tectonic_bin
         pdf_engine = "--pdf-engine=$tectonic_bin"
@@ -158,6 +166,7 @@ function pdf(; project="default")
             template;
             "--listings";
             pdf_engine;
+            juliamono_template_var;
             extra_args;
             output
         ]
