@@ -9,8 +9,6 @@ include_files = "--lua-filter=$include_lua_filter"
 crossref = "--filter=pandoc-crossref"
 citeproc = "--citeproc"
 
-install_extra_fonts()
-
 function csl()
     csl_path = pandoc_file("style.csl")
     csl = "--csl=$csl_path"
@@ -89,7 +87,7 @@ end
 
 @memoize function copy_juliamono()
     filename = "JuliaMono-Regular.woff2"
-    from = pandoc_file(filename)
+    from_path = joinpath(JULIAMONO_PATH, "webfonts", filename)
     cp(from, joinpath(BUILD_DIR, filename); force=true)
 end
 
@@ -170,6 +168,7 @@ function juliamono_path()
     # The forward slash is required by LaTeX.
     dir * '/'
 end
+const JULIAMONO_PATH = juliamono_path()
 
 function pdf(; project="default")
     copy_extra_directories(project)
@@ -182,7 +181,7 @@ function pdf(; project="default")
     write_metadata(metadata_path)
     metadata = "--metadata-file=$metadata_path"
     input_files = ignore_homepage(project, inputs(project))
-    juliamono_template_var = "--variable=juliamono-path:$(juliamono_path())"
+    juliamono_template_var = "--variable=juliamono-path:$JULIAMONO_PATH"
 
     Tectonic.tectonic() do tectonic_bin
         pdf_engine = "--pdf-engine=$tectonic_bin"
