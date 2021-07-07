@@ -1,3 +1,5 @@
+import Pkg
+
 using Books
 using Documenter
 using Test
@@ -13,7 +15,10 @@ DocMeta.setdocmeta!(
     using DataFrames);
   recursive=true
 )
-doctest(Books)
+
+if VERSION in Pkg.Types.VersionRange(v"1.6", v"1.6.10")
+    doctest(Books)
+end
 
 @testset "Books.jl" begin
   include("output.jl")
