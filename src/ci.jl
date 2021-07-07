@@ -52,44 +52,6 @@ function install_extra_fonts()
     run(`fc-cache --force --verbose $fonts_dir`)
 end
 
-function install_apt_packages()
-    @assert is_ci()
-    println("Installing apt packages")
-
-    packages = [
-        "python3-pip"
-    ]
-
-    sudo = sudo_prefix()
-    args = [sudo, "apt-get", "-qq", "update"]
-    nonempty_run(args)
-    for package in packages
-        println("Installing $package via apt")
-        args = [sudo, "apt-get", "install", "-y", package]
-        nonempty_run(args)
-    end
-end
-
-function validate_installation(name::AbstractString; args="--version")
-    try
-        run(`$name $args`)
-    catch e
-        error("Could not run $name with args $args")
-    end
-end
-
-function install_non_apt_packages()
-    @assert is_ci()
-    println("Installing non-apt packages")
-
-    sudo = sudo_prefix()
-    args = [sudo, "pip3", "install", "cairosvg"]
-    nonempty_run(args)
-    validate_installation("cairosvg")
-end
-
 function install_dependencies()
-    install_apt_packages()
-    install_non_apt_packages()
     install_extra_fonts()
 end
