@@ -1,6 +1,6 @@
-[juliamono]
+[JuliaMono]
 git-tree-sha1 = "23db14b6914e1b611f57c98fedc4c888f7405fda"
 
-    [[juliamono.download]]
+    [[JuliaMono.download]]
     sha256 = "0ca7cd06d3f535d5a08325927b814401e3ddf3c108b31fb0c3c0dd1fc9a1e20a"
     url = "https://github.com/cormullion/juliamono/archive/v0.040.tar.gz"

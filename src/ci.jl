@@ -29,7 +29,7 @@ The benefit is that it's easy to verify the installation via `fc-list | grep "Ju
 """
 function install_extra_fonts()
     name = "juliamono-0.040"
-    dir = joinpath(Artifacts.artifact"juliamono", name)
+    dir = joinpath(Artifacts.artifact"JuliaMono", name)
     # See `fc-cache --force --verbose` for folders that `fc-cache` inspects.
     # Don't try to pass a dir to `fc-cache`, this is ignored on my pc for some reason.
     target_dir = joinpath(homedir(), ".local", "share", "fonts")
