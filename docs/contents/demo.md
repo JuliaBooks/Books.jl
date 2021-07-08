@@ -426,3 +426,11 @@ df = DataFrame(A = [2], B = [Date(2018)])
 Options(df; caption=nothing, label=nothing) # hide
 "; process=string)
 ```
+
+## Ligatures
+
+Ligatures from JuliaMono are disabled. For example, none of these symbols are combined into a single glyph.
+
+```
+|> => and <=
+```
