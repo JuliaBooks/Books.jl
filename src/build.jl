@@ -46,7 +46,7 @@ end
 Copy the extra directories defined for `project`.
 """
 function copy_extra_directories(project)
-    extra_directories = config(project, "extra_directories")::Vector{String}
+    extra_directories = config(project, "extra_directories")::Vector
     copy_extra_directory.(extra_directories)
 end
 
