@@ -427,7 +427,7 @@ Options(df; caption=nothing, label=nothing) # hide
 "; process=string)
 ```
 
-## Ligatures
+### Ligatures
 
 Ligatures from JuliaMono are disabled. For example, none of these symbols are combined into a single glyph.
 
