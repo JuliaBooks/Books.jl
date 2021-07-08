@@ -163,7 +163,7 @@ function ignore_homepage(project, input_paths)
 end
 
 function juliamono_path()
-    artifact = Artifacts.artifact"juliamono"
+    artifact = Artifacts.artifact"JuliaMono"
     dir = joinpath(artifact, "juliamono-0.040")
     # The forward slash is required by LaTeX.
     dir * '/'
