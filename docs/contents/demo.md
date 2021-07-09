@@ -287,7 +287,7 @@ If you are really sure, you can export all symbols in your module with something
 An AlgebraOfGraphics plot is shown below in @fig:example_plot.
 For Plots.jl and Makie.jl see, respectively section @sec:plotsjl and @sec:makie.
 This is actually a bit tricky, because we want to show vector graphics (SVG) on the web, but these are not supported (well) by LaTeX.
-Therefore, portable network graphics (PNG) images are also created and passed to LaTeX when building a PDF.
+Therefore, portable network graphics (PNG) images are also created and passed to LaTeX.
 
 ```jl
 @sco(M.example_plot())

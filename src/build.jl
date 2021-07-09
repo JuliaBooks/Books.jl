@@ -98,7 +98,7 @@ function pandoc_html(project::AbstractString)
     output_filename = joinpath(BUILD_DIR, "index.html")
     output = "--output=$output_filename"
     metadata_path = config(project, "metadata_path")::String
-    write_metadata(metadata_path)
+    metadata_path = combine_metadata(metadata_path)
     metadata = "--metadata-file=$metadata_path"
     copy_css()
     copy_mousetrap()
@@ -178,7 +178,7 @@ function pdf(; project="default")
     output_filename = joinpath(BUILD_DIR, "$file.pdf")
     output = "--output=$output_filename"
     metadata_path = config(project, "metadata_path")::String
-    write_metadata(metadata_path)
+    metadata_path = combine_metadata(metadata_path)
     metadata = "--metadata-file=$metadata_path"
     input_files = ignore_homepage(project, inputs(project))
     juliamono_template_var = "--variable=juliamono-path:$JULIAMONO_PATH"
@@ -218,7 +218,7 @@ function docx(; project="default")
     output_filename = joinpath(BUILD_DIR, "$file.docx")
     output = "--output=$output_filename"
     metadata_path = config(project, "metadata_path")::String
-    write_metadata(metadata_path)
+    metadata_path = combine_metadata(metadata_path)
     metadata = "--metadata-file=$metadata_path"
     input_files = ignore_homepage(project, inputs(project))
 
