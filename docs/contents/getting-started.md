@@ -75,7 +75,7 @@ M.default_config()
 ```
 
 Here, the `extra_directories` allows you to specify directories which need to be moved into `_build`, which makes them available for the local server and online.
-This is, for instance, useful for images like @fig:book_store.
+This is, for instance, useful for images like @fig:book_store:
 
 <pre>
 ![Book store.](images/book-store.jpg){#fig:book_store}
