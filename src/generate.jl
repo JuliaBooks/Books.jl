@@ -88,6 +88,8 @@ function caller_module()
     throw(ErrorException("Couldn't determine the module of the caller"))
 end
 
+remove_modules(expr) = replace(expr, r"^[A-Z][a-zA-Z]*\." => "")
+
 """
     method_name(expr::String)
 
@@ -115,7 +117,6 @@ function method_name(expr::String)
     if startswith(expr, '(')
         expr = strip(expr, ['(', ')'])
     end
-    remove_modules(expr) = replace(expr, r"^[A-Z][a-zA-Z]*\." => "")
     expr = remove_modules(expr)
     expr = replace(expr, '(' => '_')
     expr = replace(expr, ')' => "")

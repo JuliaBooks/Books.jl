@@ -76,12 +76,12 @@ sum_example_definition() = code_block(@code_string sum_example())
 example_table() = DataFrame(A = [1, 2], B = [3, 4], C = [5, 6])
 example_table_definition() = code_block(@code_string example_table())
 
+export my_data
 function my_data()
     DataFrame(A = [1, 2], B = [3, 4], C = [5, 6], D = [7, 8])
 end
 
-function my_data_mean()
-    df = my_data()
+function my_data_mean(df::DataFrame)
     Statistics.mean(df.A)
 end
 
