@@ -122,7 +122,7 @@ When you want to control where the various objects are saved, use `Options`.
 This way, you can pass a informative path with plots for which informative captions, cross-reference labels and image names can be determined.
 
 ```jl
-@sco(M.multiple_df_example())
+@sco M.multiple_df_example()
 ```
 
 To define the labels and/or captions manually, see @sec:labels-captions.
@@ -219,28 +219,28 @@ This macro is exported by Books, so ensure that you have `using Books` in your p
 
 <pre>
 ```jl
-@sco(M.my_data())
+@sco M.my_data()
 ```
 </pre>
 
 This gives
 
 ```jl
-@sco(M.my_data())
+@sco M.my_data()
 ```
 
 To only show the source code, use `@sc`:
 
 <pre>
 ```jl
-@sc(M.my_data())
+@sc M.my_data()
 ```
 </pre>
 
 resulting in
 
 ```jl
-@sc(M.my_data())
+@sc M.my_data()
 ```
 
 Since we're using methods as code blocks, we can use the code shown in one code block in another.
@@ -248,14 +248,14 @@ For example, to determine the mean of column A:
 
 <pre>
 ```jl
-@sco(M.my_data_mean(my_data()))
+@sco M.my_data_mean(my_data())
 ```
 </pre>
 
 shows as
 
 ```jl
-@sco(M.my_data_mean(my_data()))
+@sco M.my_data_mean(my_data())
 ```
 
 Or, we can show the output inline, namely `jl M.my_data_mean(my_data())`, by using
@@ -269,14 +269,14 @@ For example,
 
 <pre>
 ```jl
-@sc(M.hello(""))
+@sc M.hello("" )
 ```
 </pre>
 
 shows
 
 ```jl
-@sc(M.hello(""))
+@sc M.hello("")
 ```
 
 Now, we can show
@@ -299,7 +299,7 @@ This is actually a bit tricky, because we want to show vector graphics (SVG) on 
 Therefore, portable network graphics (PNG) images are also created and passed to LaTeX.
 
 ```jl
-@sco(M.example_plot())
+@sco M.example_plot()
 ```
 
 If the output is a string instead of the output you expected, then check whether you load the related packages in time.
@@ -308,7 +308,7 @@ For example, for this plot, you need to load AlgebraOfGraphics.jl together with 
 For multiple images, use `Options.(objects, paths)`:
 
 ```jl
-@sc(M.multiple_example_plots())
+@sc M.multiple_example_plots()
 ```
 
 Resulting in @fig:example_plot_2 and @fig:example_plot_3:
@@ -320,13 +320,13 @@ M.multiple_example_plots()
 For changing the size, use `axis` from AlgebraOfGraphics:
 
 ```jl
-@sco(M.image_options_plot())
+@sco M.image_options_plot()
 ```
 
 And, for adjusting the caption, use `Options`:
 
 ```jl
-@sco(M.combined_options_plot())
+@sco M.combined_options_plot()
 ```
 
 or the caption can be specified in the Markdown file:
@@ -344,13 +344,13 @@ Options(M.image_options_plot(); caption="Label specified in Markdown.")
 ### Plots {#sec:plotsjl}
 
 ```jl
-@sco(M.plotsjl())
+@sco M.plotsjl()
 ```
 
 ### Makie {#sec:makie}
 
 ```jl
-@sco(M.makiejl())
+@sco M.makiejl()
 ```
 
 ## Other notes
@@ -366,7 +366,7 @@ So, if the package that you're using has defined a new `show` method, this will 
 For example, for `MCMCChains`,
 
 ```jl
-@sco(M.chain())
+@sco M.chain()
 ```
 
 ### Note box
@@ -436,8 +436,24 @@ Options(df; caption=nothing, label=nothing) # hide
 "; process=string)
 ```
 
-### Ligatures
+This also works for `@sco`.
+For example, for `my_data` we can use:
 
+<pre>
+```jl
+@sco process=string post=output_block my_data()
+```
+</pre>
+
+which will show as:
+
+```jl
+@sco process=string post=output_block my_data()
+```
+
+### Fonts
+
+The code blocks default to JuliaMono in html and PDF.
 Ligatures from JuliaMono are disabled. For example, none of these symbols are combined into a single glyph.
 
 ```

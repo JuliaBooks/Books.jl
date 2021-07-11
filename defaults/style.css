@@ -241,6 +241,15 @@ pre, code, kbd, samp {
   border-radius: 4px;
 }
 
+pre code {
+  /* Without this, padding is only applied to the first line. */
+  display: block;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+}
+
 pre {
   white-space: pre;
   white-space: pre-wrap;
