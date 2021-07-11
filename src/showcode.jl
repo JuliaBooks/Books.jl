@@ -17,42 +17,11 @@ end
 Show code for function `f`; to also show output, use [`@sco`](@ref).
 """
 macro sc(f)
-    println("Obtaining source code for $f")
     esc(quote
         s = Books.CodeTracking.@code_string $(f)
         s = Books.remove_hide_comment(s)
         Books.code_block(s)
     end)
-end
-
-"""
-    CodeAndFunction(code::AbstractString, f)
-
-This struct is used by [`@sco`](@ref).
-"""
-struct CodeAndFunction
-    fdef::String
-    fcall::String
-    out::Any
-end
-
-function sco(f::Function, types;
-        process::Union{Nothing,Function}=nothing, post::Function=identity)
-
-    return Books.CodeTracking.code_string(f, types)
-    fdef = Books.CodeTracking.@code_string $args
-    # CodeAndFunction(fdef, $fcall, $f)
-end
-
-"""
-    @sco(f)
-
-Show code and output for `f()`; to show only code, use [`@sc`](@ref).
-    M=Main, process::Union{Nothing,Function}=nothing,
-    post::Function=identity)
-"""
-macro sco(ex0...)
-    InteractiveUtils.gen_call_with_extracted_types_and_kwargs(__module__, :sco, ex0)
 end
 
 """
@@ -71,36 +40,28 @@ function add_method_call(fdef, fcall)
         $fdef
         $fcall
         """
-    out = code_block(out)
+    out = code_block(strip(out))
 end
 
-function convert_output(expr, path, cf::CodeAndFunction)
-    fdef = cf.fdef
-    fcall = cf.fcall
-    out = cf.out
-    fdef = Books.remove_hide_comment(fdef)
-    code = add_method_call(fdef, fcall)
-    out = convert_output(expr, path, out)
-    """
-    $code
-    $out
-    """
+function apply_process_post(expr, out, process::Union{Nothing,Function}, post::Function)
+    out = isnothing(process) ? convert_output(expr, nothing, out) : process(out)
+    out = post(out)
 end
 
 """
     eval_convert(expr::AbstractString, M,
-    process::Union{Nothing,Function}=nothing,
-    post::Union{Nothing,Function}=identity)
+        process::Union{Nothing,Function}=nothing,
+        post::Function=identity)
 
 Evaluate `expr` in module `M` and convert the output.
 """
 function eval_convert(expr::AbstractString, M,
-    process::Union{Nothing,Function}=nothing,
-    post::Union{Nothing,Function}=identity)
+        process::Union{Nothing,Function}=nothing,
+        post::Union{Nothing,Function}=identity)
+
     ex = Meta.parse("begin $expr end")
     out = Core.eval(M, ex)
-    out = isnothing(process) ? convert_output(expr, nothing, out) : process(out)
-    out = post(out)
+    out = apply_process_post(expr, out, process, post)
 end
 
 """
@@ -145,3 +106,42 @@ function sc(expr::AbstractString; M=Main)
     code = remove_hide_comment(expr)
     code = code_block(strip(code))
 end
+
+function sco(f::Function, types; M=Main, process::Union{Nothing,Function}=nothing,
+        post::Function=identity, fcall="")
+
+    fdef = Books.CodeTracking.code_string(f, types)
+    code = add_method_call(fdef, fcall)
+    # Also here, f and types do not contain all the information that we need.
+    ex = Meta.parse("begin $fcall end")
+    out = Core.eval(M, ex)
+    out = apply_process_post(fcall, out, process, post)
+    """
+    $code
+    $out
+    """
+end
+
+"""
+    extract_function_call(ex0)
+
+Extract function call before `gen_call_with_extracted_types_and_kwargs` throws this information away.
+"""
+function extract_function_call(ex0)
+    fcall = ex0[end]  # Mandatory argument according to Julia source code.
+    string(fcall)::String
+end
+
+"""
+    @sco(f::Function, types;
+        process::Union{Nothing,Function}=nothing, post::Function=identity)
+
+Show code and output for `f()`; to show only code, use [`@sc`](@ref).
+See [`sco`](@ref) for more information about `process` and `post`.
+"""
+macro sco(ex0...)
+    fcall = extract_function_call(ex0)
+    ex0 = (:(fcall = $fcall), ex0...)
+    InteractiveUtils.gen_call_with_extracted_types_and_kwargs(__module__, :sco, ex0)
+end
+
