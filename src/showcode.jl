@@ -31,8 +31,9 @@ end
 This struct is used by [`@sco`](@ref).
 """
 struct CodeAndFunction
-    code::AbstractString
-    f::Any
+    fdef::String
+    fcall::String
+    out::Any
 end
 
 """
@@ -41,16 +42,38 @@ end
 Show code and output for `f()`; to show only code, use [`@sc`](@ref).
 """
 macro sco(f)
+    fcall = string(f)::String
     esc(quote
-        code = @sc $(f)
-        CodeAndFunction(code, $(f))
+        fdef = Books.CodeTracking.@code_string $f
+        CodeAndFunction(fdef, $fcall, $f)
     end)
 end
 
+"""
+    add_method_call(code)
+
+Show
+```
+f(x) = x
+f(1)
+```
+when calling `sco f(1)` and not only `f(x) = x`.
+"""
+function add_method_call(fdef, fcall)
+    fcall = remove_modules(fcall)
+    out = """
+        $fdef
+        $fcall
+        """
+    out = code_block(out)
+end
+
 function convert_output(expr, path, cf::CodeAndFunction)
-    code = cf.code
-    f = cf.f
-    out = f
+    fdef = cf.fdef
+    fcall = cf.fcall
+    out = cf.out
+    fdef = Books.remove_hide_comment(fdef)
+    code = add_method_call(fdef, fcall)
     out = convert_output(expr, path, out)
     """
     $code

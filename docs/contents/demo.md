@@ -179,7 +179,8 @@ I guess that there is no perfect way here.
 The benefit of evaluating the user input directly, as Books.jl is doing, seems to be that it is more extensible if I'm not mistaken.
 Possibly, the reasoning is that R Markdown needs to convert the output directly, whereas Julia's better type system allows for converting in much later stages, but I'm not sure.
 
-> **Tip**: After you run `gen()` with the `Point` struct defined above, the struct will be available in your REPL.
+> **Tip**: When using `sco`, the code is evaluated in the `Main` module.
+> This means that the objects, such as the `Point` struct defined above, are available in your REPL after running `gen()`.
 
 ## Labels and captions {#sec:labels-captions}
 
@@ -245,14 +246,22 @@ resulting in
 Since we're using methods as code blocks, we can use the code shown in one code block in another.
 For example, to determine the mean of column A:
 
+<pre>
 ```jl
-@sco(M.my_data_mean())
+@sco(M.my_data_mean(my_data()))
+```
+</pre>
+
+shows as
+
+```jl
+@sco(M.my_data_mean(my_data()))
 ```
 
-Or, we can show the output inline, namely `jl M.my_data_mean()`, by using
+Or, we can show the output inline, namely `jl M.my_data_mean(my_data())`, by using
 
 ```
-`jl M.my_data_mean()`
+`jl M.my_data_mean(my_data())`
 ```
 
 It is also possible to show methods with parameters.
