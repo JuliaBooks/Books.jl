@@ -43,8 +43,9 @@ function add_method_call(fdef, fcall)
     out = code_block(strip(out))
 end
 
-function apply_process_post(expr, out, process::Union{Nothing,Function}, post::Function)
-    out = isnothing(process) ? convert_output(expr, nothing, out) : process(out)
+function apply_process_post(expr, out, process::Union{Nothing,Function}, post::Function;
+        path::Union{Nothing,String}=nothing)
+    out = isnothing(process) ? convert_output(expr, path, out) : process(out)
     out = post(out)
 end
 
@@ -113,9 +114,10 @@ function sco(f::Function, types; M=Main, process::Union{Nothing,Function}=nothin
     fdef = Books.CodeTracking.code_string(f, types)
     code = add_method_call(fdef, fcall)
     # Also here, f and types do not contain all the information that we need.
-    ex = Meta.parse("begin $fcall end")
+    ex = Meta.parse(fcall)
     out = Core.eval(M, ex)
-    out = apply_process_post(fcall, out, process, post)
+    path = escape_expr(fcall)
+    out = apply_process_post(fcall, out, process, post; path)
     """
     $code
     $out
