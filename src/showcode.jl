@@ -36,17 +36,23 @@ struct CodeAndFunction
     out::Any
 end
 
+function sco(f::Function, types;
+        process::Union{Nothing,Function}=nothing, post::Function=identity)
+
+    return Books.CodeTracking.code_string(f, types)
+    fdef = Books.CodeTracking.@code_string $args
+    # CodeAndFunction(fdef, $fcall, $f)
+end
+
 """
     @sco(f)
 
 Show code and output for `f()`; to show only code, use [`@sc`](@ref).
+    M=Main, process::Union{Nothing,Function}=nothing,
+    post::Function=identity)
 """
-macro sco(f)
-    fcall = string(f)::String
-    esc(quote
-        fdef = Books.CodeTracking.@code_string $f
-        CodeAndFunction(fdef, $fcall, $f)
-    end)
+macro sco(ex0...)
+    InteractiveUtils.gen_call_with_extracted_types_and_kwargs(__module__, :sco, ex0)
 end
 
 """
