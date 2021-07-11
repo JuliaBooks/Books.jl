@@ -57,7 +57,7 @@ function extract_expr(s::AbstractString)::Vector
     inline_pattern = r" `jl ([^`]*)`"
     matches = eachmatch(inline_pattern, s)
     from_inline = clean.(matches)
-    E = [from_codeblocks; from_inline]
+    exprs = [from_codeblocks; from_inline]
 
     function check_parse_errors(expr)
         try
@@ -66,8 +66,8 @@ function extract_expr(s::AbstractString)::Vector
             error("Exception occured when trying to parse `$expr`")
         end
     end
-    check_parse_errors.(E)
-    E
+    check_parse_errors.(exprs)
+    exprs
 end
 
 """
@@ -169,6 +169,33 @@ function evaluate_and_write(f::Function)
     nothing
 end
 
+function clean_stacktrace(stacktrace::String)
+    lines = split(stacktrace, '\n')
+    books_file = "Books.jl/src/"
+    contains_books = [contains(l, books_file) for l in lines]
+    i = findfirst(contains_books)
+    lines = lines[1:i-6]
+    lines = [lines; " [...]"]
+    stacktrace = join(lines, '\n')
+end
+
+function report_error(expr, e)
+    path = escape_expr(expr)
+    # Source: Franklin.jl/src/eval/run.jl.
+    exc, bt = last(Base.catch_stack())
+    stacktrace = sprint(Base.showerror, exc, bt)::String
+    stacktrace = clean_stacktrace(stacktrace)
+    msg = """
+        Failed to run:
+        $expr
+
+        Details:
+        $stacktrace
+        """
+    @error msg
+    write(path, code_block(msg))
+end
+
 """
     evaluate_include(expr::String, M, fail_on_error::Bool)
 
@@ -185,11 +212,7 @@ function evaluate_include(expr::String, M, fail_on_error::Bool)
         try
             evaluate_and_write(M, expr)
         catch e
-            @error """
-            Failed to run code for $path.
-            Details:
-            $(rethrow())
-            """
+            report_error(expr, e)
         end
     end
 end
