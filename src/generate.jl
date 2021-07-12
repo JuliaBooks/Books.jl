@@ -172,10 +172,9 @@ end
 
 function clean_stacktrace(stacktrace::String)
     lines = split(stacktrace, '\n')
-    books_file = "Books.jl/src/"
-    contains_books = [contains(l, books_file) for l in lines]
+    contains_books = [contains(l, "] top-level scope") for l in lines]
     i = findfirst(contains_books)
-    lines = lines[1:i-6]
+    lines = lines[1:i+5]
     lines = [lines; " [...]"]
     stacktrace = join(lines, '\n')
 end
