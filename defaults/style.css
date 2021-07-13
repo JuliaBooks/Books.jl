@@ -341,7 +341,7 @@ figure {
 figure img {
   border: none;
   /* For detailed images, we need the full width. */
-  width: 100%;
+  max-width: 100%;
 }
 
 
