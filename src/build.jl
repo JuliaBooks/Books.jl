@@ -1,13 +1,14 @@
+const crossref_bin = string(pandoc_crossref_jll.pandoc_crossref_path)::String
+const crossref = "--filter=$crossref_bin"
+const include_lua_filter = joinpath(PROJECT_ROOT, "src", "include-codeblocks.lua")
+const include_files = "--lua-filter=$include_lua_filter"
+const citeproc = "--citeproc"
+
 function pandoc_file(filename)
     user_path = joinpath("pandoc", filename)
     fallback_path = joinpath(PROJECT_ROOT, "defaults", filename)
     isfile(user_path) ? user_path : fallback_path
 end
-
-include_lua_filter = joinpath(PROJECT_ROOT, "src", "include-codeblocks.lua")
-include_files = "--lua-filter=$include_lua_filter"
-crossref = "--filter=pandoc-crossref"
-citeproc = "--citeproc"
 
 function csl()
     csl_path = pandoc_file("style.csl")
@@ -52,13 +53,11 @@ end
 
 function call_pandoc(args)::Tuple{Base.Process, String}
     pandoc() do pandoc_bin
-        pandoc_crossref() do _
-            cmd = `$pandoc_bin $args`
-            stdout = IOBuffer()
-            p = run(pipeline(cmd; stdout))
-            out = String(take!(stdout))::String
-            return (p, out)
-        end
+        cmd = `$pandoc_bin $args`
+        stdout = IOBuffer()
+        p = run(pipeline(cmd; stdout))
+        out = String(take!(stdout))::String
+        return (p, out)
     end
 end
 
