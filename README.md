@@ -13,3 +13,9 @@ pkg> add Books
 ```
 
 See, the [documentation](https://rikhuijzer.github.io/Books.jl) for more information.
+
+### Windows
+
+Currently, Windows is not supported.
+Some regexes expects paths to contain a forward slash and things like that.
+I don't plan to invest time in supporting Windows, but PRs for Windows will be reviewed and merged.
