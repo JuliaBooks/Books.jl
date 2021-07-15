@@ -16,11 +16,11 @@ import Markdown
 import Tectonic
 import TOML
 import YAML
+import pandoc_crossref_jll
 
 using Memoize
 using Requires
 using pandoc_jll
-using pandoc_crossref_jll
 
 const GENERATED_DIR = "_gen"
 const DEFAULTS_DIR = joinpath(PROJECT_ROOT, "defaults")
