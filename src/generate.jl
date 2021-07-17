@@ -182,7 +182,11 @@ end
 function report_error(expr, e)
     path = escape_expr(expr)
     # Source: Franklin.jl/src/eval/run.jl.
-    exc, bt = last(Base.catch_stack())
+    if VERSION >= v"1.7.0-"
+        exc, bt = last(Base.current_exceptions())
+    else
+        exc, bt = last(Base.catch_stack())
+    end
     stacktrace = sprint(Base.showerror, exc, bt)::String
     stacktrace = clean_stacktrace(stacktrace)
     msg = """
