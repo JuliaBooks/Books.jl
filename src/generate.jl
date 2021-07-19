@@ -145,7 +145,7 @@ end
 function evaluate_and_write(M::Module, expr::String)
     path = escape_expr(expr)
     expr_info = replace(expr, '\n' => "\\n")
-    println("Writing output of `$expr_info` to $path")
+    println("Writing output of `$expr_info`")
 
     ex = Meta.parse("begin $expr end")
     out = Core.eval(M, ex)
@@ -161,7 +161,7 @@ function evaluate_and_write(f::Function)
     expr = "$(function_name)()"
     path = escape_expr(expr)
     expr_info = replace(expr, '\n' => "\\n")
-    println("Writing output of `$expr_info` to $path")
+    println("Writing output of `$expr_info`")
     out = f()
     out = convert_output(expr, path, out)
     out = string(out)::String
