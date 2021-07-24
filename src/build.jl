@@ -142,10 +142,26 @@ function ci_url_prefix(project)
     user_setting
 end
 
+function highlight()
+    theme = "https://highlightjs.org/static/demo/styles/github.css"
+    """
+    <link rel="stylesheet" href=$theme>
+    <script src="https://fredrikekre.se/assets/julia.highlight.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('pre').forEach((el) => {
+            hljs.highlightElement(el);
+        });
+    });
+    </script>
+    """
+end
+
 function html(; project="default", extra_head="")
     copy_extra_directories(project)
     url_prefix = is_ci() ? ci_url_prefix(project)::String : ""
     c = config(project, "contents")
+    extra_head = extra_head * highlight()
     write_html_pages(url_prefix, pandoc_html(project), extra_head)
 end
 

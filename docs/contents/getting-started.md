@@ -6,6 +6,13 @@ The easiest way to get started is to
 1. step inside that directory and
 1. serve your book via:
 
+```language-julia
+function foo()
+    1 + 1
+    "this is wrong"
+end
+```
+
 ```jl
 M.serve_example()
 ```
