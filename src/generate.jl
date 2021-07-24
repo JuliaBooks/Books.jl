@@ -2,11 +2,12 @@
 """
     code_block(s)
 
-Wrap `s` in a Markdown code block with triple backticks.
+Wrap `s` in a Markdown code block.
 Assumes that the language is Julia.
 """
 code_block(s) = """
-    ```language-julia
+
+    ``` {.julia}
     $s
     ```
     """
@@ -17,7 +18,8 @@ code_block(s) = """
 Wrap `s` in a Markdown code block with the language description "output".
 """
 output_block(s) = """
-    ```output
+
+    ```
     $s
     ```
     """

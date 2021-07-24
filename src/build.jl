@@ -170,7 +170,7 @@ function html(; project="default", extra_head="")
     copy_extra_directories(project)
     url_prefix = is_ci() ? ci_url_prefix(project)::String : ""
     c = config(project, "contents")
-    extra_head = extra_head * highlight(url_prefix)
+    extra_head = extra_head # * highlight(url_prefix)
     write_html_pages(url_prefix, pandoc_html(project), extra_head)
 end
 
