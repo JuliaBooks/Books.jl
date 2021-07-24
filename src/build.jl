@@ -142,11 +142,20 @@ function ci_url_prefix(project)
     user_setting
 end
 
-function highlight()
-    theme = "https://highlightjs.org/static/demo/styles/github.css"
+@memoize function highlight(url_prefix)
+    highlight_dir = joinpath(Artifacts.artifact"Highlight", "cdn-release-11.1.0")
+
+    highlight_name = "highlight.min.js"
+    highlight_path = joinpath(highlight_dir, "build", highlight_name)
+    cp(highlight_path, joinpath(BUILD_DIR, highlight_name); force=true)
+
+    style_name = "github.min.css"
+    style_path = joinpath(highlight_dir, "build", "styles", style_name)
+    cp(style_path, joinpath(BUILD_DIR, style_name); force=true)
+
     """
-    <link rel="stylesheet" href=$theme>
-    <script src="https://fredrikekre.se/assets/julia.highlight.min.js"></script>
+    <link rel="stylesheet" href="$url_prefix/$style_name">
+    <script src="$url_prefix/$highlight_name"></script>
     <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         document.querySelectorAll('pre').forEach((el) => {
@@ -161,7 +170,7 @@ function html(; project="default", extra_head="")
     copy_extra_directories(project)
     url_prefix = is_ci() ? ci_url_prefix(project)::String : ""
     c = config(project, "contents")
-    extra_head = extra_head * highlight()
+    extra_head = extra_head * highlight(url_prefix)
     write_html_pages(url_prefix, pandoc_html(project), extra_head)
 end
 

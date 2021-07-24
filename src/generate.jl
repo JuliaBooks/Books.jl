@@ -16,7 +16,11 @@ code_block(s) = """
 
 Wrap `s` in a Markdown code block with the language description "output".
 """
-output_block(s) = "```output\n$s\n```\n"
+output_block(s) = """
+    ```output
+    $s
+    ```
+    """
 
 function extract_codeblock_expr(s)
 end
