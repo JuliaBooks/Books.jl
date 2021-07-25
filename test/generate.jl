@@ -4,7 +4,7 @@ using DataFrames
 
 @testset "generate" begin
     @test code_block("lorem") == """
-        ```
+        ```language-julia
         lorem
         ```
         """

@@ -99,8 +99,6 @@ function pandoc_html(project::AbstractString)
     metadata_path = config(project, "metadata_path")::String
     metadata_path = combine_metadata(metadata_path)
     metadata = "--metadata-file=$metadata_path"
-    # highlight_filter_path = joinpath(PROJECT_ROOT, "src", "highlight.lua")
-    # highlight_filter = "--lua-filter=$highlight_filter_path"
     copy_css()
     copy_mousetrap()
     copy_juliamono()
@@ -108,10 +106,11 @@ function pandoc_html(project::AbstractString)
     args = [
         inputs(project);
         include_files;
-        # highlight_filter;
         crossref;
         citeproc;
         "--mathjax";
+        # Using highlight.js instead.
+        "--no-highlight";
         csl();
         metadata;
         template;
@@ -145,12 +144,17 @@ function ci_url_prefix(project)
     user_setting
 end
 
-@memoize function highlight(url_prefix)
+# @memoize
+function highlight(url_prefix)
     highlight_dir = joinpath(Artifacts.artifact"Highlight", "cdn-release-11.1.0")
 
     highlight_name = "highlight.min.js"
     highlight_path = joinpath(highlight_dir, "build", highlight_name)
     cp(highlight_path, joinpath(BUILD_DIR, highlight_name); force=true)
+
+    julia_highlight_name = "julia.min.js"
+    julia_highlight_path = joinpath(highlight_dir, "build", "languages", julia_highlight_name)
+    cp(julia_highlight_path, joinpath(BUILD_DIR, julia_highlight_name); force=true)
 
     style_name = "github.min.css"
     style_path = joinpath(highlight_dir, "build", "styles", style_name)
@@ -159,6 +163,7 @@ end
     """
     <link rel="stylesheet" href="$url_prefix/$style_name">
     <script src="$url_prefix/$highlight_name"></script>
+    <script src="$url_prefix/$julia_highlight_name"></script>
     <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         document.querySelectorAll('pre').forEach((el) => {
@@ -174,7 +179,7 @@ function html(; project="default", extra_head="")
     url_prefix = is_ci() ? ci_url_prefix(project)::String : ""
     c = config(project, "contents")
     if config(project, "highlight")::Bool
-        extra_head = extra_head # * highlight(url_prefix)
+        extra_head = extra_head * highlight(url_prefix)
     end
     write_html_pages(url_prefix, pandoc_html(project), extra_head)
 end

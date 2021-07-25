@@ -5,7 +5,7 @@
 Wrap `s` in a Markdown code block.
 Assumes that the language is Julia.
 """
-code_block(s) = "```julia\n$s\n```\n"
+code_block(s) = "```language-julia\n$s\n```\n"
 
 """
     output_block(s)
