@@ -5,7 +5,7 @@
   --normal-size: 19px;
   --small-size: 14px;
   --tiny-size: 11px;
-  --block-background: hsl(0, 0%, 94%);
+  --block-background: hsl(0, 0%, 96%);
   --output-background: hsl(120, 100%, 94%);
   --menu-width: 220px;
   --max-body-width: 960px;
@@ -231,7 +231,8 @@ pre, code, kbd, samp {
   font-variant-ligatures: none;
   font-size: var(--small-size);
   color: #000;
-  background: var(--block-background);
+  /* Using !important to override github.min.css settings. */
+  background: var(--block-background) !important;
   margin-top: 0.6em;
   margin-bottom: 0.6em;
   padding-top: 0.3em;
@@ -258,7 +259,7 @@ pre {
 }
 
 pre.output {
-  background: hsl(0, 0%, 98%);
+  background: hsl(0, 0%, 98%) !important;
   border: 1px dashed #dbdbdb;
 }
 
