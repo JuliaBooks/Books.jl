@@ -99,6 +99,8 @@ function pandoc_html(project::AbstractString)
     metadata_path = config(project, "metadata_path")::String
     metadata_path = combine_metadata(metadata_path)
     metadata = "--metadata-file=$metadata_path"
+    # highlight_filter_path = joinpath(PROJECT_ROOT, "src", "highlight.lua")
+    # highlight_filter = "--lua-filter=$highlight_filter_path"
     copy_css()
     copy_mousetrap()
     copy_juliamono()
@@ -106,6 +108,7 @@ function pandoc_html(project::AbstractString)
     args = [
         inputs(project);
         include_files;
+        # highlight_filter;
         crossref;
         citeproc;
         "--mathjax";
@@ -170,7 +173,9 @@ function html(; project="default", extra_head="")
     copy_extra_directories(project)
     url_prefix = is_ci() ? ci_url_prefix(project)::String : ""
     c = config(project, "contents")
-    extra_head = extra_head # * highlight(url_prefix)
+    if config(project, "highlight")::Bool
+        extra_head = extra_head # * highlight(url_prefix)
+    end
     write_html_pages(url_prefix, pandoc_html(project), extra_head)
 end
 

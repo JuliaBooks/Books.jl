@@ -5,24 +5,14 @@
 Wrap `s` in a Markdown code block.
 Assumes that the language is Julia.
 """
-code_block(s) = """
-
-    ``` {.julia}
-    $s
-    ```
-    """
+code_block(s) = "```julia\n$s\n```\n"
 
 """
     output_block(s)
 
 Wrap `s` in a Markdown code block with the language description "output".
 """
-output_block(s) = """
-
-    ```
-    $s
-    ```
-    """
+output_block(s) = "```output\n$s\n```\n"
 
 function extract_codeblock_expr(s)
 end
