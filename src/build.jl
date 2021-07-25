@@ -109,7 +109,7 @@ function pandoc_html(project::AbstractString)
         crossref;
         citeproc;
         "--mathjax";
-        # Using highlight.js instead.
+        # Using highlight.js instead of the Pandoc built-in highlighter.
         "--no-highlight";
         csl();
         metadata;
@@ -144,8 +144,7 @@ function ci_url_prefix(project)
     user_setting
 end
 
-# @memoize
-function highlight(url_prefix)
+@memoize function highlight(url_prefix)
     highlight_dir = joinpath(Artifacts.artifact"Highlight", "cdn-release-11.1.0")
 
     highlight_name = "highlight.min.js"
