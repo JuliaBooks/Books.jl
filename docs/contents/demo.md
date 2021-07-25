@@ -3,7 +3,7 @@
 We can refer to a section with the normal [pandoc-crossref](https://lierdakil.github.io/pandoc-crossref/){target="_blank"} syntax.
 For example,
 
-<pre>
+<pre class="language-markdown">
 See @sec:getting-started.
 </pre>
 
@@ -18,7 +18,7 @@ $$ y = \frac{\sin{x}}{\cos{x}} $$ {#eq:example}
 For embedding code, you can use the `jl` inline code or code block.
 For example, to show the Julia version, define a code block like
 
-<pre>
+<pre class="language-julia">
 ```jl
 M.julia_version()
 ```
@@ -53,7 +53,7 @@ You can also embed output inline with single backticks like
 
 or just call Julia's constant `VERSION` directly from within the Markdown file:
 
-```
+```markdown
 This book is built with Julia `jl string(VERSION)`.
 ```
 
@@ -92,7 +92,7 @@ To show that a DataFrame is converted to a Markdown table, we define a method
 
 and add its output to the Markdown file with
 
-<pre>
+<pre class="language-julia">
 ```jl
 M.my_table()
 ```
@@ -106,7 +106,8 @@ M.my_table()
 
 where the caption and the label are inferred from the `path`.
 Refer to @tbl:my_table with
-```
+
+```markdown
 @tbl:my_table
 ```
 
@@ -132,7 +133,7 @@ Most things can be done via functions.
 However, defining a struct is not possible, because `@sco` cannot locate the struct definition inside the module.
 Therefore, it is also possible to pass code and specify that you want to evaluate and show code (sc) without showing the output:
 
-<pre>
+<pre class="language-julia">
 ```jl
 sc("
 struct Point
@@ -155,7 +156,7 @@ end
 and show code and output (sco).
 For example,
 
-<pre>
+<pre class="language-julia">
 ```jl
 sco("p = Point(1, 2)")
 ```
@@ -169,7 +170,7 @@ sco("p = Point(1, 2)")
 
 Note that this is starting to look a lot like R Markdown where the syntax would be something like
 
-<pre>
+<pre class="language-julia">
 ```{r, results='hide'}
 x = rnorm(100)
 ```
@@ -217,7 +218,7 @@ For example, inside our package, we can define the following method:
 To show code and output (sco) for this method, use the `@sco` macro.
 This macro is exported by Books, so ensure that you have `using Books` in your package.
 
-<pre>
+<pre class="language-julia">
 ```jl
 @sco M.my_data()
 ```
@@ -231,7 +232,7 @@ This gives
 
 To only show the source code, use `@sc`:
 
-<pre>
+<pre class="language-julia">
 ```jl
 @sc M.my_data()
 ```
@@ -246,7 +247,7 @@ resulting in
 Since we're using methods as code blocks, we can use the code shown in one code block in another.
 For example, to determine the mean of column A:
 
-<pre>
+<pre class="language-julia">
 ```jl
 @sco M.my_data_mean(my_data())
 ```
@@ -267,7 +268,7 @@ Or, we can show the output inline, namely `jl M.my_data_mean(my_data())`, by usi
 It is also possible to show methods with parameters.
 For example,
 
-<pre>
+<pre class="language-julia">
 ```jl
 @sc M.hello("" )
 ```
@@ -331,7 +332,7 @@ And, for adjusting the caption, use `Options`:
 
 or the caption can be specified in the Markdown file:
 
-<pre>
+<pre class="language-julia">
 ```jl
 Options(M.image_options_plot(); caption="Label specified in Markdown.")
 ```
@@ -403,7 +404,7 @@ scob("s = \"Hello\"")
 
 Another way to change the output is via the keyword arguments `process` and `post` for `sco`.
 
-<pre>
+<pre class="language-julia">
 ```jl
 sco("
 df = DataFrame(A = [1], B = [Date(2018)])
@@ -439,7 +440,7 @@ Options(df; caption=nothing, label=nothing) # hide
 This also works for `@sco`.
 For example, for `my_data` we can use:
 
-<pre>
+<pre class="language-julia">
 ```jl
 @sco process=string post=output_block my_data()
 ```

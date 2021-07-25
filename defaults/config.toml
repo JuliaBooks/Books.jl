@@ -28,7 +28,8 @@
   # which is only visible to online visitors and hidden from offline users (PDF).
   include_homepage_outside_html = false
 
-
+  # Syntax highlighting.
+  highlight = true
 
   # Alternative project, used when calling, for example, serve(project="dev").
   [projects.dev]
