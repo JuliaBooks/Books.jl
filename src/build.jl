@@ -159,8 +159,9 @@ end
     style_path = joinpath(highlight_dir, "build", "styles", style_name)
     cp(style_path, joinpath(BUILD_DIR, style_name); force=true)
 
+    # Don't add `url_prefix` to the stylesheet link. It will be handled by `fix_links`.
     """
-    <link rel="stylesheet" href="$url_prefix/$style_name">
+    <link rel="stylesheet" href="/$style_name">
     <script src="$url_prefix/$highlight_name"></script>
     <script src="$url_prefix/$julia_highlight_name"></script>
     <script>
