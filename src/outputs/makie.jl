@@ -3,7 +3,14 @@
 using CairoMakie
 import Makie
 
-function convert_output(expr, path, p::Makie.FigureAxisPlot; caption=missing, label=missing)
+function convert_output(
+        expr,
+        path,
+        p::Union{Makie.Figure, Makie.FigureAxisPlot};
+        caption=missing,
+        label=missing
+    )
+
     im_dir = joinpath(BUILD_DIR, "im")
     mkpath(im_dir)
 
