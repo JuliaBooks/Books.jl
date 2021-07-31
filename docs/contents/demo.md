@@ -460,3 +460,11 @@ Ligatures from JuliaMono are disabled. For example, none of these symbols are co
 ```
 |> => and <=
 ```
+
+### Long lines in code blocks
+
+```language-plain
+When code or output is getting too long, a horizontal scrollbar is visible on the website to scroll horizontally.
+```
+
+

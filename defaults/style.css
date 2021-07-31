@@ -256,6 +256,18 @@ pre {
   white-space: pre-wrap;
   word-wrap: break-word;
   border: 1px solid #dbdbdb;
+
+  overflow-x: scroll;
+  display: block;
+  /* Hide the scroll bar if not used. */
+  overflow: auto;
+  white-space: pre;
+  /* Fine tuned based on max-width. */
+  max-width: 640px;
+  word-wrap: normal;
+}
+
+pre {
 }
 
 pre.output {
