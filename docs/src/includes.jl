@@ -92,7 +92,6 @@ function options_example()
     df = DataFrame(A=[1], B=[2], C=[3])
     caption = "My DataFrame."
     label = "foo"
-    k = nothing # hide
     return Options(df; caption, label)
 end
 
