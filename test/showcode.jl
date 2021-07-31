@@ -1,4 +1,8 @@
 sc_test_function() = 1
+function sc_test_function_with_comment()
+    x = 1 # hide
+    return 2
+end
 
 @testset "showcode" begin
     s = @sc sc_test_function()
@@ -26,6 +30,18 @@ sc_test_function() = 1
         ```
 
         1
+        """
+
+    s = @sco sc_test_function_with_comment()
+    @test s == """
+        ```language-julia
+        function sc_test_function_with_comment()
+            return 2
+        end
+        sc_test_function_with_comment()
+        ```
+
+        2
         """
 end
 

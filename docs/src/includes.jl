@@ -52,8 +52,9 @@ end
 
 my_table() = DataFrame(U = [1, 2], V = [:a, :b], W = [3, 4])
 
-multiple_df_vector() =
+function multiple_df_vector()
     [DataFrame(Z = [3]), DataFrame(U = [4, 5], V = [6, 7])]
+end
 
 function multiple_df_example()
     objects = [
@@ -87,8 +88,13 @@ end
 
 hello(name) = "Hello, $name"
 
-options_example() = Options(DataFrame(A = [1], B = [2], C = [3]);
-                        caption="My DataFrame.", label="foo")
+function options_example()
+    df = DataFrame(A=[1], B=[2], C=[3])
+    caption = "My DataFrame."
+    label = "foo"
+    k = nothing # hide
+    return Options(df; caption, label)
+end
 
 options_example_doctests() = Books.doctest(@doc Books.caption_label)
 
