@@ -112,8 +112,9 @@ function sco(f::Function, types; M=Main, process::Union{Nothing,Function}=nothin
         post::Function=identity, fcall="")
 
     fdef = Books.CodeTracking.code_string(f, types)
+    fdef = remove_hide_comment(fdef)
     code = add_method_call(fdef, fcall)
-    # Also here, f and types do not contain all the information that we need.
+    # Also here, f and types do not contain all the required information.
     ex = Meta.parse(fcall)
     out = Core.eval(M, ex)
     path = escape_expr(fcall)
