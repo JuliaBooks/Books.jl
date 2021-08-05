@@ -135,7 +135,7 @@ function plotting_filename(expr, path, package::String)
     else
         # Not determining some random name here, because it would require cleanups too.
         msg = """
-            It is not possible to write an image without specifying a path.
+            Couldn't determine a path for the image.
             Use `Options(p; filename=filename)` where `p` is a $package plot.
             """
         throw(ErrorException(msg))
