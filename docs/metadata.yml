@@ -2,7 +2,7 @@
 title: Books.jl
 subtitle: Create books with Julia
 book: false
-author: Rik Huijzer
+author: Rik Huijzer and contributors
 pdf-footer: https://github.com/rikhuijzer/Books.jl
 
 # An example additional header include for html.
