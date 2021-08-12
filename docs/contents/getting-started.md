@@ -94,11 +94,13 @@ That one is specified on a per project basis with `homepage_contents`, which def
 The homepage typically contains the link to the generated PDF.
 Note that the homepage is only added to the html output and not to pdf or other outputs.
 
-### Creating a Website Landing Page for Your Book
+### Creating a website landing page for your book
 
+By default, Books.jl assumes that you will want a separate landing page for your book when you host it.
+This page is not added to the generated ouputs, like PDF or Docx, so it's a nice place to put links to the generated outputs.
 If you want to create a landing page for your book when you host it, you will need to create a `index.md` file in the `contents` directory.
 Then, using an `h1` header from Markdown, give the file a title.
-Immediately after the title, you will need to write `{-}` to indicate that this is the landing page for your book's website.
+Immediately after the title, you will need to write `{-}`.
 As a result, it will not be included in the chapter count of the book.
 
 Here is an example of how an example `index.md` file looks like:
