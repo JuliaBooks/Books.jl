@@ -135,22 +135,24 @@ Therefore, it is also possible to pass code and specify that you want to evaluat
 
 <pre class="language-julia">
 ```jl
-sc("
-struct Point
-    x
-    y
-end
-")
+s = """
+    struct Point
+        x
+        y
+    end
+    """
+sc(s)
 ```
 </pre>
 
 ```jl
-sc("
-struct Point
-    x
-    y
-end
-")
+s = """
+    struct Point
+        x
+        y
+    end
+    """
+sc(s)
 ```
 
 and show code and output (sco).
@@ -390,11 +392,13 @@ To enforce output to be embedded inside a code block, use `scob`.
 For example,
 
 ```jl
+sco("""
 s = """
     df = DataFrame(A = [1], B = [Date(2018)])
     string(df)
     """
 scob(s)
+""")
 ```
 
 or, with a string

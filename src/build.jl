@@ -134,7 +134,7 @@ function write_input_markdown(project)::String
     return markdown_path
 end
 
-function pandoc_html(project::AbstractString; test=false)
+function pandoc_html(project::AbstractString)
     input_path = write_input_markdown(project)
     copy_extra_directories(project)
     html_template_path = pandoc_file("template.html")
@@ -149,7 +149,7 @@ function pandoc_html(project::AbstractString; test=false)
     copy_juliamono()
 
     args = [
-        test ? "contents/test.md" : input_path;
+        input_path;
         crossref;
         citeproc;
         "--mathjax";
