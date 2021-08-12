@@ -33,6 +33,6 @@
         """<p>2</p>"""
     ]
     for (actual, exp) in zip(lines, expected)
-        @test actual == exp
+        @test strip(actual) == strip(exp)
     end
 end
