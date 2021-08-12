@@ -4,6 +4,7 @@ Create books with Julia.
 
 [![CI Testing](https://github.com/rikhuijzer/Books.jl/workflows/CI/badge.svg)](https://github.com/rikhuijzer/Books.jl/actions?query=workflow%3ACI+branch%3Amain)
 [![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/invenia/BlueStyle)
+[![ColPrac: Contributor's Guide on Collaborative Practices for Community Packages](https://img.shields.io/badge/ColPrac-Contributor's%20Guide-blueviolet)](https://github.com/SciML/ColPrac)
 
 In a nutshell, this package is meant to generate books (or dashboards) with embedded Julia output.
 Via Pandoc, the package can live serve a website and build various outputs including a website, PDF, and Docx.
