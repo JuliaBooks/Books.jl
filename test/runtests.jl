@@ -22,6 +22,7 @@ end
 
 @testset "Books.jl" begin
     include("output.jl")
+    include("build.jl")
     include("html.jl")
     include("showcode.jl")
     include("generate.jl")

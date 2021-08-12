@@ -111,7 +111,7 @@ function write_input_markdown(project)
     texts = embed_output.(texts)
 end
 
-function pandoc_html(project::AbstractString)
+function pandoc_html(project::AbstractString; test=false)
     input_path = write_input_markdown(project)
     copy_extra_directories(project)
     html_template_path = pandoc_file("template.html")
@@ -127,7 +127,7 @@ function pandoc_html(project::AbstractString)
 
     args = [
         # input_path;
-        inputs(project);
+        test ? "contents/test.md" : inputs(project);
         include_files;
         crossref;
         citeproc;
