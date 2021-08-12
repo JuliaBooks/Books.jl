@@ -249,6 +249,7 @@ end
 const JULIAMONO_PATH = juliamono_path()
 
 function pdf(; project="default")
+    input_path = write_input_markdown(project)
     copy_extra_directories(project)
     latex_template_path = pandoc_file("template.tex")
     template = "--template=$latex_template_path"
@@ -265,8 +266,7 @@ function pdf(; project="default")
         pdf_engine = "--pdf-engine=$tectonic_bin"
 
         args = [
-            input_files;
-            include_files;
+            input_path;
             crossref;
             citeproc;
             csl();
@@ -292,6 +292,7 @@ function pdf(; project="default")
 end
 
 function docx(; project="default")
+    input_path = write_input_markdown(project)
     file = config(project, "output_filename")
     output_filename = joinpath(BUILD_DIR, "$file.docx")
     output = "--output=$output_filename"
@@ -301,8 +302,7 @@ function docx(; project="default")
     input_files = ignore_homepage(project, inputs(project))
 
     args = [
-        input_files;
-        include_files;
+        input_path;
         crossref;
         citeproc;
         csl();
