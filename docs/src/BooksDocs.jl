@@ -17,6 +17,9 @@ using Reexport
 
 plot = Plots.plot
 
+M = BooksDocs
+export M
+
 include("includes.jl")
 
 function build()

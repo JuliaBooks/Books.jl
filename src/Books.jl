@@ -35,7 +35,7 @@ export html, pdf, docx, build_all
 include("serve.jl")
 include("output.jl")
 export without_caption_label
-include("outputs/dataframes.jl")
+include(joinpath("outputs", "dataframes.jl"))
 include("showcode.jl")
 include("generate.jl")
 export code, ImageOptions, Options

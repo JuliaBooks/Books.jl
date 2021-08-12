@@ -388,12 +388,11 @@ To enforce output to be embedded inside a code block, use `scob`.
 For example,
 
 ```jl
-sco("""
-scob("
-df = DataFrame(A = [1], B = [Date(2018)])
-string(df)
-")
-""")
+s = """
+    df = DataFrame(A = [1], B = [Date(2018)])
+    string(df)
+    """
+scob(s)
 ```
 
 or, with a string
@@ -406,35 +405,33 @@ Another way to change the output is via the keyword arguments `process` and `pos
 
 <pre class="language-julia">
 ```jl
-sco("
-df = DataFrame(A = [1], B = [Date(2018)])
-"; process=string, post=output_block)
+s = "df = DataFrame(A = [1], B = [Date(2018)])"
+sco(s; process=string, post=output_block)
 ```
 </pre>
 
 which shows the following to the reader:
 
 ```jl
-sco("
-df = DataFrame(A = [1], B = [Date(2018)])
-"; process=string, post=output_block)
+s = "df = DataFrame(A = [1], B = [Date(2018)])"
+sco(s; process=string, post=output_block)
 ```
 
 Without `process=string`, the output would automatically be converted to a Markdown table by Books.jl and then wrapped inside a code block, which will cause Pandoc to show the raw output instead of a table.
 
 ```jl
-sco("
-df = DataFrame(A = [1], B = [Date(2018)])
-"; process=without_caption_label, post=output_block)
+s = "df = DataFrame(A = [1], B = [Date(2018)])"
+sco(s; process=without_caption_label, post=output_block)
 ```
 
 Without `post=output_block`, the DataFrame would be converted to a string, but not wrapped inside a code block so that Pandoc will treat is as normal Markdown:
 
 ```jl
-sco("
-df = DataFrame(A = [2], B = [Date(2018)])
-Options(df; caption=nothing, label=nothing) # hide
-"; process=string)
+s = """
+    df = DataFrame(A = [2], B = [Date(2018)])
+    Options(df; caption=nothing, label=nothing) # hide
+    """
+sco(s; process=string)
 ```
 
 This also works for `@sco`.
@@ -466,5 +463,4 @@ Ligatures from JuliaMono are disabled. For example, none of these symbols are co
 ```language-plain
 When code or output is getting too long, a horizontal scrollbar is visible on the website to scroll horizontally.
 ```
-
 
