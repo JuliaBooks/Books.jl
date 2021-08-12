@@ -57,7 +57,6 @@ function extract_expr(s::AbstractString)::Vector
         m = m[1]::SubString{String}
         m = strip(m)
         m = string(m)::String
-        @assert !contains(m, "</pre>") "Pre found in $m"
         return m
     end
     from_codeblocks = clean.(matches)
