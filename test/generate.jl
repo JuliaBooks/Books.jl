@@ -46,6 +46,20 @@ using DataFrames
         </pre>
         """
     @test match(Books.CODEBLOCK_PATTERN, invalid_block) === nothing
+
+    invalid_block = """
+        <pre class="language-julia">
+        ```jl
+        x = 1 + 1
+        ```
+        </pre>
+        which is displayed as
+        ```jl
+        x = 1 + 1
+        ```
+        """
+    @test !contains(match(Books.CODEBLOCK_PATTERN, invalid_block).match, "pre")
+
 end
 
 module Foo

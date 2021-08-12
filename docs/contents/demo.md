@@ -334,12 +334,14 @@ or the caption can be specified in the Markdown file:
 
 <pre class="language-julia">
 ```jl
-Options(M.image_options_plot(); caption="Label specified in Markdown.")
+p = M.image_options_plot()
+Options(p; caption="Label specified in Markdown.")
 ```
 </pre>
 
 ```jl
-Options(M.image_options_plot(); caption="Label specified in Markdown.")
+p = M.image_options_plot()
+Options(p; caption="Label specified in Markdown.")
 ```
 
 ### Plots {#sec:plotsjl}

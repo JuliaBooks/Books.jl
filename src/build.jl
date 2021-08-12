@@ -90,25 +90,48 @@ end
     cp(from_path, joinpath(BUILD_DIR, filename); force=true)
 end
 
+function codeblock2output(s::AbstractString)
+    expr = s
+    expr = strip(expr)
+    expr = expr[7:end-4]
+    output_path = escape_expr(expr)
+    if isfile(output_path)
+        output = read(output_path, String)
+        return output
+    else
+        msg = """
+            Cannot find file at $output_path for $expr.
+            Did you run `gen()` when having loaded your module?
+            """
+        @warn msg
+        return msg
+    end
+end
+
 """
     embed_output(text::String)
 
 In a Markdown string containing `jl` code blocks, embed the output from the output path.
 """
 function embed_output(text::String)
-    replace(text, CODEBLOCK_PATTERN => "FOOBAR")
+    text = replace(text, CODEBLOCK_PATTERN => codeblock2output)
+    return text
 end
 
 """
     write_input_markdown(project)::String
 
-Combine all the `contents/` files and embed the outputs into one big Markdown file.
-Return the path of the big Markdown file.
+Combine all the `contents/` files and embed the outputs into one Markdown file.
+Return the path of the Markdown file.
 """
-function write_input_markdown(project)
+function write_input_markdown(project)::String
     files = inputs(project)
     texts = read.(files, String)
     texts = embed_output.(texts)
+    text = join(texts, '\n')
+    markdown_path = joinpath(Books.GENERATED_DIR, "input.md")
+    write(markdown_path, text)
+    return markdown_path
 end
 
 function pandoc_html(project::AbstractString; test=false)
@@ -126,9 +149,7 @@ function pandoc_html(project::AbstractString; test=false)
     copy_juliamono()
 
     args = [
-        # input_path;
-        test ? "contents/test.md" : inputs(project);
-        include_files;
+        test ? "contents/test.md" : input_path;
         crossref;
         citeproc;
         "--mathjax";
