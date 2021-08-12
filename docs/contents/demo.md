@@ -393,11 +393,10 @@ For example,
 
 ```jl
 sco("""
-s = """
-    df = DataFrame(A = [1], B = [Date(2018)])
-    string(df)
-    """
-scob(s)
+scob("
+df = DataFrame(A = [1], B = [Date(2018)])
+string(df)
+")
 """)
 ```
 
