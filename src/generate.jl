@@ -14,8 +14,14 @@ Wrap `s` in a Markdown code block with the language description "output".
 """
 output_block(s) = "```output\n$s\n```\n"
 
-function extract_codeblock_expr(s)
-end
+"""
+    CODEBLOCK_PATTERN
+
+Pattern to match `jl` code blocks.
+"""
+CODEBLOCK_PATTERN = r"```jl\s*([\w\W]*?)\n```\n(?!</pre>)"
+
+const INLINE_CODEBLOCK_PATTERN = r" `jl ([^`]*)`"
 
 extract_expr_example() = """
     lorem
@@ -32,7 +38,7 @@ extract_expr_example() = """
 """
     extract_expr(s::AbstractString)::Vector
 
-Returns the filenames mentioned in the `jl` code blocks.
+Return the contents of the `jl` code blocks.
 Here, `s` is the contents of a Markdown file.
 
 ```jldoctest
@@ -46,17 +52,14 @@ julia> Books.extract_expr(s)
 ```
 """
 function extract_expr(s::AbstractString)::Vector
-    codeblock_pattern = r"```jl\s*([\w\W]*?)```"
-    matches = eachmatch(codeblock_pattern, s)
+    matches = eachmatch(CODEBLOCK_PATTERN, s)
     function clean(m)
         m = m[1]::SubString{String}
         m = strip(m)
         m = string(m)::String
     end
     from_codeblocks = clean.(matches)
-
-    inline_pattern = r" `jl ([^`]*)`"
-    matches = eachmatch(inline_pattern, s)
+    matches = eachmatch(INLINE_CODEBLOCK_PATTERN, s)
     from_inline = clean.(matches)
     exprs = [from_codeblocks; from_inline]
 

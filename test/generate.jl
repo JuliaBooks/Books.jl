@@ -23,12 +23,29 @@ using DataFrames
     rm(im_dir; force=true, recursive=true)
 
     @test strip(B.convert_output(nothing, nothing, code("DataFrame(A = [1])"))) == """
-    ```
-    DataFrame(A = [1])
-    ```
-    |   A |
-    | ---:|
-    |   1 |"""
+        ```
+        DataFrame(A = [1])
+        ```
+        |   A |
+        | ---:|
+        |   1 |"""
+
+
+    valid_block = """
+        ```jl
+        foo
+        ```
+        """
+    @test match(Books.CODEBLOCK_PATTERN, valid_block)[1] == "foo"
+
+    invalid_block = """
+        <pre>
+        ```jl
+        foo
+        ```
+        </pre>
+        """
+    @test match(Books.CODEBLOCK_PATTERN, invalid_block) === nothing
 end
 
 module Foo

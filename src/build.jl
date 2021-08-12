@@ -90,7 +90,29 @@ end
     cp(from_path, joinpath(BUILD_DIR, filename); force=true)
 end
 
+"""
+    embed_output(text::String)
+
+In a Markdown string containing `jl` code blocks, embed the output from the output path.
+"""
+function embed_output(text::String)
+    replace(text, CODEBLOCK_PATTERN => "FOOBAR")
+end
+
+"""
+    write_input_markdown(project)::String
+
+Combine all the `contents/` files and embed the outputs into one big Markdown file.
+Return the path of the big Markdown file.
+"""
+function write_input_markdown(project)
+    files = inputs(project)
+    texts = read.(files, String)
+    texts = embed_output.(texts)
+end
+
 function pandoc_html(project::AbstractString)
+    input_path = write_input_markdown(project)
     copy_extra_directories(project)
     html_template_path = pandoc_file("template.html")
     template = "--template=$html_template_path"
@@ -104,6 +126,7 @@ function pandoc_html(project::AbstractString)
     copy_juliamono()
 
     args = [
+        # input_path;
         inputs(project);
         include_files;
         crossref;

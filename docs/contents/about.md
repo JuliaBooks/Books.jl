@@ -75,7 +75,7 @@ For example, lets write
 ```jl
 code = """
     df = DataFrame(a=[1, 2], b=[3, 4])
-    Options(df, caption="A table", label=nothing)
+    Options(df, caption="A table.", label=nothing)
     """
 repeat(sco(code), 4)
 ```
@@ -86,7 +86,7 @@ which shows the code and output (`sco`) 4 times:
 ```jl
 code = """
     df = DataFrame(a=[1, 2], b=[3, 4])
-    Options(df, caption="A table", label=nothing)
+    Options(df, caption="A table.", label=nothing)
     """
 repeat(sco(code), 4)
 ```
