@@ -14,6 +14,7 @@
             """
         write(test_markdown_path, test_markdown)
 
+        mkpath(joinpath(Books.BUILD_DIR, "images"))
         gen("test"; project="test")
         out = Books.pandoc_html("test")
         return out
