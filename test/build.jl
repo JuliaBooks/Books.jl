@@ -35,4 +35,27 @@
     for (actual, exp) in zip(lines, expected)
         @test strip(actual) == strip(exp)
     end
+
+    out = cd(docs_dir) do
+        test_markdown_path = joinpath(docs_dir, "contents", "test.md")
+        test_markdown = raw"""
+            # Test {#sec:test}
+
+            @undefined_reference.
+            """
+        write(test_markdown_path, test_markdown)
+
+        mkpath(joinpath(Books.BUILD_DIR, "images"))
+        gen("test"; project="test")
+        try
+            Books.pandoc_html("test"; fail_on_error=true)
+            error("Expected pandoc_html to fail.")
+        catch
+        end
+        try
+            Books.html("test", fail_on_error=false)
+            error("Expected pandoc_html to fail.")
+        catch
+        end
+    end
 end
