@@ -1,4 +1,4 @@
-# Deploying Books.jl to a Web Service
+# Deploying Books.jl to a web service
 
 ## GitHub Pages
 
