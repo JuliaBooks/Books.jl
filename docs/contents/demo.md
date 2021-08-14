@@ -135,22 +135,24 @@ Therefore, it is also possible to pass code and specify that you want to evaluat
 
 <pre class="language-julia">
 ```jl
-sc("
-struct Point
-    x
-    y
-end
-")
+s = """
+    struct Point
+        x
+        y
+    end
+    """
+sc(s)
 ```
 </pre>
 
 ```jl
-sc("
-struct Point
-    x
-    y
-end
-")
+s = """
+    struct Point
+        x
+        y
+    end
+    """
+sc(s)
 ```
 
 and show code and output (sco).
@@ -295,7 +297,7 @@ If you are really sure, you can export all symbols in your module with something
 ## Plots {#sec:plots}
 
 An AlgebraOfGraphics plot is shown below in @fig:example_plot.
-For Plots.jl and Makie.jl see, respectively section @sec:plotsjl and @sec:makie.
+For Plots.jl and Makie.jl see, respectively section @sec:jlplots and @sec:makie.
 This is actually a bit tricky, because we want to show vector graphics (SVG) on the web, but these are not supported (well) by LaTeX.
 Therefore, portable network graphics (PNG) images are also created and passed to LaTeX.
 
@@ -314,9 +316,6 @@ For multiple images, use `Options.(objects, paths)`:
 
 Resulting in @fig:example_plot_2 and @fig:example_plot_3:
 
-```jl
-M.multiple_example_plots()
-```
 
 For changing the size, use `axis` from AlgebraOfGraphics:
 
@@ -334,15 +333,19 @@ or the caption can be specified in the Markdown file:
 
 <pre class="language-julia">
 ```jl
-Options(M.image_options_plot(); caption="Label specified in Markdown.")
+p = M.image_options_plot()
+Options(p; caption="Label specified in Markdown.")
 ```
 </pre>
 
 ```jl
-Options(M.image_options_plot(); caption="Label specified in Markdown.")
+p = M.image_options_plot()
+Options(p; caption="Label specified in Markdown.")
 ```
 
-### Plots {#sec:plotsjl}
+\
+
+### Plots.jl {#sec:jlplots}
 
 ```jl
 @sco M.plotsjl()
@@ -406,35 +409,33 @@ Another way to change the output is via the keyword arguments `process` and `pos
 
 <pre class="language-julia">
 ```jl
-sco("
-df = DataFrame(A = [1], B = [Date(2018)])
-"; process=string, post=output_block)
+s = "df = DataFrame(A = [1], B = [Date(2018)])"
+sco(s; process=string, post=output_block)
 ```
 </pre>
 
 which shows the following to the reader:
 
 ```jl
-sco("
-df = DataFrame(A = [1], B = [Date(2018)])
-"; process=string, post=output_block)
+s = "df = DataFrame(A = [1], B = [Date(2018)])"
+sco(s; process=string, post=output_block)
 ```
 
 Without `process=string`, the output would automatically be converted to a Markdown table by Books.jl and then wrapped inside a code block, which will cause Pandoc to show the raw output instead of a table.
 
 ```jl
-sco("
-df = DataFrame(A = [1], B = [Date(2018)])
-"; process=without_caption_label, post=output_block)
+s = "df = DataFrame(A = [1], B = [Date(2018)])"
+sco(s; process=without_caption_label, post=output_block)
 ```
 
 Without `post=output_block`, the DataFrame would be converted to a string, but not wrapped inside a code block so that Pandoc will treat is as normal Markdown:
 
 ```jl
-sco("
-df = DataFrame(A = [2], B = [Date(2018)])
-Options(df; caption=nothing, label=nothing) # hide
-"; process=string)
+s = """
+    df = DataFrame(A = [2], B = [Date(2018)])
+    Options(df; caption=nothing, label=nothing) # hide
+    """
+sco(s; process=string)
 ```
 
 This also works for `@sco`.
@@ -466,5 +467,4 @@ Ligatures from JuliaMono are disabled. For example, none of these symbols are co
 ```language-plain
 When code or output is getting too long, a horizontal scrollbar is visible on the website to scroll horizontally.
 ```
-
 

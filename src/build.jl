@@ -90,7 +90,59 @@ end
     cp(from_path, joinpath(BUILD_DIR, filename); force=true)
 end
 
-function pandoc_html(project::AbstractString)
+function codeblock2output(s::AbstractString)
+    expr = s
+    expr = strip(expr)
+    expr = expr[7:end-4]
+    output_path = escape_expr(expr)
+    if isfile(output_path)
+        output = read(output_path, String)
+        return output
+    else
+        msg = """
+            Cannot find file at $output_path for $expr.
+            Did you run `gen()` when having loaded your module?
+            """
+        @warn msg
+        return msg
+    end
+end
+
+"""
+    embed_output(text::String)
+
+In a Markdown string containing `jl` code blocks, embed the output from the output path.
+"""
+function embed_output(text::String)
+    text = replace(text, CODEBLOCK_PATTERN => codeblock2output)
+    return text
+end
+
+"""
+    write_input_markdown(project)::String
+
+Combine all the `contents/` files and embed the outputs into one Markdown file.
+Return the path of the Markdown file.
+"""
+function write_input_markdown(project)::String
+    files = inputs(project)
+    texts = read.(files, String)
+    texts = embed_output.(texts)
+    text = join(texts, '\n')
+    markdown_path = joinpath(Books.GENERATED_DIR, "input.md")
+    write(markdown_path, text)
+    return markdown_path
+end
+
+function verify_cross_references(h)
+    # For example, "<strong>¿sec:about?</strong>"
+    if contains(h, "<strong>¿")
+        error("Output contains undefined cross-references:\n$h")
+    end
+end
+
+function pandoc_html(project::AbstractString; fail_on_error=false)
+    input_path = write_input_markdown(project)
     copy_extra_directories(project)
     html_template_path = pandoc_file("template.html")
     template = "--template=$html_template_path"
@@ -104,8 +156,7 @@ function pandoc_html(project::AbstractString)
     copy_juliamono()
 
     args = [
-        inputs(project);
-        include_files;
+        input_path;
         crossref;
         citeproc;
         "--mathjax";
@@ -118,7 +169,10 @@ function pandoc_html(project::AbstractString)
         # output
     ]::Vector{String}
     _, out = call_pandoc(args)
-    out
+    if fail_on_error
+        verify_cross_references(out)
+    end
+    return out
 end
 
 """
@@ -174,14 +228,15 @@ end
     """
 end
 
-function html(; project="default", extra_head="")
+function html(; project="default", extra_head="", fail_on_error=false)
     copy_extra_directories(project)
     url_prefix = is_ci() ? ci_url_prefix(project)::String : ""
     c = config(project, "contents")
     if config(project, "highlight")::Bool
         extra_head = extra_head * highlight(url_prefix)
     end
-    write_html_pages(url_prefix, pandoc_html(project), extra_head)
+    h = pandoc_html(project; fail_on_error)
+    write_html_pages(url_prefix, h, extra_head)
 end
 
 """
@@ -205,6 +260,7 @@ end
 const JULIAMONO_PATH = juliamono_path()
 
 function pdf(; project="default")
+    input_path = write_input_markdown(project)
     copy_extra_directories(project)
     latex_template_path = pandoc_file("template.tex")
     template = "--template=$latex_template_path"
@@ -221,8 +277,7 @@ function pdf(; project="default")
         pdf_engine = "--pdf-engine=$tectonic_bin"
 
         args = [
-            input_files;
-            include_files;
+            input_path;
             crossref;
             citeproc;
             csl();
@@ -248,6 +303,7 @@ function pdf(; project="default")
 end
 
 function docx(; project="default")
+    input_path = write_input_markdown(project)
     file = config(project, "output_filename")
     output_filename = joinpath(BUILD_DIR, "$file.docx")
     output = "--output=$output_filename"
@@ -257,8 +313,7 @@ function docx(; project="default")
     input_files = ignore_homepage(project, inputs(project))
 
     args = [
-        input_files;
-        include_files;
+        input_path;
         crossref;
         citeproc;
         csl();
@@ -272,11 +327,11 @@ function docx(; project="default")
     nothing
 end
 
-function build_all(; project="default", extra_head="")
+function build_all(; project="default", extra_head="", fail_on_error=false)
     mkpath(BUILD_DIR)
     filename = "favicon.png"
     cp(joinpath("pandoc", filename), joinpath(BUILD_DIR, filename); force=true)
-    html(; project, extra_head)
+    html(; project, extra_head, fail_on_error)
     pdf(; project)
     docx(; project)
 end

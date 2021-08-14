@@ -26,3 +26,10 @@
     "notes",
     "references"
   ]
+
+  # This project is only used when testing Books.jl.
+  [projects.test]
+  contents = [
+    "test"
+  ]
+

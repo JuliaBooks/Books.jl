@@ -35,7 +35,7 @@ export html, pdf, docx, build_all
 include("serve.jl")
 include("output.jl")
 export without_caption_label
-include("outputs/dataframes.jl")
+include(joinpath("outputs", "dataframes.jl"))
 include("showcode.jl")
 include("generate.jl")
 export code, ImageOptions, Options
@@ -49,7 +49,6 @@ function __init__()
     @require AlgebraOfGraphics="cbdf2221-f076-402e-a563-3d30da359d67" include("outputs/aog.jl")
     @require Makie="ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a" include("outputs/makie.jl")
     @require Plots="91a5bcdd-55d7-5caf-9e0b-520d859cae80" include("outputs/plots.jl")
-
 end
 
 end # module

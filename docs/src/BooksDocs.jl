@@ -17,12 +17,16 @@ using Reexport
 
 plot = Plots.plot
 
+M = BooksDocs
+export M
+
 include("includes.jl")
 
 function build()
-    Books.gen(; fail_on_error=true)
+    fail_on_error = true
+    Books.gen(; fail_on_error)
     extra_head = "<!-- Example comment placed in the html header. -->"
-    Books.build_all(; extra_head)
+    Books.build_all(; extra_head, fail_on_error)
 end
 
 end # module

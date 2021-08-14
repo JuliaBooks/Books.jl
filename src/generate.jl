@@ -14,8 +14,14 @@ Wrap `s` in a Markdown code block with the language description "output".
 """
 output_block(s) = "```output\n$s\n```\n"
 
-function extract_codeblock_expr(s)
-end
+"""
+    CODEBLOCK_PATTERN
+
+Pattern to match `jl` code blocks.
+"""
+const CODEBLOCK_PATTERN = r"```jl\s*([^```]*)\n```\n(?!</pre>)"
+
+const INLINE_CODEBLOCK_PATTERN = r" `jl ([^`]*)`"
 
 extract_expr_example() = """
     lorem
@@ -32,7 +38,7 @@ extract_expr_example() = """
 """
     extract_expr(s::AbstractString)::Vector
 
-Returns the filenames mentioned in the `jl` code blocks.
+Return the contents of the `jl` code blocks.
 Here, `s` is the contents of a Markdown file.
 
 ```jldoctest
@@ -46,17 +52,15 @@ julia> Books.extract_expr(s)
 ```
 """
 function extract_expr(s::AbstractString)::Vector
-    codeblock_pattern = r"```jl\s*([\w\W]*?)```"
-    matches = eachmatch(codeblock_pattern, s)
+    matches = eachmatch(CODEBLOCK_PATTERN, s)
     function clean(m)
         m = m[1]::SubString{String}
         m = strip(m)
         m = string(m)::String
+        return m
     end
     from_codeblocks = clean.(matches)
-
-    inline_pattern = r" `jl ([^`]*)`"
-    matches = eachmatch(inline_pattern, s)
+    matches = eachmatch(INLINE_CODEBLOCK_PATTERN, s)
     from_inline = clean.(matches)
     exprs = [from_codeblocks; from_inline]
 
@@ -131,12 +135,12 @@ function method_name(expr::String)
 end
 
 """
-    escape_expr(expr::String)
+    escape_expr(expr::AbstractString)
 
 Escape an expression to the corresponding path.
 The logic in this method should match the logic in the Lua filter.
 """
-function escape_expr(expr::String)
+function escape_expr(expr::AbstractString)
     n = 80
     escaped = n < length(expr) ? expr[1:n] : expr
     escaped = replace(escaped, r"([^a-zA-Z0-9]+)" => "_")
@@ -242,12 +246,6 @@ The methods are assumed to be in the module `M` of the caller.
 Otherwise, specify another module `M`.
 After calling the methods, this method will also call `html()` to update the site when
 `call_html == true`.
-
-!!! note
-
-    If there is anthing that you want to have available when running the code blocks,
-    just load them inside your REPL (module `Main`) and call `gen()`.
-    For example, you can define `M = YourModule` to shorten calls to methods in your module.
 """
 
 function gen(paths::Vector{String};
@@ -256,8 +254,9 @@ function gen(paths::Vector{String};
     mkpath(GENERATED_DIR)
     paths = [contains(dirname(p), "contents") ? p : expand_path(p) for p in paths]
     included_expr = vcat([extract_expr(read(p, String)) for p in paths]...)
-    f(expr) = evaluate_include(expr, M, fail_on_error)
-    foreach(f, included_expr)
+    foreach(included_expr) do expr
+        evaluate_include(expr, M, fail_on_error)
+    end
     if call_html
         println("Updating html")
         html(; project)
