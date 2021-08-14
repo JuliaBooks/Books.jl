@@ -316,6 +316,9 @@ For multiple images, use `Options.(objects, paths)`:
 
 Resulting in @fig:example_plot_2 and @fig:example_plot_3:
 
+```jl
+M.multiple_example_plots()
+```
 
 For changing the size, use `axis` from AlgebraOfGraphics:
 

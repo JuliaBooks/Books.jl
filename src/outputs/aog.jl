@@ -6,8 +6,6 @@ using CairoMakie
 function convert_output(expr, path, fg::AlgebraOfGraphics.FigureGrid; caption=missing, label=missing)
     im_dir = joinpath(BUILD_DIR, "im")
     mkpath(im_dir)
-    @show path
-    @show expr
 
     file = plotting_filename(expr, path, "AlgebraOfGraphics.jl")
 
@@ -25,7 +23,6 @@ function convert_output(expr, path, fg::AlgebraOfGraphics.FigureGrid; caption=mi
     AlgebraOfGraphics.save(png_path, fg; px_per_unit)
 
     im_link = joinpath("im", svg_filename)
-    @show expr, caption, label
     caption, label = caption_label(expr, caption, label)
     pandoc_image(file, png_path; caption, label)
 end
