@@ -297,7 +297,7 @@ If you are really sure, you can export all symbols in your module with something
 ## Plots {#sec:plots}
 
 An AlgebraOfGraphics plot is shown below in @fig:example_plot.
-For Plots.jl and Makie.jl see, respectively section @sec:plotsjl and @sec:makie.
+For Plots.jl and Makie.jl see, respectively section @sec:jlplots and @sec:makie.
 This is actually a bit tricky, because we want to show vector graphics (SVG) on the web, but these are not supported (well) by LaTeX.
 Therefore, portable network graphics (PNG) images are also created and passed to LaTeX.
 
@@ -316,9 +316,6 @@ For multiple images, use `Options.(objects, paths)`:
 
 Resulting in @fig:example_plot_2 and @fig:example_plot_3:
 
-```jl
-M.multiple_example_plots()
-```
 
 For changing the size, use `axis` from AlgebraOfGraphics:
 
@@ -346,7 +343,9 @@ p = M.image_options_plot()
 Options(p; caption="Label specified in Markdown.")
 ```
 
-### Plots {#sec:plotsjl}
+\
+
+### Plots.jl {#sec:jlplots}
 
 ```jl
 @sco M.plotsjl()

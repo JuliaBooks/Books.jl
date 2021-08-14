@@ -164,7 +164,7 @@ function multiple_example_plots()
         draw(data(df) * mapping(:x, :y))
         draw(data(df) * mapping(:x, :z))
     ]
-    Options.(objects, filenames)
+    return Options.(objects, filenames)
 end
 
 function image_options_plot()

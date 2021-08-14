@@ -49,7 +49,15 @@ function convert_output(expr, path, outputs::AbstractVector)
         path = nothing
         outputs = convert_output.(nothing, nothing, outputs)
         outputs = String.(outputs)
-        out = join(outputs, "\n\n")
+        # Adding a backslach on a newline to avoid a bug in Pandoc/Crossref
+        # where section labels are not always added.
+        sep = """\n
+            ```{=comment}
+            This comment is placed between and behind outputs to clearly separate blocks in
+            order to avoid a bug with cross-references in Pandoc/Crossref.
+            ```\n
+            """
+        out = join(outputs, sep) * sep
     end
 end
 
