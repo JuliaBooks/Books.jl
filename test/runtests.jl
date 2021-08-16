@@ -1,6 +1,7 @@
 import Pkg
 
 using Books
+using DataFrames
 using Documenter
 using Test
 

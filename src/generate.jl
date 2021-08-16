@@ -253,9 +253,13 @@ function gen(paths::Vector{String};
 
     mkpath(GENERATED_DIR)
     paths = [contains(dirname(p), "contents") ? p : expand_path(p) for p in paths]
-    included_expr = vcat([extract_expr(read(p, String)) for p in paths]...)
-    foreach(included_expr) do expr
-        evaluate_include(expr, M, fail_on_error)
+    # Adding Threads.@threads here sounds nice but didn't really work in practise.
+    # It wasn't much faster, but did sometimes introduce errors.
+    for p in paths
+        exprs = extract_expr(read(p, String))
+        foreach(exprs) do expr
+            evaluate_include(expr, M, fail_on_error)
+        end
     end
     if call_html
         println("Updating html")
