@@ -19,18 +19,26 @@ end
 Fix a single html image string.
 
 ```jldoctest
-julia> h = "\\"$(Books.BUILD_DIR)/im/image.png";
+julia> h = "img src=\\"_build/im/imaginary.png\\" ";
 
 julia> url_prefix = "Foo.jl";
 
+julia> touch(joinpath(Books.BUILD_DIR, "im", "imaginary.svg"));
+
 julia> Books.fix_png_image(h, url_prefix)
-"\\"Foo.jl/im/image.png"
+"img src=\\"Foo.jl/im/imaginary.svg\\" "
 ```
 """
 function fix_png_image(h::AbstractString, url_prefix)
     path_prefix = "\"$(BUILD_DIR)/"
+    png_filename = h[20:end-2]
     h = replace(h, path_prefix => "\"$(url_prefix)/")
-    h = replace(h, ".png\"" => ".svg\"")
+    svg_filename = png_filename[1:end-4] * ".svg"
+    svg_path = joinpath(Books.BUILD_DIR, "im", svg_filename)
+    if isfile(svg_path)
+        h = replace(h, ".png\"" => ".svg\"")
+    end
+    return h
 end
 
 """

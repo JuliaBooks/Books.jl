@@ -7,11 +7,16 @@
         <img src="$(B.BUILD_DIR)/im/bar.png" alt="bar" />
         """
     url_prefix = ""
-    @test B.fix_image_urls(s, url_prefix) == """
-        <img src="/im/example.svg" alt="example" />
-        and
-        <img src="/im/bar.svg" alt="bar" />
-        """
+    cd(joinpath(Books.PROJECT_ROOT, "docs")) do
+        dir = joinpath(Books.BUILD_DIR, "im")
+        mkpath(dir)
+        touch(joinpath(dir, "example.svg"))
+        @test B.fix_image_urls(s, url_prefix) == """
+            <img src="/im/example.svg" alt="example" />
+            and
+            <img src="/im/bar.png" alt="bar" />
+            """
+    end
 
     h = """
     <body>
