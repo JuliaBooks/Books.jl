@@ -1,6 +1,15 @@
 using DataFrames
 using Latexify
 
+function df2markdown(df::DataFrame)::String
+    escaped = "ESCAPEDUNDERSCORE"
+    sanitize(name) = replace(name, '_' => escaped)
+    df = rename(sanitize, df)
+    table = Latexify.latexify(df; env=:mdtable, latex=false)
+    table = string(table)::String
+    table = replace(table, escaped => '_')
+end
+
 """
     convert_output(expr, path, out::DataFrame; caption=nothing, label=nothing)
 
@@ -19,11 +28,12 @@ julia> print(Books.convert_output("my_table()", nothing, df))
 ```
 """
 function convert_output(expr, path, out::DataFrame; caption=missing, label=missing)::String
-    table = Latexify.latexify(out; env=:mdtable, latex=false)
+    table = df2markdown(out)
     caption, label = caption_label(expr, caption, label)
 
     if isnothing(caption) && isnothing(label)
-        return string(table)
+        text = string(table)
+        return text
     end
 
     label = isnothing(label) ? "" : "{#tbl:$label}"
