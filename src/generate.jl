@@ -221,6 +221,10 @@ function evaluate_include(expr::String, M, fail_on_error::Bool)
         try
             evaluate_and_write(M, expr)
         catch e
+            if e isa InterruptException
+                @info "Process was stopped by a terminal interrupt (CTRL+C)"
+                return e
+            end
             report_error(expr, e)
         end
     end
@@ -253,12 +257,13 @@ function gen(paths::Vector{String};
 
     mkpath(GENERATED_DIR)
     paths = [contains(dirname(p), "contents") ? p : expand_path(p) for p in paths]
-    # Adding Threads.@threads here sounds nice but didn't really work in practise.
+    included_expr = vcat([extract_expr(read(p, String)) for p in paths]...)
+    # Adding Threads.@threads for each separate path sounds nice but didn't really work in practise.
     # It wasn't much faster, but did sometimes introduce errors.
-    for p in paths
-        exprs = extract_expr(read(p, String))
-        foreach(exprs) do expr
-            evaluate_include(expr, M, fail_on_error)
+    for expr in included_expr
+        out = evaluate_include(expr, M, fail_on_error)
+        if out isa InterruptException
+            break
         end
     end
     if call_html
