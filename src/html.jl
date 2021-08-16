@@ -23,10 +23,8 @@ julia> h = "img src=\\"_build/im/imaginary.png\\" ";
 
 julia> url_prefix = "Foo.jl";
 
-julia> touch(joinpath(Books.BUILD_DIR, "im", "imaginary.svg"));
-
-julia> Books.fix_png_image(h, url_prefix)
-"img src=\\"Foo.jl/im/imaginary.svg\\" "
+julia> Books.fix_png_image(h, url_prefix) # Only replaces if file exists.
+"img src=\\"Foo.jl/im/imaginary.png\\" "
 ```
 """
 function fix_png_image(h::AbstractString, url_prefix)
