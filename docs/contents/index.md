@@ -4,10 +4,6 @@
 This file is only included on the website.
 ```
 
-foo_bar_baz_bar | fa
---- | ---
-1 | 2
-
 ```jl
 M.homepage_intro()
 ```
