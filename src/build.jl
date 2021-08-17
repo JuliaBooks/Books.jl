@@ -94,6 +94,7 @@ function codeblock2output(s::AbstractString)
     expr = s
     expr = strip(expr)
     expr = expr[7:end-4]
+    expr = strip(expr)
     output_path = escape_expr(expr)
     if isfile(output_path)
         output = read(output_path, String)

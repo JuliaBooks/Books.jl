@@ -1,3 +1,13 @@
+"""
+    UserExpr
+
+Struct containing the user provided `expr::String` and it's `indentation::Int` in number of
+spaces.
+"""
+struct UserExpr
+    expr::String
+    indentation::Int
+end
 
 """
     code_block(s)
@@ -19,7 +29,7 @@ output_block(s) = "```output\n$s\n```\n"
 
 Pattern to match `jl` code blocks.
 """
-const CODEBLOCK_PATTERN = r"```jl\s*([^```]*)\n```\n(?!</pre>)"
+CODEBLOCK_PATTERN = r"```jl\s*([^```]*)\n([ ]*)```\n(?!</pre>)"
 
 const INLINE_CODEBLOCK_PATTERN = r" `jl ([^`]*)`"
 
@@ -28,10 +38,10 @@ extract_expr_example() = """
     ```jl
     foo(3)
     ```
-    ```jl
-    foo(3)
-    bar
-    ```
+       ```jl
+       foo(3)
+       bar
+       ```
     ipsum `jl bar()` dolar
     """
 
@@ -45,19 +55,25 @@ Here, `s` is the contents of a Markdown file.
 julia> s = Books.extract_expr_example();
 
 julia> Books.extract_expr(s)
-3-element Vector{String}:
- "foo(3)"
- "foo(3)\\nbar"
- "bar()"
+3-element Vector{Books.UserExpr}:
+ Books.UserExpr("foo(3)", 0)
+ Books.UserExpr("foo(3)\\n   bar", 3)
+ Books.UserExpr("bar()", 0)
 ```
 """
 function extract_expr(s::AbstractString)::Vector
     matches = eachmatch(CODEBLOCK_PATTERN, s)
     function clean(m)
-        m = m[1]::SubString{String}
-        m = strip(m)
-        m = string(m)::String
-        return m
+        expr = m[1]::SubString{String}
+        expr = strip(expr)
+        expr = string(expr)::String
+        indentation = if haskey(m, 2)
+            spaces = m[2]::SubString{String}
+            length(spaces)
+        else
+            0
+        end
+        return UserExpr(expr, indentation)
     end
     from_codeblocks = clean.(matches)
     matches = eachmatch(INLINE_CODEBLOCK_PATTERN, s)
@@ -147,18 +163,25 @@ function escape_expr(expr::AbstractString)
     joinpath(GENERATED_DIR, "$escaped.md")
 end
 
-function evaluate_and_write(M::Module, expr::String)
+function evaluate_and_write(M::Module, userexpr::UserExpr)
+    expr = userexpr.expr
     path = escape_expr(expr)
     expr_info = replace(expr, '\n' => "\\n")
     println("Writing output of `$expr_info`")
 
     ex = Meta.parse("begin $expr end")
     out = Core.eval(M, ex)
-    out = convert_output(expr, path, out)
-    out = string(out)::String
-    write(path, out)
-
-    nothing
+    converted = convert_output(expr, path, out)
+    markdown = string(converted)::String
+    indent = userexpr.indentation
+    if 0 < indent
+        lines = split(markdown, '\n')
+        spaces = join(repeat([" "], indent))
+        lines = spaces .* lines
+        markdown = join(lines, '\n')
+    end
+    write(path, markdown)
+    return nothing
 end
 
 function evaluate_and_write(f::Function)
@@ -206,11 +229,11 @@ function report_error(expr, e)
 end
 
 """
-    evaluate_include(expr::String, M, fail_on_error::Bool)
+    evaluate_include(expr::UserExpr, M, fail_on_error::Bool)
 
 For a `path` included in a Markdown file, run the corresponding function and write the output to `path`.
 """
-function evaluate_include(expr::String, M, fail_on_error::Bool)
+function evaluate_include(expr::UserExpr, M, fail_on_error::Bool)
     if isnothing(M)
         # This code isn't really working.
         M = caller_module()
@@ -257,7 +280,7 @@ function gen(paths::Vector{String};
 
     mkpath(GENERATED_DIR)
     paths = [contains(dirname(p), "contents") ? p : expand_path(p) for p in paths]
-    included_expr = vcat([extract_expr(read(p, String)) for p in paths]...)
+    included_expr = Iterators.flatten([extract_expr(read(p, String)) for p in paths])
     # Adding Threads.@threads for each separate path sounds nice but didn't really work in practise.
     # It wasn't much faster, but did sometimes introduce errors.
     for expr in included_expr

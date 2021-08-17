@@ -471,3 +471,15 @@ Ligatures from JuliaMono are disabled. For example, none of these symbols are co
 When code or output is getting too long, a horizontal scrollbar is visible on the website to scroll horizontally.
 ```
 
+### Code blocks in lists
+
+To embed code blocks inside lists, indent by 3 spaces and place an empty line before and after the code block.
+For example, this will show as:
+
+1. This is a list item with some code and output:
+
+   ```jl
+   scob("x = 2 + 1")
+   ```
+
+2. And the list continues.
