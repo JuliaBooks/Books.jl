@@ -60,6 +60,25 @@ using DataFrames
         """
     @test !contains(match(Books.CODEBLOCK_PATTERN, invalid_block).match, "pre")
 
+    valid_block = """
+        1. This is a code block in a list with 3 spaces indentation because Pandoc would see it as a nested level otherwise.
+           ```jl
+           s = "x = 1"
+           sco(s)
+           ```
+        """
+    m = match(Books.CODEBLOCK_PATTERN, valid_block)
+    @test m[1] == "s = \"x = 1\"\n   sco(s)"
+    @test m[2] == "   "
+
+    out = cd(joinpath(Books.PROJECT_ROOT, "docs"))
+        expr = first(Books.extract_expr(valid_block))
+        Books.evaluate_and_write(Main, expr)
+        # TODO: Also test proper indentation.
+        path = Books.escape_expr(expr)
+        out = read(path, String)
+    end
+    @test out == "   ```language-julia\n   x = 1\n   ```\n\n   1\n"
 end
 
 module Foo

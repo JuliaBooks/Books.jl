@@ -1,3 +1,13 @@
+"""
+    UserExpr
+
+Struct containing the user provided `expr::String` and it's `indentation::Int` in number of
+spaces.
+"""
+struct UserExpr
+    expr::String
+    indentation::Int
+end
 
 """
     code_block(s)
@@ -19,7 +29,7 @@ output_block(s) = "```output\n$s\n```\n"
 
 Pattern to match `jl` code blocks.
 """
-const CODEBLOCK_PATTERN = r"```jl\s*([^```]*)\n```\n(?!</pre>)"
+CODEBLOCK_PATTERN = r"```jl\s*([^```]*)\n([ ]*)```\n(?!</pre>)"
 
 const INLINE_CODEBLOCK_PATTERN = r" `jl ([^`]*)`"
 
@@ -28,10 +38,10 @@ extract_expr_example() = """
     ```jl
     foo(3)
     ```
-    ```jl
-    foo(3)
-    bar
-    ```
+       ```jl
+       foo(3)
+       bar
+       ```
     ipsum `jl bar()` dolar
     """
 
@@ -45,19 +55,25 @@ Here, `s` is the contents of a Markdown file.
 julia> s = Books.extract_expr_example();
 
 julia> Books.extract_expr(s)
-3-element Vector{String}:
- "foo(3)"
- "foo(3)\\nbar"
- "bar()"
+3-element Vector{Books.UserExpr}:
+ Books.UserExpr("foo(3)", 0)
+ Books.UserExpr("foo(3)\\n   bar", 3)
+ Books.UserExpr("bar()", 0)
 ```
 """
 function extract_expr(s::AbstractString)::Vector
     matches = eachmatch(CODEBLOCK_PATTERN, s)
     function clean(m)
-        m = m[1]::SubString{String}
-        m = strip(m)
-        m = string(m)::String
-        return m
+        expr = m[1]::SubString{String}
+        expr = strip(expr)
+        expr = string(expr)::String
+        indentation = if haskey(m, 2)
+            spaces = m[2]::SubString{String}
+            length(spaces)
+        else
+            0
+        end
+        return UserExpr(expr, indentation)
     end
     from_codeblocks = clean.(matches)
     matches = eachmatch(INLINE_CODEBLOCK_PATTERN, s)

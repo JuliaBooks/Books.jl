@@ -58,26 +58,4 @@
         catch
         end
     end
-
-    out = cd(docs_dir) do
-        test_markdown_path = joinpath(docs_dir, "contents", "test.md")
-        test_markdown = raw"""
-            # Test {#sec:test}
-
-            1. This is a code block in a list with 3 spaces indentation because Pandoc doesn't accept 4.
-               ```jl
-               23432 + 1
-               ```
-            """
-
-        write(test_markdown_path, test_markdown)
-
-        mkpath(joinpath(Books.BUILD_DIR, "images"))
-        gen("test"; project="test")
-        out = Books.pandoc_html("test")
-        return out
-    end
-    # TODO: Also test proper indentation.
-    # Test can probably be more close to the actual logic than via build.
-    @test contains(out, "23433")
 end
