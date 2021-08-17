@@ -71,14 +71,14 @@ using DataFrames
     @test m[1] == "s = \"x = 1\"\n   sco(s)"
     @test m[2] == "   "
 
-    out = cd(joinpath(Books.PROJECT_ROOT, "docs"))
-        expr = first(Books.extract_expr(valid_block))
-        Books.evaluate_and_write(Main, expr)
-        # TODO: Also test proper indentation.
-        path = Books.escape_expr(expr)
+    out = cd(joinpath(Books.PROJECT_ROOT, "docs")) do
+        userexpr = first(Books.extract_expr(valid_block))
+        Books.evaluate_and_write(Main, userexpr)
+        path = Books.escape_expr(userexpr.expr)
         out = read(path, String)
+        return out
     end
-    @test out == "   ```language-julia\n   x = 1\n   ```\n\n   1\n"
+    @test out == "   ```language-julia\n   x = 1\n   ```\n   \n   1\n   "
 end
 
 module Foo

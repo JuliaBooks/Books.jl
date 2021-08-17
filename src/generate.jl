@@ -163,18 +163,25 @@ function escape_expr(expr::AbstractString)
     joinpath(GENERATED_DIR, "$escaped.md")
 end
 
-function evaluate_and_write(M::Module, expr::String)
+function evaluate_and_write(M::Module, userexpr::UserExpr)
+    expr = userexpr.expr
     path = escape_expr(expr)
     expr_info = replace(expr, '\n' => "\\n")
     println("Writing output of `$expr_info`")
 
     ex = Meta.parse("begin $expr end")
     out = Core.eval(M, ex)
-    out = convert_output(expr, path, out)
-    out = string(out)::String
-    write(path, out)
-
-    nothing
+    converted = convert_output(expr, path, out)
+    markdown = string(converted)::String
+    indent = userexpr.indentation
+    if 0 < indent
+        lines = split(markdown, '\n')
+        spaces = join(repeat([" "], indent))
+        lines = spaces .* lines
+        markdown = join(lines, '\n')
+    end
+    write(path, markdown)
+    return nothing
 end
 
 function evaluate_and_write(f::Function)
@@ -222,11 +229,11 @@ function report_error(expr, e)
 end
 
 """
-    evaluate_include(expr::String, M, fail_on_error::Bool)
+    evaluate_include(expr::UserExpr, M, fail_on_error::Bool)
 
 For a `path` included in a Markdown file, run the corresponding function and write the output to `path`.
 """
-function evaluate_include(expr::String, M, fail_on_error::Bool)
+function evaluate_include(expr::UserExpr, M, fail_on_error::Bool)
     if isnothing(M)
         # This code isn't really working.
         M = caller_module()
@@ -273,7 +280,7 @@ function gen(paths::Vector{String};
 
     mkpath(GENERATED_DIR)
     paths = [contains(dirname(p), "contents") ? p : expand_path(p) for p in paths]
-    included_expr = vcat([extract_expr(read(p, String)) for p in paths]...)
+    included_expr = Iterators.flatten([extract_expr(read(p, String)) for p in paths])
     # Adding Threads.@threads for each separate path sounds nice but didn't really work in practise.
     # It wasn't much faster, but did sometimes introduce errors.
     for expr in included_expr
