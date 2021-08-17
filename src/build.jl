@@ -328,6 +328,19 @@ function docx(; project="default")
     nothing
 end
 
+"""
+    cleanup()
+
+Remove generated files.
+"""
+function cleanup()
+    dirs = [Books.GENERATED_DIR, Books.BUILD_DIR]
+    for dir in dirs
+        rm(dir; force=true, recursive=true)
+        mkpath(dir)
+    end
+end
+
 function build_all(; project="default", extra_head="", fail_on_error=false)
     mkpath(BUILD_DIR)
     filename = "favicon.png"
