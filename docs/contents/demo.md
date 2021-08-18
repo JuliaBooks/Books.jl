@@ -482,4 +482,11 @@ For example, this will show as:
    scob("x = 2 + 1")
    ```
 
-2. And the list continues.
+2. And the list continues
+    * with an example on the third level:
+
+       ```jl
+       scob("x = 3 + 1")
+       ```
+
+    * another third level item

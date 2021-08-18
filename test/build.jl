@@ -58,4 +58,29 @@
         catch
         end
     end
+
+    out = cd(docs_dir) do
+        test_markdown_path = joinpath(docs_dir, "contents", "test.md")
+        third_level_indentation = """
+            1. This is the second level
+                * This is the third level
+
+                   ```jl
+                   s = "x = 1 + 2"
+                   sco(s)
+                   ```
+
+                * Another item
+            """
+        write(test_markdown_path, third_level_indentation)
+
+        mkpath(joinpath(Books.BUILD_DIR, "images"))
+        gen("test"; project="test")
+        out = Books.embed_output(third_level_indentation)
+
+        lines = split(out, '\n')
+        # Due to, probably, the Regex, it can happen that the first line gets indented too much.
+        @test lines[4] == "       ```language-julia"
+        @test lines[5] == "       x = 1 + 2"
+    end
 end

@@ -98,6 +98,9 @@ function codeblock2output(s::AbstractString)
     output_path = escape_expr(expr)
     if isfile(output_path)
         output = read(output_path, String)
+        # The indentation of the first line is already handled somewhere else
+        # (probably by the regex).
+        output = lstrip(output)
         return output
     else
         msg = """

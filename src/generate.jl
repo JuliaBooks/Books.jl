@@ -29,7 +29,7 @@ output_block(s) = "```output\n$s\n```\n"
 
 Pattern to match `jl` code blocks.
 """
-CODEBLOCK_PATTERN = r"```jl\s*([^```]*)\n([ ]*)```\n(?!</pre>)"
+const CODEBLOCK_PATTERN = r"```jl\s*([^```]*)\n([ ]*)```\n(?!</pre>)"
 
 const INLINE_CODEBLOCK_PATTERN = r" `jl ([^`]*)`"
 
@@ -286,13 +286,14 @@ function gen(paths::Vector{String};
     for expr in included_expr
         out = evaluate_include(expr, M, fail_on_error)
         if out isa InterruptException
-            break
+            return nothing
         end
     end
     if call_html
         println("Updating html")
         html(; project)
     end
+    return nothing
 end
 
 """
