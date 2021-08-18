@@ -29,7 +29,7 @@ Currently, this package is used to write the [Julia Data Science book](https://g
 
 ## Usage
 
-To install this package (Julia 1.6 on MacOS/Linux), use
+To install this package (Julia 1.6/1.7 on MacOS/Linux), use
 ```
 pkg> add Books
 ```
