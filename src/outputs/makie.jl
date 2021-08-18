@@ -32,6 +32,8 @@ function convert_output(
         # SVG doesn't work with GLMakie.
         Makie.FileIO.save(svg_path, p)
     catch
+        # Even when the SVG saving fails, Makie creates an image of 0 bytes.
+        rm(svg_path; force=true)
         im_link = joinpath("im", png_filename)
     end
 
