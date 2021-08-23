@@ -1,4 +1,4 @@
-@info "Loading Plots.jl support into Books via Requires"
+@debug "Loading Plots.jl support into Books.jl via Requires.jl"
 
 import Plots
 

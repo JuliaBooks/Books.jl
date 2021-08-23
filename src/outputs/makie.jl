@@ -1,4 +1,4 @@
-@info "Loading Makie.jl support into Books via Requires"
+@debug "Loading Makie.jl support into Books.jl via Requires.jl"
 
 using CairoMakie
 import Makie
