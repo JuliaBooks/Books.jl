@@ -207,7 +207,8 @@ function clean_stacktrace(stacktrace::String)
     stacktrace = join(lines, '\n')
 end
 
-function report_error(expr, e)
+function report_error(userexpr::UserExpr, e)
+    expr = userexpr.expr
     path = escape_expr(expr)
     # Source: Franklin.jl/src/eval/run.jl.
     if VERSION >= v"1.7.0-"
@@ -233,22 +234,22 @@ end
 
 For a `path` included in a Markdown file, run the corresponding function and write the output to `path`.
 """
-function evaluate_include(expr::UserExpr, M, fail_on_error::Bool)
+function evaluate_include(userexpr::UserExpr, M, fail_on_error::Bool)
     if isnothing(M)
         # This code isn't really working.
         M = caller_module()
     end
     if fail_on_error
-        evaluate_and_write(M, expr)
+        evaluate_and_write(M, userexpr)
     else
         try
-            evaluate_and_write(M, expr)
+            evaluate_and_write(M, userexpr)
         catch e
             if e isa InterruptException
                 @info "Process was stopped by a terminal interrupt (CTRL+C)"
                 return e
             end
-            report_error(expr, e)
+            report_error(userexpr, e)
         end
     end
 end

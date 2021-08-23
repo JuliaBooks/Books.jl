@@ -101,14 +101,13 @@ function codeblock2output(s::AbstractString)
         # The indentation of the first line is already handled somewhere else
         # (probably by the regex).
         output = lstrip(output)
-        return output
+        return output * '\n'
     else
         msg = """
             Cannot find file at $output_path for $expr.
             Did you run `gen()` when having loaded your module?
             """
-        @warn msg
-        return msg
+        return code_block(msg)
     end
 end
 
