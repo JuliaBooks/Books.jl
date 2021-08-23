@@ -347,7 +347,7 @@ function build_all(; project="default", extra_head="", fail_on_error=false)
     mkpath(BUILD_DIR)
     filename = "favicon.png"
     from_path = joinpath("pandoc", filename)
-    if is_file(from_path)
+    if isfile(from_path)
         cp(from_path, joinpath(BUILD_DIR, filename); force=true)
     end
     html(; project, extra_head, fail_on_error)
