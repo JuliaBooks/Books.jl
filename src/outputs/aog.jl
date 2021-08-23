@@ -1,4 +1,4 @@
-@debug "Loading AlgebraOfGraphics.jl support into Books via Requires"
+@info "Loading AlgebraOfGraphics.jl support into Books via Requires"
 
 using AlgebraOfGraphics
 using CairoMakie
