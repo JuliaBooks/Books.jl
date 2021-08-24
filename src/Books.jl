@@ -4,7 +4,7 @@ const PROJECT_ROOT = string(pkgdir(Books))::String
 
 let
     path = joinpath(PROJECT_ROOT, "README.md")
-    text = read(path, String)::String
+    text = read(path, String)
     @doc text Books
 end
 
