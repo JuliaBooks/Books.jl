@@ -122,13 +122,16 @@ function embed_output(text::String)
 end
 
 """
-    write_input_markdown(project)::String
+    write_input_markdown(project; skip_index=false)::String
 
 Combine all the `contents/` files and embed the outputs into one Markdown file.
 Return the path of the Markdown file.
 """
-function write_input_markdown(project)::String
+function write_input_markdown(project; skip_index=false)::String
     files = inputs(project)
+    if skip_index
+        files = files[2:end]
+    end
     texts = read.(files, String)
     texts = embed_output.(texts)
     text = join(texts, '\n')
@@ -263,7 +266,7 @@ end
 const JULIAMONO_PATH = juliamono_path()
 
 function pdf(; project="default")
-    input_path = write_input_markdown(project)
+    input_path = write_input_markdown(project; skip_index=true)
     copy_extra_directories(project)
     latex_template_path = pandoc_file("template.tex")
     template = "--template=$latex_template_path"
@@ -306,7 +309,7 @@ function pdf(; project="default")
 end
 
 function docx(; project="default")
-    input_path = write_input_markdown(project)
+    input_path = write_input_markdown(project; skip_index=true)
     file = config(project, "output_filename")
     output_filename = joinpath(BUILD_DIR, "$file.docx")
     output = "--output=$output_filename"
