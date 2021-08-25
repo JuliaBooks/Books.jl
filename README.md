@@ -38,6 +38,6 @@ See, the [documentation](https://rikhuijzer.github.io/Books.jl) for more informa
 
 ### Windows
 
-Currently, Windows is not supported.
-Some regexes expects paths to contain a forward slash and things like that.
-For now, I don't plan to invest time in supporting Windows, but PRs for Windows are welcome.
+Currently, this package (probably) does not work on Windows.
+The fixes should be fairly easy.
+I simply have to look into it a bit more.
