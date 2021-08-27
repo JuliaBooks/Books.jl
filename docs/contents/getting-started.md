@@ -98,10 +98,9 @@ Note that the homepage is only added to the html output and not to pdf or other 
 
 By default, Books.jl assumes that you will want a separate landing page for your book when you host it.
 This page is not added to the generated ouputs, like PDF or Docx, so it's a nice place to put links to the generated outputs.
-If you want to create a landing page for your book when you host it, you will need to create a `index.md` file in the `contents` directory.
-Then, using an `h1` header from Markdown, give the file a title.
-Immediately after the title, you will need to write `{-}`.
-As a result, it will not be included in the chapter count of the book.
+You will need to create a `index.md` file in the `contents` directory.
+Then, using an top-level header from Markdown (e.g. "# Title"), give the file a title.
+Immediately after the title, you need to write `{-}` to avoid this chapter showing up in your HTML menu.
 
 Here is an example of how an example `index.md` file looks like:
 
