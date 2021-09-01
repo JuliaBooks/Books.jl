@@ -186,19 +186,18 @@ function add_previous_and_next_buttons(bodies::Vector{String}, menu_items::Vecto
 end
 
 """
-    add_menu([splitted])
+    add_menu(head, bodies, foot)
 
 Menu including numbered sections.
 """
-function add_menu(splitted)
-    head, bodies, foot = splitted
+function add_menu(head, bodies, foot)
     data = pandoc_metadata()::Dict{Any, Any}
     title = data["title"]::String
     subtitle = "subtitle" in keys(data) ? data["subtitle"]::String : ""
 
     ids_texts = html_page_name.(bodies)
     names = getproperty.(ids_texts, :id)
-    menu_items::Vector{String} = []
+    menu_items = Vector{String}[]
     skip_homepage(z) = Iterators.peel(z)[2]
     for (name, body) in skip_homepage(zip(names, bodies))
         V = section_infos(body)
@@ -280,8 +279,8 @@ function add_extra_head(head, extra_head::AbstractString)
 end
 
 function html_pages(h, extra_head="")
-    h = split_html(h)
-    head, menu, bodies, foot = add_menu(h)
+    head, bodies, foot = split_html(h)
+    head, menu, bodies, foot = add_menu(head, bodies, foot)
     head = add_extra_head(head, extra_head)
     ids_texts = html_page_name.(bodies)
     id_names = getproperty.(ids_texts, :id)

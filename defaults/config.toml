@@ -15,6 +15,9 @@
   # Output pdf or docx filename.
   output_filename = "analysis"
 
+  # Full URL, required for the sitemap.
+  online_url = "https://example.com"
+
   # Prefix for GitHub or GitLab Pages.
   online_url_prefix = ""
 

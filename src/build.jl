@@ -234,7 +234,7 @@ end
     """
 end
 
-function html(; project="default", extra_head="", fail_on_error=false)
+function html(; project="default", extra_head="", fail_on_error=false, build_sitemap=false)
     copy_extra_directories(project)
     url_prefix = is_ci() ? ci_url_prefix(project)::String : ""
     c = config(project, "contents")
@@ -242,6 +242,9 @@ function html(; project="default", extra_head="", fail_on_error=false)
         extra_head = extra_head * highlight(url_prefix)
     end
     h = pandoc_html(project; fail_on_error)
+    if build_sitemap
+        sitemap(h)
+    end
     write_html_pages(url_prefix, h, extra_head)
 end
 
@@ -353,7 +356,8 @@ function build_all(; project="default", extra_head="", fail_on_error=false)
     if isfile(from_path)
         cp(from_path, joinpath(BUILD_DIR, filename); force=true)
     end
-    html(; project, extra_head, fail_on_error)
+    build_sitemap = true
+    html(; project, extra_head, fail_on_error, build_sitemap)
     pdf(; project)
     docx(; project)
 end

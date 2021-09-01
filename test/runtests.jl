@@ -26,5 +26,6 @@ end
     include("build.jl")
     include("html.jl")
     include("showcode.jl")
+    include("sitemap.jl")
     include("generate.jl")
 end

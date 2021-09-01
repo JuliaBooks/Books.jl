@@ -9,6 +9,9 @@
   ]
   output_filename = "books"
 
+  # Full URL, required for the sitemap.
+  online_url = "https://rikhuijzer.github.io/Books.jl"
+
   # Prefix for GitHub Pages.
   online_url_prefix = "/Books.jl"
 
