@@ -350,7 +350,7 @@ function write_html_pages(url_prefix, h::AbstractString, extra_head="")
     names, pages = fix_links(names, pages, url_prefix)
     for (i, (name, page)) in enumerate(zip(names, pages))
         name = i == 1 ? "index" : name
-        path = joinpath(BUILD_DIR, "$name$HTML_SUFFIX")
+        path = joinpath(BUILD_DIR, "$(name).html")
         write(path, page)
     end
 end
