@@ -18,6 +18,7 @@ import TOML
 import YAML
 import pandoc_crossref_jll
 
+using Dates: today
 using Memoize
 using Requires
 using pandoc_jll
@@ -30,6 +31,7 @@ mkpath(BUILD_DIR)
 include("html.jl")
 include("defaults.jl")
 include("ci.jl")
+include("sitemap.jl")
 include("build.jl")
 export html, pdf, docx, build_all
 include("serve.jl")

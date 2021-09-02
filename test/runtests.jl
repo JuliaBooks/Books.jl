@@ -2,6 +2,7 @@ import Pkg
 
 using Books
 using DataFrames
+using Dates: today
 using Documenter
 using Test
 
@@ -26,5 +27,6 @@ end
     include("build.jl")
     include("html.jl")
     include("showcode.jl")
+    include("sitemap.jl")
     include("generate.jl")
 end
