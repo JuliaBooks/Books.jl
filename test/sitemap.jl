@@ -12,11 +12,12 @@ function lstrip_lines(text)
 end
 
 @testset "sitemap" begin
+    html_suffix = Books.HTML_SUFFIX
     online_url = "https://example.com"
     online_url_prefix = "Foo.jl/"
     link = "index"
     actual = Books.sitemap_loc(online_url, online_url_prefix, link)
-    @test actual == "https://example.com/Foo.jl/index.html"
+    @test actual == "https://example.com/Foo.jl/index$(html_suffix)"
 
     project = "default"
     cd(joinpath(Books.PROJECT_ROOT, "docs")) do
@@ -27,7 +28,7 @@ end
         text = lstrip_lines(text)
         expected = """
             <url>
-            <loc>https://rikhuijzer.github.io/Books.jl/plots.html</loc>
+            <loc>https://rikhuijzer.github.io/Books.jl/plots$html_suffix</loc>
             <lastmod>$(today())</lastmod>
             <changefreq>monthly</changefreq>
             </url>

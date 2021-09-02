@@ -77,7 +77,7 @@
         expected = """
             <!DOCTYPE html>
             <link rel="stylesheet" href="/Books.jl/files/style.css"/>
-            <a href="/Books.jl/test.html#sec:foo">Foo</a>
+            <a href="/Books.jl/test$(Books.HTML_SUFFIX)#sec:foo">Foo</a>
             <h2 data-number="3.5" id="sec:foo"><span class="header-section-number">3.5</span> Foo</h2>
             <p> <a href="https://www.example.com">Jump</a></p>
             """
@@ -88,7 +88,7 @@
     expected = """
         <!DOCTYPE html>
         <link rel="stylesheet" href="/files/style.css"/>
-        <a href="/test.html#sec:foo">Foo</a>
+        <a href="/test$(Books.HTML_SUFFIX)#sec:foo">Foo</a>
         <h2 data-number="3.5" id="sec:foo"><span class="header-section-number">3.5</span> Foo</h2>
         <p> <a href="https://www.example.com">Jump</a></p>
         """
