@@ -243,7 +243,7 @@ function html(; project="default", extra_head="", fail_on_error=false, build_sit
     end
     h = pandoc_html(project; fail_on_error)
     if build_sitemap
-        sitemap(h)
+        sitemap(project, h)
     end
     write_html_pages(url_prefix, h, extra_head)
 end

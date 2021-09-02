@@ -196,16 +196,16 @@ function add_menu(head, bodies, foot)
     subtitle = "subtitle" in keys(data) ? data["subtitle"]::String : ""
 
     ids_texts = html_page_name.(bodies)
-    names = getproperty.(ids_texts, :id)
+    ids = ids_texts2links(ids_texts)
     menu_items = Vector{String}[]
     skip_homepage(z) = Iterators.peel(z)[2]
-    for (name, body) in skip_homepage(zip(names, bodies))
+    for (id, body) in skip_homepage(zip(ids, bodies))
         V = section_infos(body)
         for info in V
             num = info.num
             id = info.id
             text = info.text
-            link = "/$name.html"
+            link = "/$id.html"
             link_text = "<b>$num</b> $text"
             level = section_level(num)
             if level < 3

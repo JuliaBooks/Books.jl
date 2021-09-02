@@ -12,6 +12,12 @@ function lstrip_lines(text)
 end
 
 @testset "sitemap" begin
+    online_url = "https://example.com"
+    online_url_prefix = "Foo.jl/"
+    link = "index.html"
+    actual = Books.sitemap_loc(online_url, online_url_prefix, link)
+    @test actual == "https://example.com/Foo.jl/index.html"
+
     project = "default"
     cd(joinpath(Books.PROJECT_ROOT, "docs")) do
         h = Books.pandoc_html(project)
