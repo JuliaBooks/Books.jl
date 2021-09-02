@@ -236,7 +236,7 @@ end
 
 function html(; project="default", extra_head="", fail_on_error=false, build_sitemap=false)
     copy_extra_directories(project)
-    url_prefix = is_ci() ? ci_url_prefix(project)::String : ""
+    url_prefix = IS_CI ? ci_url_prefix(project)::String : ""
     c = config(project, "contents")
     if config(project, "highlight")::Bool
         extra_head = extra_head * highlight(url_prefix)
