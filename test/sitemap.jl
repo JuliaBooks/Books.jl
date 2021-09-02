@@ -7,28 +7,31 @@ Helper function for testing.
 function lstrip_lines(text)
     lines = split(text, '\n')
     lines = lstrip.(lines)
-    text = join(text, '\n')
+    text = join(lines, '\n')
     return text
 end
 
 @testset "sitemap" begin
     online_url = "https://example.com"
     online_url_prefix = "Foo.jl/"
-    link = "index.html"
+    link = "index"
     actual = Books.sitemap_loc(online_url, online_url_prefix, link)
     @test actual == "https://example.com/Foo.jl/index.html"
 
     project = "default"
     cd(joinpath(Books.PROJECT_ROOT, "docs")) do
         h = Books.pandoc_html(project)
-        text = Books.sitemap(h)
+        text = Books.sitemap(project, h)
+        @test startswith(text, "<?xml")
+        @test endswith(rstrip(text), "</urlset>")
+        text = lstrip_lines(text)
         expected = """
             <url>
-            <loc>http://https://rikhuijzer.github.io/Books.jl</loc>
+            <loc>https://rikhuijzer.github.io/Books.jl/plots.html</loc>
             <lastmod>$(today())</lastmod>
             <changefreq>monthly</changefreq>
             </url>
             """
-        @test text == expected
+        @test contains(text, expected)
     end
 end

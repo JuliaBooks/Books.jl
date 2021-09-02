@@ -2,6 +2,7 @@ import Pkg
 
 using Books
 using DataFrames
+using Dates: today
 using Documenter
 using Test
 

@@ -197,7 +197,7 @@ function add_menu(head, bodies, foot)
 
     ids_texts = html_page_name.(bodies)
     ids = ids_texts2links(ids_texts)
-    menu_items = Vector{String}[]
+    menu_items::Vector{String} = []
     skip_homepage(z) = Iterators.peel(z)[2]
     for (id, body) in skip_homepage(zip(ids, bodies))
         V = section_infos(body)

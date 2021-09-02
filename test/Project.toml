@@ -2,6 +2,7 @@
 AlgebraOfGraphics = "cbdf2221-f076-402e-a563-3d30da359d67"
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 MCMCChains = "c7f686f2-ff18-58e9-bc7b-31028e88f75d"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
