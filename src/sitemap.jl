@@ -6,7 +6,7 @@ Return a vector of links for a vector of `id_texts`.
 ids_texts2links(id_texts) = getproperty.(id_texts, :id)
 
 function sitemap_loc(online_url, online_url_prefix, link)
-    loc = "$(online_url)/$(online_url_prefix)/$(link).html"
+    loc = "$(online_url)/$(online_url_prefix)/$(link)$(html_suffix())"
     loc = replace(loc, "///" => "/")
     loc = replace(loc, "//" => "/")
     loc = replace(loc, "https:/" => "https://")

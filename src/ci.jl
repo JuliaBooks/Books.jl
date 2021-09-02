@@ -1,4 +1,13 @@
 is_ci() = "CI" in keys(ENV)
+const IS_CI = is_ci()
+
+"""
+    html_suffix()
+
+Return "" when not in CI since GitHub Pages redirects to the HTML file anyway.
+"""
+html_suffix() = IS_CI ? "" : ".html"
+const HTML_SUFFIX = html_suffix()
 
 """
     is_sudo_env()

@@ -28,10 +28,10 @@ const DEFAULTS_DIR = joinpath(PROJECT_ROOT, "defaults")
 const BUILD_DIR = "_build"
 mkpath(BUILD_DIR)
 
-include("html.jl")
 include("defaults.jl")
 include("ci.jl")
 include("sitemap.jl")
+include("html.jl")
 include("build.jl")
 export html, pdf, docx, build_all
 include("serve.jl")

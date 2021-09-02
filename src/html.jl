@@ -204,7 +204,7 @@ function add_menu(head, bodies, foot)
         for info in V
             num = info.num
             text = info.text
-            link = "/$id.html"
+            link = "/$id$(HTML_SUFFIX)"
             link_text = "<b>$num</b> $text"
             level = section_level(num)
             if level < 3
@@ -326,10 +326,10 @@ function fix_links(names, pages, url_prefix)
             capture = first(match(rx, s).captures)::SubString{String}
             if startswith(capture, "#sec:")
                 page_link = mapping[capture]
-                return uncapture("$url_prefix/$page_link.html$capture")
+                return uncapture("$url_prefix/$page_link$(HTML_SUFFIX)$capture")
             elseif startswith(capture, "#ref-")
                 page_link = "references"
-                return uncapture("$url_prefix/$page_link.html$capture")
+                return uncapture("$url_prefix/$page_link$(HTML_SUFFIX)$capture")
             elseif URIs.URI(URIs.unescapeuri(capture)).scheme == ""
                 return uncapture("$url_prefix$capture")
             else
@@ -350,7 +350,7 @@ function write_html_pages(url_prefix, h::AbstractString, extra_head="")
     names, pages = fix_links(names, pages, url_prefix)
     for (i, (name, page)) in enumerate(zip(names, pages))
         name = i == 1 ? "index" : name
-        path = joinpath(BUILD_DIR, "$name.html")
+        path = joinpath(BUILD_DIR, "$name$HTML_SUFFIX")
         write(path, page)
     end
 end
