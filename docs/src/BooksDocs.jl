@@ -25,7 +25,10 @@ include("includes.jl")
 function build()
     fail_on_error = true
     Books.gen(; fail_on_error)
-    extra_head = "<!-- Example comment placed in the html header. -->"
+    extra_head = """
+        <!-- Google Search Console verification. -->
+        <meta name="google-site-verification" content="deJcoJ2nJMQFPa1hJZULlns4yYOCQXsfcsVdafQMgdc" />
+        """
     Books.build_all(; extra_head, fail_on_error)
 end
 
