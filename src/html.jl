@@ -203,7 +203,6 @@ function add_menu(head, bodies, foot)
         V = section_infos(body)
         for info in V
             num = info.num
-            id = info.id
             text = info.text
             link = "/$id.html"
             link_text = "<b>$num</b> $text"
