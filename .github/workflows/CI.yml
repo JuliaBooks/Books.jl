@@ -9,7 +9,7 @@ on:
 
 jobs:
   # When on the main branch, only run the deploy job. Testing all versions is done in PRs.
-  if: ${{ ( github.event_name != 'main' || matrix.version == '1.6' ) }}
+  if: ${{ ( github.event_name != 'push' || matrix.version == '1.6' ) }}
   test-and-deploy:
     name: Test and deploy
     runs-on: ${{ matrix.os }}
