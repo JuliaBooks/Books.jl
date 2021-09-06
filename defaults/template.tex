@@ -168,10 +168,24 @@ $endif$
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 
+\newfontfamily\JuliaMono{JuliaMono}[
+  UprightFont = *-Regular,
+  BoldFont = *-Bold
+]
+\newfontface\JuliaMonoRegular{JuliaMono-Regular}
+\newfontface\JuliaMonoBold{JuliaMono-Bold}
+
 \setmonofont{JuliaMono-Medium}[
   Contextuals=Alternate,
   Ligatures=NoCommon
 ]
+
+% \show\ttdefault{}
+
+\usepackage[utf8]{inputenc}
+% Thanks to https://github.com/tectonic-typesetting/tectonic/issues/800#issuecomment-899531583.
+% \usepackage{newunicodechar}
+% \newunicodechar{|}{\ensuremath{\lambda}}
 
 $if(mainfont)$
   \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$]{$mainfont$}
@@ -625,37 +639,6 @@ $endif$
 % font family to Source Sans Pro, not \sfdefault.
 %
 
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  $if(fontfamily)$
-  $else$
-  $endif$
-\else % if not pdftex
-  $if(mainfont)$
-  $else$
-  \usepackage[default]{sourcesanspro}
-  \usepackage{sourcecodepro}
-
-  % XeLaTeX specific adjustments for straight quotes: https://tex.stackexchange.com/a/354887
-  % This issue is already fixed (see https://github.com/silkeh/latex-sourcecodepro/pull/5) but the
-  % fix is still unreleased.
-  % TODO: Remove this workaround when the new version of sourcecodepro is released on CTAN.
-  \ifxetex
-    \makeatletter
-    \defaultfontfeatures[\ttfamily]
-      { Numbers   = \sourcecodepro@figurestyle,
-        Scale     = \SourceCodePro@scale,
-        Extension = .otf }
-    \setmonofont
-      [ UprightFont    = *-\sourcecodepro@regstyle,
-        ItalicFont     = *-\sourcecodepro@regstyle It,
-        BoldFont       = *-\sourcecodepro@boldstyle,
-        BoldItalicFont = *-\sourcecodepro@boldstyle It ]
-      {SourceCodePro}
-    \makeatother
-  \fi
-  $endif$
-\fi
-
 %
 % heading color
 %
@@ -749,12 +732,17 @@ $endif$
   keywordstyle=\ttfamily
 }
 
+% Use for debugging
+% \show\ttfamily{}
+% \renewcommand{\ttdefault}{cmtt}
+% \show\bfseries
+
 \lstdefinestyle{eisvogel_listing_style}{
   language         = raw,
   xleftmargin      = 0.6em,
   framexleftmargin = 0.4em,
   backgroundcolor  = \color{listing-background},
-  basicstyle       = \color{listing-text-color}\linespread{1.4}$if(code-block-font-size)$$code-block-font-size$$else$\footnotesize$endif$\ttfamily{},
+  basicstyle       = \color{listing-text-color}\linespread{1.4}\ttdefault{},
   breaklines       = true,
   frame            = single,
   framesep         = 0.19em,
@@ -775,6 +763,7 @@ $endif$
   stringstyle      = , % \color{listing-string},
   showstringspaces = false,
   escapeinside     = {/*@}{@*/}, % Allow LaTeX inside these special comments
+  % Wow. Required according to https://tex.stackexchange.com/a/24532/92217.
   literate         =
   {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
   {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
