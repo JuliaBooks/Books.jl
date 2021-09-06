@@ -1,5 +1,5 @@
 [JuliaMono]
-git-tree-sha1 = "23db14b6914e1b611f57c98fedc4c888f7405fda"
+git-tree-sha1 = "8730bd1d8cbb19f36e0ca10236011fd72083746f"
 
     [[JuliaMono.download]]
     sha256 = "255b4960fa61ccc58660603c3b8ae19f1cd9d10ecb34ea32967bb32381962931"
