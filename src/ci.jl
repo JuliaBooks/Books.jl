@@ -37,7 +37,7 @@ Installing fonts globally is the most reliable workaround that I can find.
 The benefit is that it's easy to verify the installation via `fc-list | grep "Julia"`.
 """
 function install_extra_fonts()
-    name = "juliamono-0.042"
+    name = "juliamono-$JULIAMONO_VERSION"
     dir = joinpath(Artifacts.artifact"JuliaMono", name)
     # See `fc-cache --force --verbose` for folders that `fc-cache` inspects.
     # Don't try to pass a dir to `fc-cache`, this is ignored on my pc for some reason.
