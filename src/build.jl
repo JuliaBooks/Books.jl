@@ -262,7 +262,7 @@ end
 
 function juliamono_path()
     artifact = Artifacts.artifact"JuliaMono"
-    dir = joinpath(artifact, "juliamono-0.040")
+    dir = joinpath(artifact, "juliamono-0.042")
     # The forward slash is required by LaTeX.
     dir * '/'
 end
