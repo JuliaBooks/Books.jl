@@ -28,3 +28,4 @@ This package includes code from the following projects, which have their own lic
 - The citation style is obtained via the [Citation Style Language (CSL) project](https://citationstyles.org/).
 - [The include-files Lua filter](https://github.com/pandoc/lua-filters/blob/master/LICENSE).
 - Icon made by [smashicons](https://www.flaticon.com/authors/smashicons).
+- [julia-mono-listings](https://github.com/mossr/julia-mono-listings/blob/master/LICENSE.md)

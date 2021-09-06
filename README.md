@@ -7,7 +7,7 @@ Create books with Julia.
 [![ColPrac: Contributor's Guide on Collaborative Practices for Community Packages](https://img.shields.io/badge/ColPrac-Contributor's%20Guide-blueviolet)](https://github.com/SciML/ColPrac)
 
 In a nutshell, this package is meant to generate books (or dashboards) with embedded Julia output.
-Via Pandoc, the package can live serve a website and build various outputs including a website, PDF, and Docx.
+Via Pandoc, the package can live serve a website and build various outputs including a website, PDF, and DOCX.
 For Julia code, the package can either show the code and the output, show the code or show only the output.
 For many standard output types, such as DataFrames and plots, the package will automatically handle proper embedding in the output documents, and also try to guess suitable captions and labels.
 Also, it is possible to work via the live server, which shows changes within seconds.
@@ -17,7 +17,7 @@ This package assumes that:
 - the user is comfortable with managing two REPLs,
 - the user wants to embed Julia code,
 - Markdown sections and subsections (level 2) should be numbered and listed in the HTML menu, and
-- the book (website, PDF and Docx) is built via CI.
+- the book (website, PDF and DOCX) is built via CI.
 
 The reason that numbering of sections is always assumed is to allow the book to be printed.
 Without section numbers, it is difficult to refer to other parts of the book.

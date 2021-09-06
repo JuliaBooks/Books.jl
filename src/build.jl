@@ -262,7 +262,7 @@ end
 
 function juliamono_path()
     artifact = Artifacts.artifact"JuliaMono"
-    dir = joinpath(artifact, "juliamono-0.042")
+    dir = joinpath(artifact, "juliamono-$JULIAMONO_VERSION")
     # The forward slash is required by LaTeX.
     dir * '/'
 end
@@ -308,7 +308,7 @@ function pdf(; project="default")
         end
     end
 
-    nothing
+    return nothing
 end
 
 function docx(; project="default")
