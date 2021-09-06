@@ -183,7 +183,7 @@ end
 function plotsjl()
     p = plot(1:10, 1:2:20)
     caption = "An example plot with Plots.jl."
-    # Label default to `nothing`, which will not create a cross-reference.
+    # Label defaults to `nothing`, which will not create a cross-reference.
     label = missing
     Options(p; caption, label)
 end

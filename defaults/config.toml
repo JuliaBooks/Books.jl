@@ -12,7 +12,7 @@
     "references"
   ]
 
-  # Output pdf or docx filename.
+  # Output PDF or DOCX filename.
   output_filename = "analysis"
 
   # Full URL, required for the sitemap.
