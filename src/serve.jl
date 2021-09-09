@@ -50,7 +50,7 @@ function default_simplewatcher(project, extra_directories)
     sw
 end
 
-function serve(; simplewatcher=nothing,
+function serve(; simplewatcher=nothing, host::String="127.0.0.1",
         project="default", verbose=true, dir=BUILD_DIR)
 
     if isnothing(simplewatcher)
@@ -59,6 +59,6 @@ function serve(; simplewatcher=nothing,
     end
     mkpath(dir)
     html(; project)
-    port = config(project, "port")
-    LiveServer.serve(simplewatcher; verbose, port, dir)
+    port = config(project, "port")::Int
+    LiveServer.serve(simplewatcher; verbose, host, port, dir)
 end
