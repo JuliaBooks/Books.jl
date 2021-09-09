@@ -83,6 +83,17 @@ entr(gen, ["contents"], [M])
 
 where M is the name of your module.
 Which will automatically run `gen()` whenever one of the files in `contents/` changes or any code in the module `M`.
+To only run `gen` for one file, such as "contents/my_text.md", use:
+
+```
+mygen() = gen("my_text")
+entr(mygen, ["contents"], [M])
+```
+
+With this, `mygen` will be called every time something changes in one of the files in the contents folder or when something changes in your module `M`.
+Note that you have to run this while `serve` is running in another terminal in the background.
+Then, your Julia code is executed and the website is automatically updated every time you change something in "content" or your module `M`.
+
 In the background, `gen` passes the methods through `convert_output(expr::String, path, out::T)` where `T` can, for example, be a DataFrame or a plot.
 To show that a DataFrame is converted to a Markdown table, we define a method
 
