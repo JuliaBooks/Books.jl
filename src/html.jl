@@ -315,6 +315,10 @@ function redistribute_footnotes!(bodies, footnotes)
     for footnote in footnotes
         m = match(rx, footnote)
         id = string(m[1])::String
+        num = id[3:end]
+        # Lists start counting at 1 whereas the footnotes should stick to the id.
+        footnote_text_start = "endnote\"><p>"
+        footnote = replace(footnote, footnote_text_start => "$(footnote_text_start) $(num). ")
         body_index = id_locations[id]
         if body_index in keys(body_footnotes)
             push!(body_footnotes[body_index], footnote)
