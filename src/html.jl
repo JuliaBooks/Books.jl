@@ -277,10 +277,85 @@ function add_extra_head(head, extra_head::AbstractString)
     replace(head, before => after)
 end
 
+function extract_footnotes(last_body)
+    lines = split(last_body, '\n')
+    footnotes_start = """<section class="footnotes" role="doc-endnotes">"""
+    start_index = findfirst(contains(footnotes_start), lines)
+    footnotes_end = "</section>"
+    stop_index = findfirst(contains(footnotes_end), lines[start_index:end]) + start_index
+    footnotes = lines[start_index:stop_index]
+    without_footnotes = [lines[1:start_index-1]; lines[stop_index+1:end]]
+    last_body = join(without_footnotes, '\n')
+    return (last_body, footnotes)
+end
+
+function locate_footnotes(bodies)::Dict{String,Int}
+    id_locations = Dict{String,Int}()
+    rx = r"<a href=\"#(fn[0-9]*)\" class=\"footnote-ref\""
+    for (body_index, body) in enumerate(bodies)
+        M = eachmatch(rx, body)
+        for m in M
+            id = m[1]
+            id_locations[id] = body_index
+        end
+    end
+    return id_locations
+end
+
+function redistribute_footnotes!(bodies, footnotes)
+    filter!(contains("footnote-back"), footnotes)
+    # print(join(footnotes, '\n'))
+    id_locations = locate_footnotes(bodies)
+    rx = r"id=\"(fn[0-9]*)\""
+
+    body_footnotes = Dict{Int,Vector{AbstractString}}()
+    for footnote in footnotes
+        m = match(rx, footnote)
+        id = m[1]
+        body_index = id_locations[id]
+        if body_index in keys(body_footnotes)
+            push!(body_footnotes[body_index], footnote)
+        else
+            body_footnotes[body_index] = [footnote]
+        end
+    end
+
+    bodies_with_footnotes = keys(body_footnotes)
+    for body_index in bodies_with_footnotes
+        footnotes = join(body_footnotes[body_index], '\n')
+        text = """
+            <section class="footnotes" role="doc-endnotes">
+            <hr />
+            <ol>
+            $footnotes
+            </ol>
+            </section>
+            """
+        bodies[body_index] = bodies[body_index] * text
+    end
+    return bodies
+end
+
+"""
+    fix_footnotes(bodies)
+
+Return bodies where references are in the correct body instead of in the last one.
+By default, Pandoc will place the endnotes for footnotes at the end.
+Usually, this would mean behind the references.
+"""
+function fix_footnotes(bodies)
+    last_body = bodies[end]
+    without_footnotes, footnotes = extract_footnotes(last_body)
+    bodies[end] = without_footnotes
+    bodies = redistribute_footnotes!(bodies, footnotes)
+    return bodies
+end
+
 function html_pages(h, extra_head="")
     head, bodies, foot = split_html(h)
     head, menu, bodies, foot = add_menu(head, bodies, foot)
     head = add_extra_head(head, extra_head)
+    bodies = fix_footnotes(bodies)
     ids_texts = html_page_name.(bodies)
     id_names = getproperty.(ids_texts, :id)
     text_names = getproperty.(ids_texts, :text)

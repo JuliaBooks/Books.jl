@@ -501,3 +501,18 @@ For example, this will show as:
        ```
 
     * another third level item
+
+### Footnotes
+
+Footnotes can be added via regular Markdown syntax:
+
+```
+Some sentence[^foot].
+
+[^foot]: Footnote text.
+```
+
+> Some sentence[^foot].
+
+[^foot]: Footnote text.
+
