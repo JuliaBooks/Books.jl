@@ -487,3 +487,6 @@ kbd {
   font-size: var(--small-size);
 }
 
+.footnotes ol {
+  list-style-type: none;
+}
