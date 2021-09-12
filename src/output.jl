@@ -99,8 +99,8 @@ julia> filenames = ["a", "b"];
 
 julia> Options.(objects, filenames)
 2-element Vector{Options}:
- Options(1, "a", missing, missing)
- Options(2, "b", missing, missing)
+ Options(1, "a", missing, missing, missing)
+ Options(2, "b", missing, missing, missing)
 ```
 """
 Options(object, filename::AbstractString) = Options(object; filename)
@@ -281,7 +281,7 @@ This path works for PDF and is fixed for html in the html post-processor.
 # Example
 ```jldoctest
 julia> Books.pandoc_image("example_image", "_build/im/example_image.png")
-"![](_build/im/example_image.png)"
+"![](_build/im/example_image.png){}"
 ```
 """
 function pandoc_image(file, path; caption=nothing, label=nothing, link_attributes=nothing)
