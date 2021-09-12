@@ -193,8 +193,9 @@ function makiejl()
     y = sin.(x)
     p = lines(x, y)
     caption = "An example plot with Makie.jl."
-    label = missing
-    Options(p; caption, label)
+    label = "makie"
+    link_attributes = "width=70%"
+    Options(p; caption, label, link_attributes)
 end
 
 chain() = MCMCChains.Chains([1])

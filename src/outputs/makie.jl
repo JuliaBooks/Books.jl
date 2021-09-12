@@ -8,9 +8,9 @@ function convert_output(
         path,
         p::Union{Makie.Figure, Makie.FigureAxisPlot};
         caption=missing,
-        label=missing
+        label=missing,
+        link_attributes=missing
     )
-
     im_dir = joinpath(BUILD_DIR, "im")
     mkpath(im_dir)
 
@@ -38,5 +38,5 @@ function convert_output(
     end
 
     caption, label = caption_label(expr, caption, label)
-    pandoc_image(file, png_path; caption, label)
+    pandoc_image(file, png_path; caption, label, link_attributes)
 end

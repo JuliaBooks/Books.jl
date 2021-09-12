@@ -367,6 +367,8 @@ Options(p; caption="Label specified in Markdown.")
 
 ### Makie {#sec:makie}
 
+This time, we also pass `link_attributes` to Pandoc (@fig:makie):
+
 ```jl
 @sco M.makiejl()
 ```
