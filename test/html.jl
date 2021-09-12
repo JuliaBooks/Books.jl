@@ -93,4 +93,28 @@
         <p> <a href="https://www.example.com">Jump</a></p>
         """
     @test actual == expected
+
+
+    footnotes = """
+        <section class="footnotes" role="doc-endnotes">
+        <hr />
+        <ol>
+        <li id="fn1" role="doc-endnote"><p>Foo.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+        <li id="fn2" role="doc-endnote"><p>beta.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+        </ol>
+        </section>
+        """
+
+    last_body = """
+        lorem
+        ipsum
+        $footnotes
+        dolar
+        """
+    last_body, footnotes = Books.extract_footnotes(last_body)
+    @test last_body == """
+        lorem
+        ipsum
+        dolar
+        """
 end

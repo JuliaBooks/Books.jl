@@ -212,8 +212,8 @@ h6 {
 blockquote {
   color: #666666;
   margin: 0;
-  padding-left: 3em;
-  border-left: 0.4em #EEE solid;
+  padding-left: 2em;
+  border-left: 0.3em #EEE solid;
 }
 
 hr {
@@ -482,3 +482,8 @@ kbd {
   padding: 4px 4px;
   vertical-align: middle;
 }
+
+.footnotes {
+  font-size: var(--small-size);
+}
+
