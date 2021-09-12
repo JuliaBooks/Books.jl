@@ -281,6 +281,9 @@ function extract_footnotes(last_body)
     lines = split(last_body, '\n')
     footnotes_start = """<section class="footnotes" role="doc-endnotes">"""
     start_index = findfirst(contains(footnotes_start), lines)
+    if isnothing(start_index) # Project doesn't contain footnotes.
+        return (last_body, [])
+    end
     footnotes_end = "</section>"
     stop_index = findfirst(contains(footnotes_end), lines[start_index:end]) + start_index
     footnotes = lines[start_index:stop_index]
