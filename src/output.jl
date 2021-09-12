@@ -75,9 +75,16 @@ struct Options
     filename::Union{AbstractString,Nothing,Missing}
     caption::Union{AbstractString,Nothing,Missing}
     label::Union{AbstractString,Nothing,Missing}
+    link_attributes::Union{AbstractString,Nothing,Missing}
 
-    Options(object; filename=missing, caption=missing, label=missing) =
-        new(object, filename, caption, label)
+    function Options(object;
+        filename=missing,
+        caption=missing,
+        label=missing,
+        link_attributes=missing
+    )
+        return new(object, filename, caption, label, link_attributes)
+    end
 end
 
 """
@@ -92,8 +99,8 @@ julia> filenames = ["a", "b"];
 
 julia> Options.(objects, filenames)
 2-element Vector{Options}:
- Options(1, "a", missing, missing)
- Options(2, "b", missing, missing)
+ Options(1, "a", missing, missing, missing)
+ Options(2, "b", missing, missing, missing)
 ```
 """
 Options(object, filename::AbstractString) = Options(object; filename)
@@ -186,7 +193,8 @@ function convert_output(expr, path, opts::Options)::String
     end
     caption = opts.caption
     label = opts.label
-    convert_output(expr, path, object; caption, label)
+    link_attributes = opts.link_attributes
+    convert_output(expr, path, object; caption, label, link_attributes)
 end
 
 """
@@ -265,7 +273,7 @@ function prettify_caption(caption)
 end
 
 """
-    pandoc_image(file, path; caption=nothing, label=nothing)
+    pandoc_image(file, path; caption=nothing, label=nothing, link_attributes=nothing)
 
 Return pandoc image link where label is prepended with `#fig:`.
 This path works for PDF and is fixed for html in the html post-processor.
@@ -273,19 +281,22 @@ This path works for PDF and is fixed for html in the html post-processor.
 # Example
 ```jldoctest
 julia> Books.pandoc_image("example_image", "_build/im/example_image.png")
-"![](_build/im/example_image.png)"
+"![](_build/im/example_image.png){}"
 ```
 """
-function pandoc_image(file, path; caption=nothing, label=nothing)
-    if isnothing(caption) && isnothing(label)
-        "![]($path)"
-    elseif isnothing(label)
-        "![$caption]($path)"
-    elseif isnothing(caption)
-        "![]($path){#fig:$label}"
-    else
-        "![$caption]($path){#fig:$label}"
+function pandoc_image(file, path; caption=nothing, label=nothing, link_attributes=nothing)
+    if ismissing(link_attributes) || isnothing(link_attributes)
+        link_attributes = ""
     end
+    if !isnothing(label)
+        link_attributes *= " #fig:$label"
+    end
+    link_attributes = strip(link_attributes)
+    if isnothing(caption)
+        caption = ""
+    end
+
+    return "![$caption]($path){$link_attributes}"
 end
 
 """

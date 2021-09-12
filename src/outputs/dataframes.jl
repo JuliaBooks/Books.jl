@@ -27,7 +27,14 @@ julia> print(Books.convert_output("my_table()", nothing, df))
 : My table. {#tbl:my_table}
 ```
 """
-function convert_output(expr, path, out::DataFrame; caption=missing, label=missing)::String
+function convert_output(
+        expr,
+        path,
+        out::DataFrame;
+        caption=missing,
+        label=missing,
+        link_attributes=missing
+    )
     table = df2markdown(out)
     caption, label = caption_label(expr, caption, label)
 

@@ -1,5 +1,7 @@
 import Pkg
 
+import Makie
+
 using Books
 using DataFrames
 using Dates: today
