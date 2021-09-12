@@ -295,7 +295,7 @@ function locate_footnotes(bodies)::Dict{String,Int}
     for (body_index, body) in enumerate(bodies)
         M = eachmatch(rx, body)
         for m in M
-            id = m[1]
+            id = string(m[1])::String
             id_locations[id] = body_index
         end
     end
@@ -304,14 +304,14 @@ end
 
 function redistribute_footnotes!(bodies, footnotes)
     filter!(contains("footnote-back"), footnotes)
-    # print(join(footnotes, '\n'))
     id_locations = locate_footnotes(bodies)
     rx = r"id=\"(fn[0-9]*)\""
 
+    # Group footnotes per body (webpage).
     body_footnotes = Dict{Int,Vector{AbstractString}}()
     for footnote in footnotes
         m = match(rx, footnote)
-        id = m[1]
+        id = string(m[1])::String
         body_index = id_locations[id]
         if body_index in keys(body_footnotes)
             push!(body_footnotes[body_index], footnote)
@@ -320,6 +320,7 @@ function redistribute_footnotes!(bodies, footnotes)
         end
     end
 
+    # Add a footnote section per body (webpage).
     bodies_with_footnotes = keys(body_footnotes)
     for body_index in bodies_with_footnotes
         footnotes = join(body_footnotes[body_index], '\n')

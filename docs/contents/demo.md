@@ -377,6 +377,20 @@ Options(p; caption="Label specified in Markdown.")
 
 For an example of a multilingual book setup, say English and Chinese, see the book by [Jun Tian](https://github.com/LearnJuliaTheFunWay/LearnJuliaTheFunWay.jl).
 
+### Footnotes
+
+Footnotes can be added via regular Markdown syntax:
+
+```
+Some sentence[^foot].
+
+[^foot]: Footnote text.
+```
+
+> Some sentence[^foot].
+
+[^foot]: Footnote text.
+
 ### Show
 
 When your method returns an output type `T` which is unknown to Books.jl, it will be passed through `show(io::IO, ::MIME"text/plain", object::T)`.
@@ -501,18 +515,4 @@ For example, this will show as:
        ```
 
     * another third level item
-
-### Footnotes
-
-Footnotes can be added via regular Markdown syntax:
-
-```
-Some sentence[^foot].
-
-[^foot]: Footnote text.
-```
-
-> Some sentence[^foot].
-
-[^foot]: Footnote text.
 
