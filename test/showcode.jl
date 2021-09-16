@@ -68,7 +68,6 @@ end
 
 @testset "@sco" begin
     pre(out) = Options(out; caption="caption")
-    df = DataFrame(; x = [1, 2])
     s = @sco pre=pre sco_test_dataframe()
     @test strip(s) == strip("""
         ```language-julia
