@@ -257,6 +257,29 @@ resulting in
 @sc M.my_data()
 ```
 
+To override options for your output, use the `pre` keyword argument of `@sco`:
+
+<pre class="language-julia">
+```jl
+let
+    caption = "This caption is set via the pre keyword."
+    pre(out) = Options(out; caption)
+    @sco pre=pre my_data()
+end
+```
+</pre>
+
+which appears to the reader as:
+
+```jl
+let
+    caption = "This caption is set via the pre keyword."
+    pre(out) = Options(out; caption)
+    @sco pre=pre my_data()
+end
+```
+
+See `?sco` for more information.
 Since we're using methods as code blocks, we can use the code shown in one code block in another.
 For example, to determine the mean of column A:
 
