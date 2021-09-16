@@ -10,7 +10,6 @@ end
 
 import Artifacts
 import CodeTracking
-import InteractiveUtils
 import LiveServer
 import Markdown
 import Tectonic
@@ -19,6 +18,7 @@ import YAML
 import pandoc_crossref_jll
 
 using Dates: today
+using InteractiveUtils: gen_call_with_extracted_types
 using Memoize
 using Requires
 using pandoc_jll

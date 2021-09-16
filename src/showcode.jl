@@ -43,10 +43,22 @@ function add_method_call(fdef, fcall)
     out = code_block(strip(out))
 end
 
-function apply_process_post(expr, out, process::Union{Nothing,Function}, post::Function;
-        path::Union{Nothing,String}=nothing)
-    out = isnothing(process) ? convert_output(expr, path, out) : process(out)
+function apply_process_post(
+        expr,
+        out,
+        pre::Function,
+        process::Union{Nothing,Function},
+        post::Function;
+        path::Union{Nothing,String}=nothing
+    )
+    out = pre(out)
+    if isnothing(process)
+        out = convert_output(expr, path, out)
+    else
+        out = process(out)
+    end
     out = post(out)
+    return out
 end
 
 """
@@ -56,31 +68,44 @@ end
 
 Evaluate `expr` in module `M` and convert the output.
 """
-function eval_convert(expr::AbstractString, M,
+function eval_convert(expr::AbstractString,
+        M,
+        pre::Union{Nothing,Function}=identity,
         process::Union{Nothing,Function}=nothing,
-        post::Union{Nothing,Function}=identity)
+        post::Union{Nothing,Function}=identity
+    )
 
     ex = Meta.parse("begin $expr end")
     out = Core.eval(M, ex)
-    out = apply_process_post(expr, out, process, post)
+    out = apply_process_post(expr, out, pre, process, post)
 end
 
 """
-    sco(expr::AbstractString;
-    M=Main, process::Union{Nothing,Function}=nothing,
-    post::Function=identity)
+    sco(
+        expr::AbstractString;
+        M=Main,
+        pre::Function=identity,
+        process::Union{Nothing,Function}=nothing,
+        post::Function=identity
+    )
 
 Show code and output for `expr`.
-Process the output by applying `post` or `convert_output` to it.
-Then, post-process the output by applying `post` to it.
+Process the output by applying `pre`, `process` or `post` to it.
+Specifically,
+
+- `pre` is applied before `convert_output`
+- `process` is applied instead of `convert_output`
+- `post` is applied after convert output
 """
 function sco(expr::AbstractString;
         M=Main,
+        pre::Function=identity,
         process::Union{Nothing,Function}=nothing,
-        post::Function=identity)
+        post::Function=identity
+    )
     code = remove_hide_comment(expr)
     code = code_block(strip(code))
-    out = eval_convert(expr, M, process, post)
+    out = eval_convert(expr, M, pre, process, post)
     """
     $code
     $out
@@ -108,8 +133,15 @@ function sc(expr::AbstractString; M=Main)
     code = code_block(strip(code))
 end
 
-function sco(f::Function, types; M=Main, process::Union{Nothing,Function}=nothing,
-        post::Function=identity, fcall="")
+function sco_macro_helper(
+        f::Function,
+        types;
+        M=Main,
+        pre::Function=identity,
+        process::Union{Nothing,Function}=nothing,
+        post::Function=identity,
+        fcall::String=""
+    )
 
     fdef = Books.CodeTracking.code_string(f, types)
     fdef = remove_hide_comment(fdef)
@@ -118,7 +150,7 @@ function sco(f::Function, types; M=Main, process::Union{Nothing,Function}=nothin
     ex = Meta.parse(fcall)
     out = Core.eval(M, ex)
     path = escape_expr(fcall)
-    out = apply_process_post(fcall, out, process, post; path)
+    out = apply_process_post(fcall, out, pre, process, post; path)
     """
     $code
     $out
@@ -132,7 +164,45 @@ Extract function call before `gen_call_with_extracted_types_and_kwargs` throws t
 """
 function extract_function_call(ex0)
     fcall = ex0[end]  # Mandatory argument according to Julia source code.
-    string(fcall)::String
+    return string(fcall)::String
+end
+
+"""
+    my_gen_call_with_extracted_types_and_kwargs(__module__, fcn, ex0)
+
+This is a copy from InteractiveUtils.
+For some reason, using the one from InteractiveUtils causes objects to be placed inside
+`Books.jl`.
+
+For example, when using `my_gen_call_with_extracted_types_and_kwargs`:
+```
+julia> foo(x) = x
+
+julia> macroexpand(Main, :(@sco pre=foo f(1)))
+:(Books.sco_macro_helper(f, (Base.typesof)(1), fcall = "f(1)", pre = foo))
+```
+
+And, when using `gen_call_with_extracted_types_and_kwargs`:
+```
+julia> macroexpand(Main, :(@sco pre=foo f(1)))
+:(Books.sco_macro_helper(f, (Base.typesof)(1), fcall = "f(1)", pre = Books.foo))
+```
+"""
+function my_gen_call_with_extracted_types_and_kwargs(__module__, fcn, ex0)
+    kws = Expr[]
+    arg = ex0[end] # Mandatory argument
+    for i in 1:length(ex0)-1
+        x = ex0[i]
+        if x isa Expr && x.head === :(=) # Keyword given of the form "foo=bar"
+            if length(x.args) != 2
+                return Expr(:call, :error, "Invalid keyword argument: $x")
+            end
+            push!(kws, Expr(:kw, esc(x.args[1]), esc(x.args[2])))
+        else
+            return Expr(:call, :error, "@$fcn expects only one non-keyword argument")
+        end
+    end
+    return gen_call_with_extracted_types(__module__, fcn, arg, kws)
 end
 
 """
@@ -145,6 +215,5 @@ See [`sco`](@ref) for more information about `process` and `post`.
 macro sco(ex0...)
     fcall = extract_function_call(ex0)
     ex0 = (:(fcall = $fcall), ex0...)
-    InteractiveUtils.gen_call_with_extracted_types_and_kwargs(__module__, :sco, ex0)
+    return my_gen_call_with_extracted_types_and_kwargs(__module__, :sco_macro_helper, ex0)
 end
-

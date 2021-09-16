@@ -1,4 +1,6 @@
 sc_test_function() = 1
+sco_test_dataframe() = DataFrame(; x = [1])
+
 function sc_test_function_with_comment()
     x = 1 # hide
     return 2
@@ -62,4 +64,22 @@ end
     with_macro = remove_line(with_macro, 2)
 
     @test with_macro == without_macro
+end
+
+@testset "@sco" begin
+    pre(out) = Options(out; caption="caption")
+    df = DataFrame(; x = [1, 2])
+    s = @sco pre=pre sco_test_dataframe()
+    @test strip(s) == strip("""
+        ```language-julia
+        sco_test_dataframe() = DataFrame(; x = [1])
+        sco_test_dataframe()
+        ```
+
+        |   x |
+        | ---:|
+        |   1 |
+
+        : caption
+        """)
 end
