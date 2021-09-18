@@ -83,4 +83,19 @@
         @test lines[4] == "       ```language-julia"
         @test lines[5] == "       x = 1 + 2"
     end
+
+    out = cd(docs_dir) do
+        test_markdown_path = joinpath(docs_dir, "contents", "test.md")
+        inline_code = """
+            Ans: `jl 1 + 1`.
+            """
+        write(test_markdown_path, inline_code)
+
+        mkpath(joinpath(Books.BUILD_DIR, "images"))
+        gen("test"; project="test")
+        out = Books.embed_output(inline_code)
+
+        lines = split(out, '\n')
+        @test lines[1] == "Ans: 2."
+    end
 end

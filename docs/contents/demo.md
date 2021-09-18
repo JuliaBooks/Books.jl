@@ -51,13 +51,14 @@ You can also embed output inline with single backticks like
 `jl julia_version()`
 ```
 
-or just call Julia's constant `VERSION` directly from within the Markdown file:
+or just call Julia's constant `VERSION` directly from within the Markdown file.
+For example,
 
 ```markdown
-This book is built with Julia `jl string(VERSION)`.
+This book is built with Julia `jl "$(BACKTICK)jl VERSION$(BACKTICK)"`.
 ```
 
-This book is built with Julia `jl string(VERSION)`.
+This book is built with Julia `jl VERSION`.
 
 While doing this, it is expected that you also have the browser open and a server running, see @sec:getting-started.
 That way, the page is immediately updated when you run `gen`.
