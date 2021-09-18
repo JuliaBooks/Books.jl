@@ -205,6 +205,8 @@ This avoids the adding of `"` which `show` does by default.
 """
 convert_output(expr, path, out::AbstractString) = string(out)
 
+convert_output(expr, path, out::VersionNumber) = string(out)
+
 convert_output(expr, path, out::Number) = string(out)
 
 """

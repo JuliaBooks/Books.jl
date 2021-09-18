@@ -111,6 +111,25 @@ function codeblock2output(s::AbstractString)
     end
 end
 
+function inlinecodeblock2output(s::AbstractString)
+    expr = strip(s)
+    # Remove _jl prefix
+    expr = expr[4:end-1]
+    expr = strip(expr)
+    output_path = escape_expr(expr)
+    if isfile(output_path)
+        output = read(output_path, String)
+        output = strip(output)
+        return ' ' * output
+    else
+        msg = """
+            Cannot find file at $output_path for $expr.
+            Did you run `gen()` when having loaded your module?
+            """
+        return code_block(msg)
+    end
+end
+
 """
     embed_output(text::String)
 
@@ -118,6 +137,7 @@ In a Markdown string containing `jl` code blocks, embed the output from the outp
 """
 function embed_output(text::String)
     text = replace(text, CODEBLOCK_PATTERN => codeblock2output)
+    text = replace(text, INLINE_CODEBLOCK_PATTERN => inlinecodeblock2output)
     return text
 end
 
