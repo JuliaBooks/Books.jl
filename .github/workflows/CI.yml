@@ -66,6 +66,7 @@ jobs:
         if: ${{ ( github.event_name == 'push' || github.event_name == 'workflow_dispatch') && runner.os == 'Linux' }}
         uses: peaceiris/actions-gh-pages@v3
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          cname: books.huijzer.xyz
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           force_orphan: true
           publish_dir: ./docs/_build/
