@@ -18,9 +18,9 @@ Show code for function `f`; to also show output, use [`@sco`](@ref).
 """
 macro sc(f)
     esc(quote
-        s = Books.CodeTracking.@code_string $(f)
-        s = Books.remove_hide_comment(s)
-        Books.code_block(s)
+        s = $CodeTracking.@code_string $(f)
+        s = $remove_hide_comment(s)
+        $code_block(s)
     end)
 end
 
