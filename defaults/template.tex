@@ -57,7 +57,7 @@ $endif$
 $if(fontsize)$
   $fontsize$,
 $else$
-  14pt
+  10pt,
 $endif$
 $if(lang)$
   $babel-lang$,
@@ -129,6 +129,11 @@ $if(section-titles)$
 \AtBeginSubsection{
   \frame{\subsectionpage}
 }
+
+% Font.
+\usepackage{palatino}
+\setmainfont{Palatino}
+
 $endif$
 $endif$
 $if(beamerarticle)$

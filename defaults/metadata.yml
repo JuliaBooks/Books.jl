@@ -17,9 +17,11 @@ pdf-footer: "\\url{https://github.com/johndoe/Book.jl}"
 # Make margins a bit smaller. LaTeX has huge default margins.
 geometry:
   - top=20mm
-  - left=24mm
-  - right=24mm
+  - left=16mm
+  - right=16mm
   - bottom=28mm
+  - paperheight=9.21in # 23.39 cm.
+  - paperwidth=6.14in # 15.6 cm.
 
 # A setting for the PDF. I don't know whether it is important.
 lang: en-US
