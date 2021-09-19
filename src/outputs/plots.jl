@@ -1,6 +1,6 @@
 @debug "Loading Plots.jl support into Books.jl via Requires.jl"
 
-import Plots
+using Plots: savefig
 
 function convert_output(
         expr,
@@ -18,11 +18,11 @@ function convert_output(
     println("Writing plot images for $file")
     svg_filename = "$file.svg"
     svg_path = joinpath(im_dir, svg_filename)
-    Plots.savefig(p, svg_path)
+    savefig(p, svg_path)
 
     png_filename = "$file.png"
     png_path = joinpath(im_dir, png_filename)
-    Plots.savefig(p, png_path)
+    savefig(p, png_path)
 
     im_link = joinpath("im", svg_filename)
     caption, label = caption_label(expr, caption, label)

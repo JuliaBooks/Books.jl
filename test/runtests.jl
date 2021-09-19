@@ -1,11 +1,13 @@
 import Pkg
 
-import Makie
-
 using Books
+using CairoMakie
 using DataFrames
 using Dates: today
-using Documenter
+using Documenter:
+    DocMeta,
+    doctest
+using Makie: lines
 using Test
 
 B = Books

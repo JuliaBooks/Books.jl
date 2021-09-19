@@ -1,7 +1,6 @@
 @debug "Loading AlgebraOfGraphics.jl support into Books.jl via Requires.jl"
 
-using AlgebraOfGraphics
-using CairoMakie
+import AlgebraOfGraphics
 
 function convert_output(
         expr,
