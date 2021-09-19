@@ -51,3 +51,7 @@ function convert_output(
         : $caption $label
         """
 end
+
+function convert_output(path, expr, out::DataFrameRow; kwargs...)
+    convert_output(path, expr, DataFrame(out); kwargs...)
+end
