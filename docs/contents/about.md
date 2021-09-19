@@ -1,6 +1,6 @@
 # About {#sec:about}
 
-Similar to [Bookdown](https://bookdown.org){target="_blank"} this package is, basically, a wrapper around [Pandoc](https://pandoc.org/){target="_blank"}.
+Similar to [Bookdown](https://bookdown.org){target="_blank"}, this package wraps around [Pandoc](https://pandoc.org/){target="_blank"}.
 For websites, this package allows for:
 
 - Building a website spanning multiple pages.
@@ -9,7 +9,7 @@ For websites, this package allows for:
 - Embedding dynamic output, while still allowing normal Julia package utilities, such as unit testing and live reloading (Revise.jl).
 - Showing code blocks as well as output.
 
-If you don't need PDFs or EPUBs, then [Franklin.jl](https://github.com/tlienart/Franklin.jl){target="_blank"} is probably a better choice.
+If you don't need to generate PDFs, then [Franklin.jl](https://github.com/tlienart/Franklin.jl){target="_blank"} is probably a better choice.
 To create single pages and PDFs containing code blocks, see [Weave.jl](https://github.com/JunoLab/Weave.jl){target="_blank"}.
 
 One of the main differences with Franklin.jl, Weave.jl and knitr (Bookdown) is that this package completely decouples the computations from the building of the output.

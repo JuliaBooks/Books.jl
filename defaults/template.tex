@@ -284,8 +284,13 @@ $if(footnotes-pretty)$
 \setlength{\skip\footins}{0.3cm} % set space between page content and footnote
 \setlength{\footskip}{0.9cm} % set space between footnote and page bottom
 $endif$
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\definecolor{linkblue}{HTML}{3D93F6}
+\usepackage{hyperref}
 \hypersetup{
+  colorlinks,
+  citecolor=linkblue,
+  linkcolor=linkblue,
+  urlcolor=linkblue,
 $if(title-meta)$
   pdftitle={$title-meta$},
 $endif$
@@ -301,17 +306,9 @@ $endif$
 $if(keywords)$
   pdfkeywords={$for(keywords)$$keywords$$sep$, $endfor$},
 $endif$
-$if(colorlinks)$
-  colorlinks=true,
-  linkcolor=$if(linkcolor)$$linkcolor$$else$default-linkcolor$endif$,
-  filecolor=$if(filecolor)$$filecolor$$else$default-filecolor$endif$,
-  citecolor=$if(citecolor)$$citecolor$$else$default-citecolor$endif$,
-  urlcolor=$if(urlcolor)$$urlcolor$$else$default-urlcolor$endif$,
-$else$
-  hidelinks,
-$endif$
   breaklinks=true,
-  pdfcreator={LaTeX via pandoc with the Eisvogel template}}
+  pdfcreator={LaTeX via Pandoc}%
+}
 \urlstyle{same} % disable monospaced font for URLs
 $if(verbatim-in-note)$
 \VerbatimFootnotes % allow verbatim text in footnotes
@@ -337,15 +334,10 @@ $if(beamer)$
 $endif$
 \usepackage{listings}
 \newcommand{\passthrough}[1]{#1}
-\lstset{defaultdialect=[5.3]Lua}
-\lstset{defaultdialect=[x86masm]Assembler}
 $if(listings-no-page-break)$
 \usepackage{etoolbox}
 \BeforeBeginEnvironment{lstlisting}{\par\noindent\begin{minipage}{\linewidth}}
 \AfterEndEnvironment{lstlisting}{\end{minipage}\par\addvspace{\topskip}}
-$endif$
-$if(lhs)$
-\lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
 $endif$
 $if(highlighting-macros)$
 $highlighting-macros$
@@ -725,12 +717,14 @@ $endif$
 \definecolor{listing-string}{HTML}{00999A}
 \definecolor{listing-comment}{HTML}{8E8E8E}
 
-%
-% Better no syntax highlighting than wrong syntax highlighting.
-%
-\lstdefinelanguage{raw}{
-  keywordstyle=\ttfamily
-}
+% Override the color for inline code.
+% source: https://tex.stackexchange.com/questions/124115
+\usepackage{etoolbox}
+\usepackage{atbegshi,ifthen,tikz}
+\usepackage[most]{tcolorbox}
+
+\let\lstinlineoriginal=\lstinline
+\renewcommand{\lstinline}{\lstinlineoriginal[keywordstyle=\color{gray}]}
 
 % Use for debugging
 % \show\ttfamily{}
@@ -4041,15 +4035,24 @@ $endif$
 \lst@RestoreCatcodes
 \makeatother
 
+\definecolor{highlight-red}{HTML}{d73a49}
+\definecolor{highlight-background}{HTML}{f5f5f5}
+% Inline code should have a gray background.
+% That's not working (yet), so making the font color a bit more light.
+% The website uses hsl(0, 0, 15) == #262626
+\definecolor{highlight-gray}{HTML}{333333}
+\definecolor{highlight-blue}{HTML}{005cc5}
+\definecolor{highlight-darkblue}{HTML}{032f62}
+
 \lstdefinestyle{eisvogel_listing_style}{
   language         = Julia,
-  backgroundcolor  = \color[HTML]{fafafa},
-  basicstyle       = \JuliaMonoRegular\small\color[HTML]{19177C},
-  numberstyle      = \JuliaMonoRegular\scriptsize\color[HTML]{7F7F7F},
-  keywordstyle     = [1]{\JuliaMonoBold\color[HTML]{1BA1EA}},
-  keywordstyle     = [2]{\color[HTML]{0F6FA3}},
-  keywordstyle     = [3]{\color[HTML]{0000FF}},
-  stringstyle      = \JuliaMonoRegular\color[HTML]{F5615C},
+  backgroundcolor  = \color{highlight-background},
+  basicstyle       = \JuliaMonoRegular\small\color{highlight-gray},
+  numberstyle      = \JuliaMonoRegular\scriptsize\color{highlight-blue},
+  keywordstyle     = [1]{\JuliaMonoBold\color{highlight-darkblue}},
+  keywordstyle     = [2]{\color{highlight-darkblue}},
+  keywordstyle     = [3]{\color{highlight-darkblue}},
+  stringstyle      = \JuliaMonoRegular\color{highlight-darkblue},
   commentstyle     = \color[HTML]{AAAAAA},
   rulecolor        = \color[HTML]{000000},
   xleftmargin      = 0.6em,
