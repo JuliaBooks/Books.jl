@@ -368,12 +368,12 @@ function caption_label(expr, caption, label)
 end
 
 """
-    docstring(s::Markdown.MD)
+    docstring(s::MD)
 
 Return docstring, as obtained from `@doc f` for function `f`, to be parsed by Pandoc.
 Needs work to be made prettier.
 """
-function docstring(s::Markdown.MD)
+function docstring(s::MD)
     lines = split(string(s), '\n')
     ignore(line) = any([
         contains(line, "```")
@@ -389,11 +389,11 @@ function docstring(s::Markdown.MD)
 end
 
 """
-    doctest(s::Markdown.MD)
+    doctest(s::MD)
 
 Return jldoctest, as obtained from `@doc f` for function `f`.
 """
-function doctest(s::Markdown.MD)
+function doctest(s::MD)
     s = string(s)
     start = findfirst("```jldoctest", s).start
     stop = findlast("```", s).stop

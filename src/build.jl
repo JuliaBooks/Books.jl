@@ -1,4 +1,4 @@
-const crossref_bin = string(pandoc_crossref_jll.pandoc_crossref_path)::String
+const crossref_bin = string(pandoc_crossref_path)::String
 const crossref = "--filter=$crossref_bin"
 const include_lua_filter = joinpath(PROJECT_ROOT, "src", "include-codeblocks.lua")
 const include_files = "--lua-filter=$include_lua_filter"
@@ -302,7 +302,7 @@ function pdf(; project="default")
     input_files = ignore_homepage(project, inputs(project))
     juliamono_template_var = "--variable=juliamono-path:$JULIAMONO_PATH"
 
-    Tectonic.tectonic() do tectonic_bin
+    tectonic() do tectonic_bin
         pdf_engine = "--pdf-engine=$tectonic_bin"
 
         args = [

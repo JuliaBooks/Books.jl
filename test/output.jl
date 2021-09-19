@@ -8,7 +8,7 @@
     # Without escaping the underscores (_), Latexify would change _ to *.
     @test contains(out, "foo_bar_baz")
 
-    p = Makie.lines(1:30)
+    p = lines(1:30)
     filename = "makietest"
     opts = Options(p; filename)
     out = Books.convert_output(missing, missing, opts)

@@ -11,17 +11,17 @@ end
 import Artifacts
 import CodeTracking
 import LiveServer
-import Markdown
-import Tectonic
 import TOML
 import YAML
-import pandoc_crossref_jll
 
 using Dates: today
 using InteractiveUtils: gen_call_with_extracted_types
-using Memoize
-using Requires
-using pandoc_jll
+using Markdown: MD
+using Memoize: @memoize
+using Requires: @require
+using Tectonic: tectonic
+using pandoc_crossref_jll: pandoc_crossref_path
+using pandoc_jll: pandoc
 
 const GENERATED_DIR = "_gen"
 const DEFAULTS_DIR = joinpath(PROJECT_ROOT, "defaults")
