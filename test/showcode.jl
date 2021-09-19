@@ -82,3 +82,19 @@ end
         : caption
         """)
 end
+
+module ShowcodeTestModule
+
+using Books: @sc
+using Test
+
+f(x) = 2x
+
+@testset "showcode_from_module" begin
+    # Test that @sc works with minimal imports on the user side.
+    f_def = @sc f(1)
+    @test contains(f_def, "2x")
+end
+
+end # module
+
