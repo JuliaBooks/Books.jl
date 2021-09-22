@@ -62,11 +62,6 @@ $endif$
 $if(lang)$
   $babel-lang$,
 $endif$
-$if(papersize)$
-  $papersize$paper,
-$else$
-  paper=a4,
-$endif$
 $if(beamer)$
   ignorenonframetext,
 $if(handout)$
@@ -80,7 +75,7 @@ $for(classoption)$
   $classoption$$sep$,
 $endfor$
   ,captions=tableheading
-]{$if(beamer)$$documentclass$$else$$if(book)$scrbook$else$scrreprt$endif$$endif$}
+]{$if(beamer)$$documentclass$$else$$if(book)$tufte-book$else$scrreprt$endif$$endif$}
 $if(beamer)$
 $if(background-image)$
 \usebackgroundtemplate{%
@@ -130,10 +125,6 @@ $if(section-titles)$
   \frame{\subsectionpage}
 }
 
-% Font.
-\usepackage{palatino}
-\setmainfont{Palatino}
-
 $endif$
 $endif$
 $if(beamerarticle)$
@@ -143,7 +134,7 @@ $endif$
 $if(fontfamily)$
 \usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
 $else$
-\usepackage{lmodern}
+\usepackage{palatino}
 $endif$
 $if(linestretch)$
 \usepackage{setspace}
@@ -282,14 +273,7 @@ $endif$
 \definecolor{default-urlcolor}{HTML}{4077C0}
 
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-$if(footnotes-pretty)$
-% load footmisc in order to customize footnotes (footmisc has to be loaded before hyperref, cf. https://tex.stackexchange.com/a/169124/144087)
-\usepackage[hang,flushmargin,bottom,multiple]{footmisc}
-\setlength{\footnotemargin}{0.8em} % set space between footnote nr and text
-\setlength{\footnotesep}{\baselineskip} % set space between multiple footnotes
-\setlength{\skip\footins}{0.3cm} % set space between page content and footnote
-\setlength{\footskip}{0.9cm} % set space between footnote and page bottom
-$endif$
+
 \definecolor{linkblue}{HTML}{3D93F6}
 \usepackage{hyperref}
 \hypersetup{
@@ -321,17 +305,9 @@ $if(verbatim-in-note)$
 \VerbatimFootnotes % allow verbatim text in footnotes
 $endif$
 $if(geometry)$
-$if(beamer)$
-\geometry{$for(geometry)$$geometry$$sep$,$endfor$}
-$else$
-\usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
+% \usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
 $endif$
-$else$
-$if(beamer)$
-$else$
-\usepackage[margin=2.5cm,includehead=true,includefoot=true,centering,$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
-$endif$
-$endif$
+% \usepackage[margin=2.5cm,includehead=true,includefoot=true,centering,$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
 $if(logo)$
 \usepackage[export]{adjustbox}
 \usepackage{graphicx}
@@ -376,15 +352,17 @@ $else$
 \patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
 \makeatother
 % Allow footnotes in longtable head/foot
-\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
-\makesavenoteenv{longtable}
+% \IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+% \makesavenoteenv{longtable}
 $endif$
 $endif$
+
 % add backlinks to footnote references, cf. https://tex.stackexchange.com/questions/302266/make-footnote-clickable-both-ways
 $if(footnotes-disable-backlinks)$
 $else$
-\usepackage{footnotebackref}
+% \usepackage{footnotebackref}
 $endif$
+
 $if(graphics)$
 \usepackage{graphicx}
 \makeatletter
@@ -402,7 +380,7 @@ $if(graphics)$
 $endif$
 $if(links-as-notes)$
 % Make links footnotes instead of hotlinks:
-\DeclareRobustCommand{\href}[2]{#2\footnote{\url{#1}}}
+% \DeclareRobustCommand{\href}[2]{#2\footnote{\url{#1}}}
 $endif$
 $if(strikeout)$
 \usepackage[normalem]{ulem}
@@ -611,14 +589,18 @@ $endif$
 %
 \usepackage{csquotes}
 
-%
-% captions
-%
 \definecolor{caption-color}{HTML}{777777}
-$if(beamer)$
-$else$
-\usepackage[font={stretch=1.2}, textfont={color=caption-color}, position=top, skip=4mm, labelfont=bf, singlelinecheck=false, justification=$if(caption-justification)$$caption-justification$$else$raggedright$endif$]{caption}
-$endif$
+\usepackage[
+  font={stretch=1.2},
+  textfont={color=caption-color},
+  position=top,
+  skip=4mm,
+  labelfont=bf,
+  singlelinecheck=false,
+  justification=$if(caption-justification)$$caption-justification$$else$raggedright$endif$
+]{caption}
+% \usepackage{mcaption}
+% \captionsetup[margincap]{}
 
 %
 % blockquote
@@ -629,14 +611,6 @@ $endif$
 \newmdenv[rightline=false,bottomline=false,topline=false,linewidth=3pt,linecolor=blockquote-border,skipabove=\parskip]{customblockquote}
 \renewenvironment{quote}{\begin{customblockquote}\list{}{\rightmargin=0em\leftmargin=0em}%
 \item\relax\color{blockquote-text}\ignorespaces}{\unskip\unskip\endlist\end{customblockquote}}
-
-%
-% Source Sans Pro as the de­fault font fam­ily
-% Source Code Pro for monospace text
-%
-% 'default' option sets the default
-% font family to Source Sans Pro, not \sfdefault.
-%
 
 %
 % heading color
@@ -745,6 +719,7 @@ $endif$
 \input{$listings-unicode-path$}
 
 \definecolor{highlight-red}{HTML}{d73a49}
+\definecolor{highlight-orange}{HTML}{e36209}
 \definecolor{highlight-background}{HTML}{f5f5f5}
 % Inline code should have a gray background.
 % That's not working (yet), so making the font color a bit more light.
@@ -759,7 +734,7 @@ $endif$
   basicstyle       = \JuliaMonoRegular\small\color{highlight-gray},
   numberstyle      = \JuliaMonoRegular\scriptsize\color{highlight-red}, % not doing anything?
   keywordstyle     = [1]{\JuliaMonoBold\color{highlight-red}},
-  keywordstyle     = [2]{\color{highlight-background}},
+  keywordstyle     = [2]{\color{highlight-orange}},
   keywordstyle     = [3]{\color{highlight-darkblue}},
   stringstyle      = \JuliaMonoRegular\color{highlight-darkblue},
   commentstyle     = \color[HTML]{AAAAAA},
@@ -809,18 +784,19 @@ $if(disable-header-and-footer)$
 $else$
 \usepackage{fancyhdr}
 
-\fancypagestyle{eisvogel-header-footer}{
+\fancypagestyle{header-footer}{
   \fancyhead{}
   \fancyfoot{}
   \lhead[$if(header-right)$$header-right$$else$$date$$endif$]{$if(header-left)$$header-left$$else$$title$$endif$}
   \chead[$if(header-center)$$header-center$$else$$endif$]{$if(header-center)$$header-center$$else$$endif$}
   \rhead[$if(header-left)$$header-left$$else$$title$$endif$]{$if(header-right)$$header-right$$else$$date$$endif$}
   \cfoot[$if(footer-center)$$footer-center$$else$$endif$]{$if(footer-center)$$footer-center$$else$$endif$}
-  \rfoot[$if(footer-left)$$footer-left$$else$$for(author)$$pdf-footer$ $endfor$$endif$]{$if(footer-right)$$footer-right$$else$\thepage$endif$}
-  \renewcommand{\headrulewidth}{0.4pt}
-  \renewcommand{\footrulewidth}{0.4pt}
+  \rfoot[$if(footer-left)$$footer-left$$else$$for(author)$$pdf-footer$$endfor$$endif$]{$if(footer-right)$$footer-right$$else$\thepage$endif$}
+  \renewcommand{\headrulewidth}{0.0pt}
+  \renewcommand{\footrulewidth}{0.0pt}
 }
-\pagestyle{eisvogel-header-footer}
+\pagestyle{header-footer}
+
 $if(page-background)$
 \backgroundsetup{
 scale=1,
@@ -834,10 +810,6 @@ contents={%
 $endif$
 $endif$
 $endif$
-
-%%
-%% end added
-%%
 
 \begin{document}
 

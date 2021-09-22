@@ -13,4 +13,7 @@ header-includes:
   <link rel="stylesheet" href="/files/style.css"/>
   ```
 mousetrap: true
+
+# Useful for printing.
+links-as-notes: true
 ---

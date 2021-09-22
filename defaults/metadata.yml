@@ -18,6 +18,8 @@ geometry:
   - paperheight=9.21in # 23.39 cm.
   - paperwidth=6.14in # 15.6 cm.
   - marginparwidth=20mm
+  - marginparsep=2mm
+  - bindingoffset=4mm
   - top=10mm
   - inner=16mm
   - outer=16mm
@@ -50,4 +52,6 @@ secPrefix: Section
 
 # Keyboard shortcuts.
 mousetrap: true
+
+header-left: foobar
 ---
