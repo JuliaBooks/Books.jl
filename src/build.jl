@@ -300,7 +300,8 @@ function pdf(; project="default")
     metadata_path = combine_metadata(metadata_path)
     metadata = "--metadata-file=$metadata_path"
     input_files = ignore_homepage(project, inputs(project))
-    juliamono_template_var = "--variable=juliamono-path:$JULIAMONO_PATH"
+    listings_unicode_path = joinpath(PROJECT_ROOT, "defaults", "julia_listings_unicode.tex")
+    listings_unicode = "--variable=listings-unicode-path:$listings_unicode_path"
 
     tectonic() do tectonic_bin
         pdf_engine = "--pdf-engine=$tectonic_bin"
@@ -314,7 +315,9 @@ function pdf(; project="default")
             template;
             "--listings";
             pdf_engine;
-            juliamono_template_var;
+            # Print engine info. Extremely useful for debugging.
+            "--pdf-engine-opt=--print";
+            listings_unicode;
             extra_args
         ]
         output_tex_filename = joinpath(BUILD_DIR, "$file.tex")
