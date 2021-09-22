@@ -14,14 +14,16 @@ tex-license: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA
 
 pdf-footer: "\\url{https://github.com/johndoe/Book.jl}"
 
-# Make margins a bit smaller. LaTeX has huge default margins.
 geometry:
-  - top=20mm
-  - left=16mm
-  - right=16mm
-  - bottom=28mm
   - paperheight=9.21in # 23.39 cm.
   - paperwidth=6.14in # 15.6 cm.
+  - marginparwidth=20mm
+  - top=10mm
+  - inner=16mm
+  - outer=16mm
+  - bottom=28mm
+  - includehead
+  - includemp
 
 # A setting for the PDF. I don't know whether it is important.
 lang: en-US
