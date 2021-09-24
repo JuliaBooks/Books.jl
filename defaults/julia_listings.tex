@@ -33,47 +33,29 @@
 \definecolor{highlight-darkblue}{HTML}{032f62}
 
 \lstdefinestyle{julia}{
-  language         = Julia,
-  backgroundcolor  = \color{highlight-background},
-  basicstyle       = \JuliaMonoRegular\small\color{highlight-gray},
-  numberstyle      = \JuliaMonoRegular\scriptsize\color{highlight-red}, % not doing anything?
-  keywordstyle     = [1]{\JuliaMonoBold\color{highlight-red}},
-  keywordstyle     = [2]{\color{highlight-background}},
-  keywordstyle     = [3]{\color{highlight-darkblue}},
-  stringstyle      = \JuliaMonoRegular\color{highlight-darkblue},
+  backgroundcolor  = \color[HTML]{F2F2F2},
+  basicstyle       = \JuliaMonoRegular\small\color[HTML]{19177C},
+  numberstyle      = \JuliaMonoRegular\scriptsize\color[HTML]{7F7F7F},
+  keywordstyle     = [1]{\JuliaMonoBold\color[HTML]{1BA1EA}},
+  keywordstyle     = [2]{\color[HTML]{0F6FA3}},
+  keywordstyle     = [3]{\color[HTML]{0000FF}},
+  stringstyle      = \JuliaMonoRegular\color[HTML]{F5615C},
   commentstyle     = \color[HTML]{AAAAAA},
   rulecolor        = \color[HTML]{000000},
-  xleftmargin      = 0.6em,
-  framexleftmargin = 0.4em,
-  breaklines       = true,
-  postbreak        = \mbox{\textcolor{red}{\hookrightarrow}\space},
-  frame            = single,
-  framesep         = 0.19em,
-  frameround       = ffff,
-  tabsize          = 4,
-  keepspaces       = true, % Required for correctly displaying Julia show outputs.
-  aboveskip        = 0.8em,
-  belowskip        = 0.5em,
-  abovecaptionskip = 0em,
-  belowcaptionskip = 1.0em,
-  sensitive        = true,
-  identifierstyle  = , % \color{listing-identifier},
-  showstringspaces = false,
-  literate         =
-  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
-  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
-  {à}{{\`a}}1 {è}{{\'e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
-  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
-  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
-  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
-  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
-  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
-  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
-  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
-  {€}{{\EUR}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
-  {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1
-  {…}{{\ldots}}1 {≥}{{>=}}1 {≤}{{<=}}1 {„}{{\glqq}}1 {“}{{\grqq}}1
-  {”}{{''}}1
+  frame=lines,
+  xleftmargin=5pt,
+  framexleftmargin=25pt,
+  framextopmargin=4pt,
+  framexbottommargin=4pt,
+  tabsize=4,
+  captionpos=b,
+  breaklines=true,
+  breakatwhitespace=false,
+  showstringspaces=false,
+  showspaces=false,
+  showtabs=false,
+  columns=fullflexible,
+  keepspaces=true,
+  numbers=left
 }
-% \lstset{style=julia}
-
+\lstset{style=julia}

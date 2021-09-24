@@ -89,7 +89,7 @@ The files listed in `contents` are read from the `contents/` directory and passe
 It doesn't matter whether the files contain headings or at what levels the heading are.
 Pandoc will just place the texts behind each other.
 
-This list doesn't mention the [homepage](/) for the website.
+This list doesn't mention the homepage for the website.
 That one is specified on a per project basis with `homepage_contents`, which defaults to `index`.
 The homepage typically contains the link to the generated PDF.
 Note that the homepage is only added to the html output and not to pdf or other outputs.
