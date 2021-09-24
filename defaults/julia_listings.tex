@@ -32,18 +32,23 @@
 \definecolor{highlight-blue}{HTML}{005cc5}
 \definecolor{highlight-darkblue}{HTML}{032f62}
 
-\lstdefinestyle{julia}{
-  backgroundcolor  = \color[HTML]{F2F2F2},
-  basicstyle       = \JuliaMonoRegular\small\color[HTML]{19177C},
-  numberstyle      = \JuliaMonoRegular\scriptsize\color[HTML]{7F7F7F},
-  keywordstyle     = [1]{\JuliaMonoBold\color[HTML]{1BA1EA}},
-  keywordstyle     = [2]{\color[HTML]{0F6FA3}},
-  keywordstyle     = [3]{\color[HTML]{0000FF}},
-  stringstyle      = \JuliaMonoRegular\color[HTML]{F5615C},
-  commentstyle     = \color[HTML]{AAAAAA},
-  rulecolor        = \color[HTML]{000000},
-  frame=lines,
-  xleftmargin=5pt,
+% Thanks to https://tex.stackexchange.com/questions/570945.
+\newsavebox\mypostbreak
+\savebox\mypostbreak{\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}}}
+
+\lstdefinestyle{julia_style}{
+  backgroundcolor=\color[HTML]{F2F2F2},
+  basicstyle=\JuliaMonoRegular\scriptsize\color[HTML]{19177C},
+  numberstyle=\JuliaMonoRegular\scriptsize\color[HTML]{7F7F7F},
+  keywordstyle=[1]{\JuliaMonoBold\color[HTML]{1BA1EA}},
+  keywordstyle=[2]{\color[HTML]{0F6FA3}},
+  keywordstyle=[3]{\color[HTML]{0000FF}},
+  stringstyle=\JuliaMonoRegular\color[HTML]{F5615C},
+  commentstyle=\color[HTML]{AAAAAA},
+  rulecolor=\color[HTML]{000000},
+  postbreak=\usebox\mypostbreak,
+  frame=single,
+  xleftmargin=22pt, % Spacing from side of page.
   framexleftmargin=25pt,
   framextopmargin=4pt,
   framexbottommargin=4pt,
@@ -58,4 +63,4 @@
   keepspaces=true,
   numbers=left
 }
-\lstset{style=julia}
+\lstset{style=julia_style}

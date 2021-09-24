@@ -1,5 +1,6 @@
 \documentclass[]{tufte-book}
 
+% Required Tufte packages.
 \usepackage{changepage} % or changepage
 \usepackage{fancyhdr}
 \usepackage{fontenc}
@@ -50,10 +51,6 @@ $if(graphics)$
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-% Set default figure placement to htbp
-\makeatletter
-\def\fps@figure{htbp}
-\makeatother
 $endif$
 $if(links-as-notes)$
 \DeclareRobustCommand{\href}[2]{#2\footnote{\url{#1}}}
@@ -101,15 +98,42 @@ $if(csl-refs)$
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 $endif$
 
+\definecolor{linkblue}{HTML}{117af2}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks,
+  citecolor=linkblue,
+  linkcolor=linkblue,
+  urlcolor=linkblue,
+  linktoc=page, % Avoid Table of Contents being nearly completely blue.
+$if(title-meta)$
+  pdftitle={$title-meta$},
+$endif$
+$if(author-meta)$
+  pdfauthor={$author-meta$},
+$endif$
+$if(lang)$
+  pdflang={$lang$},
+$endif$
+$if(subject)$
+  pdfsubject={$subject$},
+$endif$
+$if(keywords)$
+  pdfkeywords={$for(keywords)$$keywords$$sep$, $endfor$},
+$endif$
+  breaklinks=true,
+  pdfcreator={LaTeX via Pandoc}%
+}
+\urlstyle{same} % disable monospaced font for URLs
+$if(verbatim-in-note)$
+\VerbatimFootnotes % allow verbatim text in footnotes
+$endif$
+
 \begin{document}
 
-$if(colorlinks)$
-\hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$$endif$}
-$endif$
 \setcounter{tocdepth}{$toc-depth$}
 \tableofcontents
 
-\mainmatter
 $body$
 
 \end{document}
