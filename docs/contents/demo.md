@@ -3,9 +3,9 @@
 We can refer to a section with the normal [pandoc-crossref](https://lierdakil.github.io/pandoc-crossref/){target="_blank"} syntax.
 For example,
 
-<pre class="language-markdown">
+```language-markdown
 See @sec:getting-started.
-</pre>
+```
 
 > See @sec:getting-started.
 
@@ -18,7 +18,7 @@ $$ y = \frac{\sin{x}}{\cos{x}} $$ {#eq:example}
 For embedding code, you can use the `jl` inline code or code block.
 For example, to show the Julia version, define a code block like
 
-<pre class="language-julia">
+<pre>
 ```jl
 M.julia_version()
 ```
@@ -54,7 +54,7 @@ You can also embed output inline with single backticks like
 or just call Julia's constant `VERSION` directly from within the Markdown file.
 For example,
 
-```markdown
+```language-markdown
 This book is built with Julia `jl "$(BACKTICK)jl VERSION$(BACKTICK)"`.
 ```
 
@@ -119,7 +119,7 @@ M.my_table()
 where the caption and the label are inferred from the `path`.
 Refer to @tbl:my_table with
 
-```markdown
+```language-markdown
 @tbl:my_table
 ```
 

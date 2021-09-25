@@ -138,6 +138,14 @@ $endif$
 % Re-enable section numbering which was disabled by tufte.
 \setcounter{secnumdepth}{2}
 
+% Some space between paragraphs is necessary because code blocks can output single line paragraphs.
+\setlength\parskip{1em plus 0.1em minus 0.2em}
+
+\let\OldLongtable\longtable
+% Need to figure out a workaround for longtable.
+% For now, let's ignore it because it's a tricky problem.
+% \renewcommand{\longtable}{foo\OldLongtable}
+
 \begin{document}
 
 \maketitle
