@@ -141,10 +141,15 @@ $endif$
 % Some space between paragraphs is necessary because code blocks can output single line paragraphs.
 \setlength\parskip{1em plus 0.1em minus 0.2em}
 
-\let\OldLongtable\longtable
-% Need to figure out a workaround for longtable.
-% For now, let's ignore it because it's a tricky problem.
-% \renewcommand{\longtable}{foo\OldLongtable}
+% Fix captions for longtable.
+% Thanks to David Carlisle at https://tex.stackexchange.com/a/183344/92217.
+\makeatletter
+\def\LT@makecaption#1#2#3{%
+  \noalign{\smash{\hbox{\kern\textwidth\rlap{\kern\marginparsep
+  \parbox[t]{\marginparwidth}{\vspace{12pt}%
+\@tufte@caption@font \@tufte@caption@justification \noindent
+   #1{#2: }\ignorespaces #3}}}}}}
+\makeatother
 
 \begin{document}
 
