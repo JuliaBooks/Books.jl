@@ -40,7 +40,8 @@
 \lstdefinestyle{julia_style}{
   language = Julia,
   backgroundcolor = \color{highlight-background},
-  basicstyle = \JuliaMonoRegular\footnotesize\color{highlight-gray},
+  % linespread is necessary to avoid white space https://tex.stackexchange.com/a/129380/92217.
+  basicstyle = \JuliaMonoRegular\linespread{1.5}\scriptsize\color{highlight-gray},
   numberstyle = \JuliaMonoRegular\scriptsize\color{highlight-red}, % not doing anything?
   keywordstyle = [1]{\JuliaMonoBold\color{highlight-red}},
   keywordstyle = [2]{\color{highlight-orange}},
@@ -78,5 +79,6 @@
     {7}{{{\color{highlight-blue}7}}}1
     {8}{{{\color{highlight-blue}8}}}1
     {9}{{{\color{highlight-blue}9}}}1
+    {│}{|}1% Remove those tricky Unicode symbols used by PrettyTables.jl.
 }
 \lstset{style=julia_style}

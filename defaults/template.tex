@@ -151,6 +151,25 @@ $endif$
    #1{#2: }\ignorespaces #3}}}}}}
 \makeatother
 
+% Doesn't seem to do anything.
+\usepackage{float}
+\floatplacement{figure}{H}
+\floatplacement{table}{H}
+
+% Reduce large spacing around sections.
+\titlespacing*{\chapter}{0pt}{5pt}{0pt}
+\titlespacing*{\section}{0pt}{2.5ex plus 1ex minus .2ex}{1.3ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{2.75ex plus 1ex minus .2ex}{1.0ex plus.2ex}
+
+% Reduce spacing in table of contents.
+\usepackage{etoolbox}
+\makeatletter
+\pretocmd{\chapter}{\addtocontents{toc}{\protect\addvspace{-3\p@}}}{}{}
+\pretocmd{\section}{\addtocontents{toc}{\protect\addvspace{-4\p@}}}{}{}
+\pretocmd{\subsection}{\addtocontents{toc}{\protect\addvspace{-5\p@}}}{}{}
+\makeatother
+
+
 \begin{document}
 
 \maketitle
@@ -159,6 +178,7 @@ $endif$
 \mainmatter
 
 \setcounter{tocdepth}{$toc-depth$}
+
 \tableofcontents
 
 $body$
