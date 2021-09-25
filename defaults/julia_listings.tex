@@ -64,6 +64,18 @@
   showtabs = false,
   columns = fullflexible,
   keepspaces = true,
-  numbers = none % Line numbers.
+  numbers = none, % Line numbers.
+  % Thanks to https://tex.stackexchange.com/questions/23634.
+  literate =%
+    {0}{{{\color{highlight-blue}0}}}1
+    {1}{{{\color{highlight-blue}1}}}1
+    {2}{{{\color{highlight-blue}2}}}1
+    {3}{{{\color{highlight-blue}3}}}1
+    {4}{{{\color{highlight-blue}4}}}1
+    {5}{{{\color{highlight-blue}5}}}1
+    {6}{{{\color{highlight-blue}6}}}1
+    {7}{{{\color{highlight-blue}7}}}1
+    {8}{{{\color{highlight-blue}8}}}1
+    {9}{{{\color{highlight-blue}9}}}1
 }
 \lstset{style=julia_style}
