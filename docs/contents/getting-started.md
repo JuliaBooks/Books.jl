@@ -53,7 +53,8 @@ However, if you want to add options to the templates, feel free to open a pull r
 If you want to configure the template completely by yourself, you can place "template.tex" in "pandoc/" at the root of your project[^selftemplate].
 This same holds for the HTML, CSS, and DOCX template.
 
-[^selftemplate]: With TeX, be ready for hours of fiddling to get things right though.
+[^selftemplate]: With LaTeX, be ready for hours of fiddling to get things right though.
+    The current LaTeX template is adjusted to work with Tectonic, Julia syntax highlighting and the Tufte LaTeX class.
 
 ## config.toml {#sec:config}
 
@@ -103,7 +104,7 @@ That one is specified on a per project basis with `homepage_contents`, which def
 The homepage typically contains the link to the generated PDF.
 Note that the homepage is only added to the html output and not to pdf or other outputs.
 
-### Creating a website landing page for your book
+### Website landing page
 
 By default, Books.jl assumes that you will want a separate landing page for your book when you host it.
 This page is not added to the generated ouputs, like PDF or DOCX, so it's a nice place to put links to the generated outputs.

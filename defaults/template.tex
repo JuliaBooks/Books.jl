@@ -1,4 +1,6 @@
-\documentclass[]{tufte-book}
+\documentclass[
+  notoc % Suppress Tufte style table of contents.
+]{tufte-book}
 
 % Required Tufte packages.
 \usepackage{changepage} % or changepage
@@ -132,6 +134,9 @@ $endif$
 \title{$title$}
 \author{\hspace*{4mm}$for(author)$$author$\\[3mm] $endfor$}
 \date{$date$}
+
+% Re-enable section numbering.
+\setcounter{secnumdepth}{2}
 
 \begin{document}
 
