@@ -2,7 +2,9 @@
 title: Books.jl
 subtitle: Create books with Julia
 book: true # Set to false to get a shorter PDF.
-author: Rik Huijzer and contributors
+author:
+  - Rik Huijzer
+  - and Contributors
 pdf-footer: https://github.com/rikhuijzer/Books.jl
 
 # An example additional header include for html.

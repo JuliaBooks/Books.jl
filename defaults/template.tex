@@ -129,11 +129,22 @@ $if(verbatim-in-note)$
 \VerbatimFootnotes % allow verbatim text in footnotes
 $endif$
 
+\title{$title$}
+\author{\hspace*{4mm}$for(author)$$author$\\[3mm] $endfor$}
+\date{$date$}
+
 \begin{document}
+
+\maketitle
+
+\frontmatter
+\mainmatter
 
 \setcounter{tocdepth}{$toc-depth$}
 \tableofcontents
 
 $body$
+
+\backmatter
 
 \end{document}

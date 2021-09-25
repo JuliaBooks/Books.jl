@@ -40,11 +40,20 @@ For example, the metadata for this project contains:
 M.docs_metadata()
 ```
 
-The following defaults are set by Books.jl.
+And, the following defaults are set by Books.jl.
 
 ```jl
 M.default_metadata()
 ```
+
+Note that Pandoc has a great templating system.
+For example, the [Pandoc LaTeX template "default.latex"](https://github.com/jgm/pandoc) contains hundreds of options which can all be set via "metadata.yml".
+In the template of this project, I tried to get the basics right and haven't spend hours on making it configurable.
+However, if you want to add options to the templates, feel free to open a pull request.
+If you want to configure the template completely by yourself, you can place "template.tex" in "pandoc/" at the root of your project[^selftemplate].
+This same holds for the HTML, CSS, and DOCX template.
+
+[^selftemplate]: With TeX, be ready for hours of fiddling to get things right though.
 
 ## config.toml {#sec:config}
 
