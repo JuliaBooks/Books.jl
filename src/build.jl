@@ -163,7 +163,11 @@ end
 function verify_cross_references(h)
     # For example, "<strong>¿sec:about?</strong>"
     if contains(h, "<strong>¿")
-        error("Output contains undefined cross-references:\n$h")
+        rx = r"<strong>¿([^<]*)\?</strong>"
+        matches = collect(eachmatch(rx, h))
+        refs = ["- " * m[1] for m in matches]
+        missing_crossrefs = join(refs, "\n")
+        error("Output contains undefined cross-references:\n\n$missing_crossrefs\n")
     end
 end
 
