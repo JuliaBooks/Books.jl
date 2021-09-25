@@ -103,8 +103,6 @@ code_example_table() = code("""
     DataFrame(A = [1, 2], B = [3, 4], C = [5, 6])
     """)
 
-julia_version() = "This method is defined to work around a bug in the regex."
-
 function markdown_gen_example()
     c = IOCapture.capture() do
         M = BooksDocs

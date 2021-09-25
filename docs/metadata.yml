@@ -1,8 +1,10 @@
 ---
 title: Books.jl
 subtitle: Create books with Julia
-book: false
-author: Rik Huijzer and contributors
+book: true # Set to false to get a shorter PDF.
+author:
+  - Rik Huijzer
+  - and Contributors
 pdf-footer: https://github.com/rikhuijzer/Books.jl
 
 # An example additional header include for html.
@@ -13,4 +15,7 @@ header-includes:
   <link rel="stylesheet" href="/files/style.css"/>
   ```
 mousetrap: true
+
+# Useful for printing.
+links-as-notes: true
 ---
