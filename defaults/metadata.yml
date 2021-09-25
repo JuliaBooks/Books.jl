@@ -21,7 +21,7 @@ geometry:
   - marginparsep=2mm
   - bindingoffset=4mm
   - top=10mm
-  - inner=12mm
+  - inner=8mm
   - outer=8mm
   - bottom=16mm
   - includehead
