@@ -30,6 +30,15 @@
 \renewcommand\smallcapsspacing[1]{{\addfontfeature{LetterSpace=10}#1}}
 
 % \setmainfont{TeX Gyre Pagella}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\setmainfont{texgyrepagella}[
+  Extension = .otf,
+  UprightFont = *-regular,
+  BoldFont = *-bold,
+  ItalicFont = *-italic,
+  BoldItalicFont = *-bolditalic,
+]
 
 \newfontfamily\JuliaMono{JuliaMono}[
   UprightFont = *-Regular,
