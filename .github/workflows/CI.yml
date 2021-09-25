@@ -63,7 +63,7 @@ jobs:
 
       - name: Deploy to secondary branch
         # Always updates documentation when ubuntu passes, which is fine.
-        if: ${{ ( github.event_name == 'push' || github.event_name == 'workflow_dispatch') && runner.os == 'Linux' }}
+        if: ${{ ( github.event_name == 'push' || github.event_name == 'workflow_dispatch') && runner.os == 'Linux' && runner.version == '1.6' }}
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
