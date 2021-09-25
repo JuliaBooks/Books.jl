@@ -132,10 +132,10 @@ $if(verbatim-in-note)$
 $endif$
 
 \title{$title$}
-\author{\hspace*{4mm}$for(author)$$author$\\[3mm] $endfor$}
+\author{$for(author)$\noindent{$author$}\\[3mm] $endfor$}
 \date{$date$}
 
-% Re-enable section numbering.
+% Re-enable section numbering which was disabled by tufte.
 \setcounter{secnumdepth}{2}
 
 \begin{document}
