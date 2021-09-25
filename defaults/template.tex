@@ -75,6 +75,7 @@ $endif$
 
 \usepackage{longtable}
 \usepackage{booktabs}
+\usepackage{array}
 
 % Source: Wandmalfarbe/pandoc-latex-template.
 $if(csl-refs)$
@@ -127,9 +128,6 @@ $endif$
   pdfcreator={LaTeX via Pandoc}%
 }
 \urlstyle{same} % disable monospaced font for URLs
-$if(verbatim-in-note)$
-\VerbatimFootnotes % allow verbatim text in footnotes
-$endif$
 
 \title{$title$}
 \author{$for(author)$\noindent{$author$}\\[3mm] $endfor$}
@@ -177,7 +175,29 @@ $endif$
 % Some space between paragraphs is necessary because code blocks can output single line paragraphs.
 \setlength\parskip{1em plus 0.1em minus 0.2em}
 
+% For justified text.
 \usepackage{ragged2e}
+
+% tufte-book disables subsubsections by default.
+% Got this definition back via `\show\subsubsection`.
+$if(allow-subsubsections)$
+\makeatletter
+\renewcommand\subsubsection{%
+\@startsection{subsubsection}{3}{\z@ }{-3.25ex\@plus -1ex \@minus -.2ex}{1.5ex \@plus .2ex}{\normalfont \normalsize \bfseries }
+}
+\makeatother
+$endif$
+
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{unicode-math}
+
+% URL line breaks.
+\usepackage{xurl}
+
+% Probably doesn't hurt.
+\usepackage{marginfix}
 
 \begin{document}
 
