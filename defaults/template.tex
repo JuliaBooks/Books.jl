@@ -138,9 +138,6 @@ $endif$
 % Re-enable section numbering which was disabled by tufte.
 \setcounter{secnumdepth}{2}
 
-% Some space between paragraphs is necessary because code blocks can output single line paragraphs.
-\setlength\parskip{1em plus 0.1em minus 0.2em}
-
 % Fix captions for longtable.
 % Thanks to David Carlisle at https://tex.stackexchange.com/a/183344/92217.
 \makeatletter
@@ -157,9 +154,17 @@ $endif$
 \floatplacement{table}{H}
 
 % Reduce large spacing around sections.
-\titlespacing*{\chapter}{0pt}{5pt}{0pt}
+\titlespacing*{\chapter}{0pt}{5pt}{20pt}
 \titlespacing*{\section}{0pt}{2.5ex plus 1ex minus .2ex}{1.3ex plus .2ex}
-\titlespacing*{\subsection}{0pt}{2.75ex plus 1ex minus .2ex}{1.0ex plus.2ex}
+\titlespacing*{\subsection}{0pt}{1.75ex plus 1ex minus .2ex}{1.0ex plus.2ex}
+
+\titleformat{\chapter}%
+  [hang]% shape
+  {\normalfont\huge\itshape}% format applied to label+text
+  {\huge\thechapter}% label
+  {1em}% horizontal separation between label and title body
+  {}% before the title body
+  []% after the title body
 
 % Reduce spacing in table of contents.
 \usepackage{etoolbox}
@@ -169,6 +174,10 @@ $endif$
 \pretocmd{\subsection}{\addtocontents{toc}{\protect\addvspace{-5\p@}}}{}{}
 \makeatother
 
+% Some space between paragraphs is necessary because code blocks can output single line paragraphs.
+\setlength\parskip{1em plus 0.1em minus 0.2em}
+
+\usepackage{ragged2e}
 
 \begin{document}
 
@@ -180,6 +189,14 @@ $endif$
 \setcounter{tocdepth}{$toc-depth$}
 
 \tableofcontents
+
+% Justify text.
+\justifying
+
+% parindent seems to be set from within another class too.
+% it is really not useful here because it will also indent lines directly after
+% code blocks. Which most of the times not useful.
+\setlength{\parindent}{0pt}
 
 $body$
 
