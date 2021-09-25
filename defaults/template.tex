@@ -181,6 +181,10 @@ $endif$
 \pretocmd{\subsection}{\addtocontents{toc}{\protect\addvspace{-5\p@}}}{}{}
 \makeatother
 
+% Long texts are harder to read than tables.
+% Therefore, we can reduce the font size of the table.
+\AtBeginEnvironment{longtable}{\footnotesize}
+
 % Some space between paragraphs is necessary because code blocks can output single line paragraphs.
 \setlength\parskip{1em plus 0.1em minus 0.2em}
 
