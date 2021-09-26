@@ -5,7 +5,7 @@ Return a vector of links for a vector of `id_texts`.
 """
 ids_texts2links(id_texts) = getproperty.(id_texts, :id)
 
-function html_loc(online_url, online_url_prefix, link, suffix)
+function html_loc(online_url, online_url_prefix, link; suffix=html_suffix())
     loc = "$(online_url)/$(online_url_prefix)/$(link)$suffix"
     loc = replace(loc, "///" => "/")
     loc = replace(loc, "//" => "/")
