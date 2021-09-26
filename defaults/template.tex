@@ -1,5 +1,5 @@
 \documentclass[
-titlepage,
+  titlepage,
   notoc % Suppress Tufte style table of contents.
 ]{tufte-book}
 
@@ -215,10 +215,37 @@ $endif$
 
 \begin{document}
 
-\maketitle
+\makeatletter
+\thispagestyle{empty}
+\vfill
+{\Huge\bf
+\noindent
+\@title
+}\\[1in]
+{\Large
+\noindent
+\@author
+}
+\makeatother
 
-\frontmatter
-\mainmatter
+\makeatletter
+\newpage
+\thispagestyle{empty}
+\vfill
+{\noindent
+$titlepage-top$
+}
+\vfill
+$titlepage-bottom$
+
+$build-info$
+
+$tex-license$
+\makeatother
+
+$if(dedication)$
+\cleardoublepage
+$endif$
 
 $if(toc)$
 \setcounter{tocdepth}{$tocdepth$}

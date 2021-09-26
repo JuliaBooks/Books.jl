@@ -310,6 +310,7 @@ function pdf(; project="default")
     input_files = ignore_homepage(project, inputs(project))
     listings_unicode_path = joinpath(PROJECT_ROOT, "defaults", "julia_listings_unicode.tex")
     listings_path = joinpath(PROJECT_ROOT, "defaults", "julia_listings.tex")
+    build_info = today()
 
     tectonic() do tectonic_bin
         pdf_engine = "--pdf-engine=$tectonic_bin"
@@ -327,6 +328,7 @@ function pdf(; project="default")
             "--pdf-engine-opt=--print";
             "--variable=listings-unicode-path:$listings_unicode_path";
             "--variable=listings-path:$listings_path";
+            "--variable=build-info:$build_info";
             extra_args
         ]
         output_tex_filename = joinpath(BUILD_DIR, "$file.tex")

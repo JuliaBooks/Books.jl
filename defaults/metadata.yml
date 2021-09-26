@@ -1,12 +1,8 @@
 ---
 title: My book
 subtitle: My book subtitle
-author: John Doe
-
-# This affects things as whether to include a white page before each chapter in the PDF.
-# See the `.tex` template for more information.
-# For reports, set `book: false`.
-book: true
+author:
+  - John Doe
 
 # Licenses; can be empty.
 html-license: <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
