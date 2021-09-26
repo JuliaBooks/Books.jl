@@ -1,5 +1,4 @@
 \documentclass[
-  titlepage,
   notoc % Suppress Tufte style table of contents.
 ]{tufte-book}
 
@@ -253,6 +252,9 @@ $if(dedication)$
 \end{center}
 \cleardoublepage
 $endif$
+
+% Don't remove this or authors will show up in header of every page.
+\mainmatter
 
 $if(toc)$
 \setcounter{tocdepth}{$tocdepth$}
