@@ -9,7 +9,7 @@
   ]
   output_filename = "books"
 
-  # Full URL, required for the sitemap.
+  # Full URL, required for the sitemap and robots.txt.
   online_url = "https://rikhuijzer.github.io"
 
   # Prefix for GitHub Pages.
