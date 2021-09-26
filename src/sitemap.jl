@@ -16,7 +16,7 @@ end
 function html_loc(project, link; suffix=html_suffix())
     online_url = string(config(project, "online_url"))::String
     online_url_prefix = string(config(project, "online_url_prefix"))::String
-    return html_loc(online_url, online_url_prefix, link, suffix)
+    return html_loc(online_url, online_url_prefix, link; suffix)
 end
 
 function sitemap_entry(loc)
