@@ -90,12 +90,12 @@ function write_extra_html_files(project)
                 </div>
                 <br>
                 <div>
-                    Page not found.
+                    Page not found
                 </div>
                 <br>
                 <br>
                 <div style="margin-bottom: 300px; font-size: 24px">
-                    <a href="/">Click here</a> to go back to the homepage.
+                    <a href="/">Click here</a> to go back to the $title homepage.
                 </div>
             </div>
         </body>
@@ -112,4 +112,5 @@ function write_extra_html_files(project)
         """
     path = joinpath(BUILD_DIR, "robots.txt")
     write(path, robots)
+    return nothing
 end
