@@ -1,12 +1,8 @@
 ---
 title: My book
 subtitle: My book subtitle
-author: John Doe
-
-# This affects things as whether to include a white page before each chapter in the PDF.
-# See the `.tex` template for more information.
-# For reports, set `book: false`.
-book: true
+author:
+  - John Doe
 
 # Licenses; can be empty.
 html-license: <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
@@ -15,11 +11,12 @@ tex-license: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA
 pdf-footer: "\\url{https://github.com/johndoe/Book.jl}"
 
 geometry:
-  - paperheight=9.21in # 23.39 cm.
-  - paperwidth=6.14in # 15.6 cm.
+  # Defaulting to large pages to be able to show 92 chars in code blocks.
+  - paperheight=10in # 25.4 cm.
+  - paperwidth=7in # 17.78 cm.
   - marginparwidth=30mm
   - marginparsep=2mm
-  - bindingoffset=4mm
+  - bindingoffset=3mm
   - top=10mm
   - inner=8mm
   - outer=8mm

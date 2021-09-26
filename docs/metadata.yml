@@ -4,7 +4,7 @@ subtitle: Create books with Julia
 book: true # Set to false to get a shorter PDF.
 author:
   - Rik Huijzer
-  - and Contributors
+  - and contributors
 pdf-footer: https://github.com/rikhuijzer/Books.jl
 
 # An example additional header include for html.
@@ -18,4 +18,16 @@ mousetrap: true
 
 # Useful for printing.
 links-as-notes: true
+
+# Only used in PDF.
+titlepage-top: >
+  \begin{tabular}{l}
+  Rik Huijzer\\
+  University of Groningen\\
+  the Netherlands\\
+  t.h.huijzer@rug.nl\\
+  \end{tabular}
+
+titlepage-bottom: >
+  \url{https://github.com/rikhuijzer/Books.jl}
 ---

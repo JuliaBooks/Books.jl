@@ -214,9 +214,46 @@ $endif$
 
 \begin{document}
 
-\maketitle
+\makeatletter
+\thispagestyle{empty}
+\vfill
+{\Huge\bf
+\noindent
+\@title
+}\\[1in]
+{\Large
+\noindent
+\@author
+}
+\makeatother
 
-\frontmatter
+\makeatletter
+\newpage
+\thispagestyle{empty}
+\vfill
+{\noindent
+$titlepage-top$
+}
+\vfill
+$titlepage-bottom$
+
+$build-info$
+
+$tex-license$
+\makeatother
+
+$if(dedication)$
+\newpage
+\thispagestyle{empty}
+\begin{center}
+    \vspace*{\fill}
+    $dedication$
+    \vspace*{\fill}
+\end{center}
+\cleardoublepage
+$endif$
+
+% Don't remove this or authors will show up in header of every page.
 \mainmatter
 
 $if(toc)$
