@@ -18,11 +18,9 @@ $$ y = \frac{\sin{x}}{\cos{x}} $$ {#eq:example}
 For embedding code, you can use the `jl` inline code or code block.
 For example, to show the Julia version, define a code block like
 
-<pre>
-```jl
-M.julia_version()
-```
-</pre>
+    ```jl
+    M.julia_version()
+    ```
 
 in a Markdown file.
 Then, in your package, define the method `julia_version()`:

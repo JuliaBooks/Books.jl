@@ -27,10 +27,10 @@ if VERSION in Pkg.Types.VersionRange(v"1.6", v"1.6.10")
 end
 
 @testset "Books.jl" begin
-    include("output.jl")
-    include("build.jl")
-    include("html.jl")
-    include("showcode.jl")
-    include("sitemap.jl")
+    # include("output.jl")
+    # include("build.jl")
+    # include("html.jl")
+    # include("showcode.jl")
+    # include("sitemap.jl")
     include("generate.jl")
 end

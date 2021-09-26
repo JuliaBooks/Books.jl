@@ -98,4 +98,12 @@
         lines = split(out, '\n')
         @test lines[1] == "Ans: 2."
     end
+
+    # Four indentations.
+    not_evaluated_block = """
+            ```jl
+            1 + 1
+            ```
+        """
+    out = Books.embed_output(not_evaluated_block)
 end

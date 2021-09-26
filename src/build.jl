@@ -92,6 +92,7 @@ end
 
 function codeblock2output(s::AbstractString)
     expr = s
+    @show s
     expr = strip(expr)
     expr = expr[7:end-4]
     expr = strip(expr)
