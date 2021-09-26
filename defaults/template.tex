@@ -254,7 +254,11 @@ $if(dedication)$
 $endif$
 
 % Don't remove this or authors will show up in header of every page.
+\frontmatter
 \mainmatter
+$if(pdf-footer)$
+\fancyfoot[C]{$pdf-footer$}
+$endif$
 
 $if(toc)$
 \setcounter{tocdepth}{$tocdepth$}
