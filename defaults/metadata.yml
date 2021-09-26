@@ -44,7 +44,7 @@ link-citations: true
 
 # These table of contents settings only affect the PDF.
 toc: true
-toc-depth: 2
+tocdepth: 1
 
 # Cross-reference prefixes.
 eqnPrefix: Equation

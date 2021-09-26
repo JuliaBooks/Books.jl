@@ -219,9 +219,10 @@ $endif$
 \frontmatter
 \mainmatter
 
-\setcounter{tocdepth}{$toc-depth$}
-
+$if(toc)$
+\setcounter{tocdepth}{$tocdepth$}
 \tableofcontents
+$endif$
 
 % Justify text.
 \justifying
