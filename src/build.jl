@@ -92,8 +92,13 @@ end
 
 function codeblock2output(s::AbstractString)
     expr = s
-    @show s
+    # Hacky way to ignore code blocks with four spaces.
+    # Cleaner would be to improve the regex.
+    if endswith(s, "    ```\n")
+        return s
+    end
     expr = strip(expr)
+    # Remove start and end of code block.
     expr = expr[7:end-4]
     expr = strip(expr)
     output_path = escape_expr(expr)

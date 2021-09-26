@@ -68,7 +68,6 @@ function extract_expr(s::AbstractString)::Vector
     matches = eachmatch(CODEBLOCK_PATTERN, s)
     function clean(m)
         expr = m[1]::SubString{String}
-        @show expr
         expr = strip(expr)
         expr = string(expr)::String
         indentation = if haskey(m, 2)
