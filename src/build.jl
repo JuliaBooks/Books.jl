@@ -184,8 +184,7 @@ function pandoc_html(project::AbstractString; fail_on_error=false)
     template = "--template=$html_template_path"
     output_filename = joinpath(BUILD_DIR, "index.html")
     output = "--output=$output_filename"
-    metadata_path = config(project, "metadata_path")::String
-    metadata_path = combine_metadata(metadata_path)
+    metadata_path = combined_metadata_path(project)
     metadata = "--metadata-file=$metadata_path"
     copy_css()
     copy_mousetrap()
@@ -306,8 +305,7 @@ function pdf(; project="default")
     file = config(project, "output_filename")
     output_filename = joinpath(BUILD_DIR, "$file.pdf")
     output = "--output=$output_filename"
-    metadata_path = config(project, "metadata_path")::String
-    metadata_path = combine_metadata(metadata_path)
+    metadata_path = combined_metadata_path(project)
     metadata = "--metadata-file=$metadata_path"
     input_files = ignore_homepage(project, inputs(project))
     listings_unicode_path = joinpath(PROJECT_ROOT, "defaults", "julia_listings_unicode.tex")
@@ -350,8 +348,7 @@ function docx(; project="default")
     file = config(project, "output_filename")
     output_filename = joinpath(BUILD_DIR, "$file.docx")
     output = "--output=$output_filename"
-    metadata_path = config(project, "metadata_path")::String
-    metadata_path = combine_metadata(metadata_path)
+    metadata_path = combined_metadata_path(project)
     metadata = "--metadata-file=$metadata_path"
     input_files = ignore_homepage(project, inputs(project))
 
@@ -392,6 +389,7 @@ function build_all(; project="default", extra_head="", fail_on_error=false)
     end
     build_sitemap = true
     html(; project, extra_head, fail_on_error, build_sitemap)
+    write_extra_html_files(project)
     pdf(; project)
     docx(; project)
 end

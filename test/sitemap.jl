@@ -16,7 +16,7 @@ end
     online_url = "https://example.com"
     online_url_prefix = "Foo.jl/"
     link = "index"
-    actual = Books.sitemap_loc(online_url, online_url_prefix, link)
+    actual = Books.html_loc(online_url, online_url_prefix, link)
     @test actual == "https://example.com/Foo.jl/index$(html_suffix)"
 
     project = "default"

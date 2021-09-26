@@ -5,18 +5,18 @@ Return a vector of links for a vector of `id_texts`.
 """
 ids_texts2links(id_texts) = getproperty.(id_texts, :id)
 
-function sitemap_loc(online_url, online_url_prefix, link)
-    loc = "$(online_url)/$(online_url_prefix)/$(link)$(html_suffix())"
+function html_loc(online_url, online_url_prefix, link; suffix=html_suffix())
+    loc = "$(online_url)/$(online_url_prefix)/$(link)$suffix"
     loc = replace(loc, "///" => "/")
     loc = replace(loc, "//" => "/")
     loc = replace(loc, "https:/" => "https://")
     return loc
 end
 
-function sitemap_loc(project, link)
+function html_loc(project, link; suffix=html_suffix())
     online_url = string(config(project, "online_url"))::String
     online_url_prefix = string(config(project, "online_url_prefix"))::String
-    return sitemap_loc(online_url, online_url_prefix, link)
+    return html_loc(online_url, online_url_prefix, link; suffix)
 end
 
 function sitemap_entry(loc)
@@ -40,7 +40,7 @@ function sitemap(project, h)
     ids_texts = html_page_name.(bodies)
 
     links = ids_texts2links(ids_texts)
-    locs = sitemap_loc.(project, links)
+    locs = html_loc.(project, links)
     entries = sitemap_entry.(locs)
     text = join(entries, '\n')
     text = """

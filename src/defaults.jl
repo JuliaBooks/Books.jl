@@ -39,6 +39,12 @@ function combine_metadata(user_metadata_path="metadata.yml")
     path
 end
 
+function combined_metadata_path(project)
+    metadata_path = config(project, "metadata_path")::String
+    combined_path = combine_metadata(metadata_path)
+    return combined_path
+end
+
 """
     project_info(path::String, project::AbstractString)
 
