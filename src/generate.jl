@@ -28,8 +28,11 @@ output_block(s) = "```output\n$s\n```\n"
     CODEBLOCK_PATTERN
 
 Pattern to match `jl` code blocks.
+
+This pattern also, wrongly, matches blocks indented with four spaces.
+These are ignored after matching.
 """
-const CODEBLOCK_PATTERN = r"```jl\s*([^```]*)\n([ ]*)```\n(?!</pre>)"
+const CODEBLOCK_PATTERN = r"```jl\s*([^```]*)\n([ ]*)```\n"
 
 const INLINE_CODEBLOCK_PATTERN = r" `jl ([^`]*)`"
 
@@ -76,6 +79,9 @@ function extract_expr(s::AbstractString)::Vector
         return UserExpr(expr, indentation)
     end
     from_codeblocks = clean.(matches)
+    # These blocks are used in the Books.jl documentation.
+    filter!(e -> e.indentation != 4, from_codeblocks)
+
     matches = eachmatch(INLINE_CODEBLOCK_PATTERN, s)
     from_inline = clean.(matches)
     exprs = [from_codeblocks; from_inline]
@@ -88,7 +94,7 @@ function extract_expr(s::AbstractString)::Vector
         end
     end
     check_parse_errors.(exprs)
-    exprs
+    return exprs
 end
 
 """

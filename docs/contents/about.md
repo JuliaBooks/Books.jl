@@ -39,31 +39,23 @@ In combination with Revise.jl, you can quickly update your code and see the upda
 Finally, a big difference with this package and other packages is that you decide yourself what you want to show for a code block.
 For example, in R
 
-<pre>
-```{r, results='hide'}
-print("Hello, world!")
-```
-</pre>
+    ```{r, results='hide'}
+    print("Hello, world!")
+    ```
 
 shows the code and not the output.
 Instead, in Books, you would write
 
-<pre>
-```jl
-sc(raw"""
-print("Hello, world!")
-"""
-)
-```
-</pre>
+    ```jl
+    s = """print("Hello, world!")"""
+    sc(s)
+    ```
 
 which is displayed as
 
 ```jl
-sc(raw"""
-print("Hello, world!")
-"""
-)
+s = """print("Hello, world!")"""
+sc(s)
 ```
 
 Here, `sc` is one of the convenience methods exported by Books.jl.
@@ -71,15 +63,13 @@ Although this approach is more verbose in some cases, it is also much more flexi
 In essence, you can come up with your own pre- or post-processing logic.
 For example, lets write
 
-<pre>
-```jl
-code = """
-    df = DataFrame(a=[1, 2], b=[3, 4])
-    Options(df, caption="A table.", label=nothing)
-    """
-repeat(sco(code), 4)
-```
-</pre>
+    ```jl
+    code = """
+        df = DataFrame(a=[1, 2], b=[3, 4])
+        Options(df, caption="A table.", label=nothing)
+        """
+    repeat(sco(code), 4)
+    ```
 
 which shows the code and output (`sco`) 4 times:
 
@@ -90,5 +80,4 @@ code = """
     """
 repeat(sco(code), 4)
 ```
-
 
