@@ -382,9 +382,7 @@ function docstring(s::MD)
     # lines = ["> $line" for line in lines]
     text = join(lines, '\n')
     """
-    <pre>
-    $text
-    </pre>
+        $text
     """
 end
 

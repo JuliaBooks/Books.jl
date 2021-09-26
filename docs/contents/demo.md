@@ -102,11 +102,9 @@ To show that a DataFrame is converted to a Markdown table, we define a method
 
 and add its output to the Markdown file with
 
-<pre class="language-julia">
-```jl
-M.my_table()
-```
-</pre>
+    ```jl
+    M.my_table()
+    ```
 
 Then, it will show as
 
@@ -143,17 +141,17 @@ Most things can be done via functions.
 However, defining a struct is not possible, because `@sco` cannot locate the struct definition inside the module.
 Therefore, it is also possible to pass code and specify that you want to evaluate and show code (sc) without showing the output:
 
-<pre class="language-julia">
-```jl
-s = """
-    struct Point
-        x
-        y
-    end
-    """
-sc(s)
-```
-</pre>
+    ```jl
+    s = """
+        struct Point
+            x
+            y
+        end
+        """
+    sc(s)
+    ```
+
+which shows as
 
 ```jl
 s = """
@@ -168,11 +166,9 @@ sc(s)
 and show code and output (sco).
 For example,
 
-<pre class="language-julia">
-```jl
-sco("p = Point(1, 2)")
-```
-</pre>
+    ```jl
+    sco("p = Point(1, 2)")
+    ```
 
 shows as
 
@@ -182,11 +178,9 @@ sco("p = Point(1, 2)")
 
 Note that this is starting to look a lot like R Markdown where the syntax would be something like
 
-<pre class="language-julia">
-```{r, results='hide'}
-x = rnorm(100)
-```
-</pre>
+    ```{r, results='hide'}
+    x = rnorm(100)
+    ```
 
 I guess that there is no perfect way here.
 The benefit of evaluating the user input directly, as Books.jl is doing, seems to be that it is more extensible if I'm not mistaken.
@@ -230,11 +224,9 @@ For example, inside our package, we can define the following method:
 To show code and output (sco) for this method, use the `@sco` macro.
 This macro is exported by Books, so ensure that you have `using Books` in your package.
 
-<pre class="language-julia">
-```jl
-@sco M.my_data()
-```
-</pre>
+    ```jl
+    @sco M.my_data()
+    ```
 
 This gives
 
@@ -244,11 +236,9 @@ This gives
 
 To only show the source code, use `@sc`:
 
-<pre class="language-julia">
-```jl
-@sc M.my_data()
-```
-</pre>
+    ```jl
+    @sc M.my_data()
+    ```
 
 resulting in
 
@@ -258,15 +248,13 @@ resulting in
 
 To override options for your output, use the `pre` keyword argument of `@sco`:
 
-<pre class="language-julia">
-```jl
-let
-    caption = "This caption is set via the pre keyword."
-    pre(out) = Options(out; caption)
-    @sco pre=pre my_data()
-end
-```
-</pre>
+    ```jl
+    let
+        caption = "This caption is set via the pre keyword."
+        pre(out) = Options(out; caption)
+        @sco pre=pre my_data()
+    end
+    ```
 
 which appears to the reader as:
 
@@ -282,11 +270,9 @@ See `?sco` for more information.
 Since we're using methods as code blocks, we can use the code shown in one code block in another.
 For example, to determine the mean of column A:
 
-<pre class="language-julia">
-```jl
-@sco M.my_data_mean(my_data())
-```
-</pre>
+    ```jl
+    @sco M.my_data_mean(my_data())
+    ```
 
 shows as
 
@@ -303,11 +289,9 @@ Or, we can show the output inline, namely `jl M.my_data_mean(my_data())`, by usi
 It is also possible to show methods with parameters.
 For example,
 
-<pre class="language-julia">
-```jl
-@sc M.hello("" )
-```
-</pre>
+    ```jl
+    @sc M.hello("" )
+    ```
 
 shows
 
@@ -367,12 +351,10 @@ And, for adjusting the caption, use `Options`:
 
 or the caption can be specified in the Markdown file:
 
-<pre class="language-julia">
-```jl
-p = M.image_options_plot()
-Options(p; caption="Label specified in Markdown.")
-```
-</pre>
+    ```jl
+    p = M.image_options_plot()
+    Options(p; caption="Label specified in Markdown.")
+    ```
 
 ```jl
 p = M.image_options_plot()
@@ -459,12 +441,10 @@ scob("s = \"Hello\"")
 
 Another way to change the output is via the keyword arguments `process` and `post` for `sco`.
 
-<pre class="language-julia">
-```jl
-s = "df = DataFrame(A = [1], B = [Date(2018)])"
-sco(s; process=string, post=output_block)
-```
-</pre>
+    ```jl
+    s = "df = DataFrame(A = [1], B = [Date(2018)])"
+    sco(s; process=string, post=output_block)
+    ```
 
 which shows the following to the reader:
 
@@ -493,11 +473,9 @@ sco(s; process=string)
 This also works for `@sco`.
 For example, for `my_data` we can use:
 
-<pre class="language-julia">
-```jl
-@sco process=string post=output_block my_data()
-```
-</pre>
+    ```jl
+    @sco process=string post=output_block my_data()
+    ```
 
 which will show as:
 
