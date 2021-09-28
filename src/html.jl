@@ -130,7 +130,7 @@ function html_page_name(html)
 end
 
 function html_href(text, link, level)
-    threshold = 33
+    threshold = 41
     if threshold < length(text)
         shortened = text[1:threshold]::String
         text = shortened * ".."
