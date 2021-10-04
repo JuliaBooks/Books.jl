@@ -5,8 +5,8 @@ author:
   - John Doe
 
 # Licenses; can be empty.
-html-license: <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
-tex-license: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+html-license: <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
+tex-license: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
 
 pdf-footer: "\\url{https://github.com/johndoe/Book.jl}"
 
@@ -16,7 +16,7 @@ geometry:
   - paperwidth=7in # 17.78 cm.
   - marginparwidth=30mm
   - marginparsep=2mm
-  - bindingoffset=3mm
+  - bindingoffset=10mm
   - top=10mm
   - inner=8mm
   - outer=8mm
