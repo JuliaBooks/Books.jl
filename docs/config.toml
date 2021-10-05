@@ -10,10 +10,7 @@
   output_filename = "books"
 
   # Full URL, required for the sitemap and robots.txt.
-  online_url = "https://rikhuijzer.github.io"
-
-  # Prefix for GitHub Pages.
-  online_url_prefix = "/Books.jl"
+  online_url = "https://books.huijzer.xyz"
 
   # Extra directories to be copied.
   extra_directories = [
