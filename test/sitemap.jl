@@ -19,7 +19,7 @@ end
     actual = Books.html_loc(online_url, online_url_prefix, link)
     @test actual == "https://example.com/Foo.jl/index$(html_suffix)"
 
-    project = "default"
+    project = "test"
     cd(joinpath(Books.PROJECT_ROOT, "docs")) do
         h = Books.pandoc_html(project)
         text = Books.sitemap(project, h)
@@ -28,7 +28,7 @@ end
         text = lstrip_lines(text)
         expected = """
             <url>
-            <loc>https://rikhuijzer.github.io/Books.jl/plots$html_suffix</loc>
+            <loc>https://rikhuijzer.github.io/Books.jl/welcome$html_suffix</loc>
             <lastmod>$(today())</lastmod>
             <changefreq>monthly</changefreq>
             </url>

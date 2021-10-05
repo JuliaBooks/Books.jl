@@ -33,3 +33,6 @@
     "test"
   ]
 
+  online_url = "https://rikhuijzer.github.io"
+  online_url_prefix = "/Books.jl"
+

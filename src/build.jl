@@ -223,14 +223,14 @@ julia> cd(pkgdir(Books)) do
 ""
 
 julia> cd(joinpath(pkgdir(Books), "docs")) do
-           Books.ci_url_prefix("default")
+           Books.ci_url_prefix("test")
        end
 "/Books.jl"
 ```
 """
 function ci_url_prefix(project)
     user_setting = config(project, "online_url_prefix")
-    user_setting
+    return user_setting
 end
 
 @memoize function highlight(url_prefix)

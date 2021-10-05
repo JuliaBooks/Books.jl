@@ -71,7 +71,7 @@
     pages = [page]
     docs_dir = joinpath(pkgdir(Books), "docs")
     cd(docs_dir) do
-        url_prefix = Books.ci_url_prefix("default")
+        url_prefix = Books.ci_url_prefix("test")
         @test url_prefix != ""
         actual = Books.fix_links(names, pages, url_prefix) |> last |> first
         expected = """
