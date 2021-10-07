@@ -19,7 +19,6 @@ using InteractiveUtils: gen_call_with_extracted_types
 using Markdown: MD
 using Memoize: @memoize
 using Requires: @require
-using Tectonic: tectonic
 using pandoc_crossref_jll: pandoc_crossref_path
 using pandoc_jll: pandoc
 

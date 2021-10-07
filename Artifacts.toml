@@ -11,3 +11,10 @@ git-tree-sha1 = "abf95d66dacf271c927a922ec729b5276e3a4b44"
     [[Highlight.download]]
     sha256 = "7c1a68258e93aca65f7a6a475be7d315b43a107f872a1db20a637c5d447d22ea"
     url = "https://github.com/highlightjs/cdn-release/archive/refs/tags/11.1.0.tar.gz"
+
+[Tectonic]
+git-tree-sha1 = "4e6be1718b95ca6b28c2072f7ec676a35a0aea94"
+
+    [[Tectonic.download]]
+    sha256 = "e46767ab9edc8cd83666a293020c290c984470d984f6f6e2f53454c0869c3dd4"
+    url = "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.7.1/tectonic-0.7.1-x86_64-unknown-linux-musl.tar.gz"
