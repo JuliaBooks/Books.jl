@@ -114,3 +114,20 @@ function write_extra_html_files(project)
     write(path, robots)
     return nothing
 end
+
+"""
+    patch_tectonic_url()
+
+Workaround for https://github.com/tectonic-typesetting/tectonic/issues/765.
+"""
+function patch_tectonic_url()
+    old_url = "https://archive.org/services/purl/net/pkgwpub/tectonic-default"
+    new_url = "https://ttassets.z13.web.core.windows.net/tlextras-2020.0r0.tar"
+    tectonic() do bin
+        txt = read(bin, String)
+        updated = replace(txt, old_url => new_url)
+        run(`chmod 775 $bin`)
+        write(bin, updated)
+    end
+    return nothing
+end

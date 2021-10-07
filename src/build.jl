@@ -392,6 +392,15 @@ function build_all(; project="default", extra_head="", fail_on_error=false)
     build_sitemap = true
     html(; project, extra_head, fail_on_error, build_sitemap)
     write_extra_html_files(project)
-    pdf(; project)
+    try
+        # Temporary test.
+        patch_tectonic_url()
+        pdf(; project)
+    catch
+        if IS_CI
+            patch_tectonic_url()
+            pdf(; project)
+        end
+    end
     docx(; project)
 end
