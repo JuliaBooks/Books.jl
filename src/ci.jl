@@ -121,12 +121,14 @@ end
 Workaround for https://github.com/tectonic-typesetting/tectonic/issues/765.
 """
 function patch_tectonic_url()
-    old_url = "https://archive.org/services/purl/net/pkgwpub/tectonic-default"
+    old_url = "archive.org/services/purl/net/pkgwpub/tectonic-default"
     # The new URL has to be shorter than the old URL for patching to work.
-    new_url = "https://juliabooks.github.io/TectonicRedirect/"
+    new_url = "juliabooks.github.io/TectonicRedirect/index"
     tectonic() do bin
         run(`chmod 775 $bin`)
-        run(`sed -i 's@$(old_url)@$(new_url)@' $bin`)
+        arg = "s@$(old_url)@$(new_url)@"
+        cmd = `sed -i $arg $bin`
+        run(cmd)
     end
     return nothing
 end
