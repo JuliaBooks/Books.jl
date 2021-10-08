@@ -11,3 +11,36 @@ git-tree-sha1 = "abf95d66dacf271c927a922ec729b5276e3a4b44"
     [[Highlight.download]]
     sha256 = "7c1a68258e93aca65f7a6a475be7d315b43a107f872a1db20a637c5d447d22ea"
     url = "https://github.com/highlightjs/cdn-release/archive/refs/tags/11.1.0.tar.gz"
+
+[[Tectonic]]
+lazy = true
+os = "linux"
+arch = "x86_64"
+libc = "musl"
+git-tree-sha1 = "4e6be1718b95ca6b28c2072f7ec676a35a0aea94"
+
+    [[Tectonic.download]]
+    sha256 = "e46767ab9edc8cd83666a293020c290c984470d984f6f6e2f53454c0869c3dd4"
+    url = "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.7.1/tectonic-0.7.1-x86_64-unknown-linux-musl.tar.gz"
+
+[[Tectonic]]
+lazy = true
+os = "linux"
+arch = "x86_64"
+libc = "glibc"
+git-tree-sha1 = "6f6dfab970aad1671eb771b077a2d559b35b51f2"
+
+    [[Tectonic.download]]
+    sha256 = "3a128a4f2302033c350f9a18dc35a48f3034173d9e02b80c00ae4f83ee506cde"
+    url = "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.7.1/tectonic-0.7.1-x86_64-unknown-linux-gnu.tar.gz"
+
+[[Tectonic]]
+lazy = true
+os = "macos"
+arch = "x86_64"
+git-tree-sha1 = "14162c715ca3bf18c65382c933951c6e5d4696f5"
+
+    [[Tectonic.download]]
+    sha256 = "4311c5f77d89f11be2f56c14997c8b850f748038f679b8e73c5fe8601a50cba4"
+    url = "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.7.1/tectonic-0.7.1-x86_64-apple-darwin.tar.gz"
+

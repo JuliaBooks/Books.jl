@@ -5,7 +5,7 @@ book: true # Set to false to get a shorter PDF.
 author:
   - Rik Huijzer
   - and contributors
-pdf-footer: https://github.com/rikhuijzer/Books.jl
+pdf-footer: ""
 
 # An example additional header include for html.
 # Note that the url will be updated by `Books.fix_links`.

@@ -312,34 +312,33 @@ function pdf(; project="default")
     listings_path = joinpath(PROJECT_ROOT, "defaults", "julia_listings.tex")
     build_info = today()
 
-    tectonic() do tectonic_bin
-        pdf_engine = "--pdf-engine=$tectonic_bin"
+    tectonic = joinpath(Artifacts.artifact"Tectonic", "tectonic")
+    pdf_engine = "--pdf-engine=$tectonic"
 
-        args = [
-            input_path;
-            crossref;
-            citeproc;
-            csl();
-            metadata;
-            template;
-            "--listings";
-            pdf_engine;
-            # Print engine info. Extremely useful for debugging.
-            "--pdf-engine-opt=--print";
-            "--variable=listings-unicode-path:$listings_unicode_path";
-            "--variable=listings-path:$listings_path";
-            "--variable=build-info:$build_info";
-            extra_args
-        ]
-        output_tex_filename = joinpath(BUILD_DIR, "$file.tex")
-        println("Wrote $output_tex_filename (for debugging purposes)")
-        tex_output = "--output=$output_tex_filename"
-        call_pandoc([args; tex_output])
+    args = [
+        input_path;
+        crossref;
+        citeproc;
+        csl();
+        metadata;
+        template;
+        "--listings";
+        pdf_engine;
+        # Print engine info. Extremely useful for debugging.
+        "--pdf-engine-opt=--print";
+        "--variable=listings-unicode-path:$listings_unicode_path";
+        "--variable=listings-path:$listings_path";
+        "--variable=build-info:$build_info";
+        extra_args
+    ]
+    output_tex_filename = joinpath(BUILD_DIR, "$file.tex")
+    println("Wrote $output_tex_filename (for debugging purposes)")
+    tex_output = "--output=$output_tex_filename"
+    call_pandoc([args; tex_output])
 
-        out = call_pandoc([args; output])
-        if !isnothing(out)
-            println("Built $output_filename")
-        end
+    out = call_pandoc([args; output])
+    if !isnothing(out)
+        println("Built $output_filename")
     end
 
     return nothing
