@@ -128,7 +128,7 @@ function patch_tectonic_url()
     tectonic = joinpath(Artifacts.artifact"Tectonic", "tectonic")
     run(`chmod 775 $tectonic`)
     arg = "s@$(old_url)@$(new_url)@"
-    cmd = `sed -i $arg $bin`
+    cmd = `sed -i $arg $tectonic`
     run(cmd)
     return nothing
 end
