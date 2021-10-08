@@ -10,6 +10,7 @@ end
 
 import Artifacts
 import CodeTracking
+import LazyArtifacts
 import LiveServer
 import TOML
 import YAML
