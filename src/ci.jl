@@ -114,3 +114,21 @@ function write_extra_html_files(project)
     write(path, robots)
     return nothing
 end
+
+"""
+    patch_tectonic_url()
+
+Workaround for https://github.com/tectonic-typesetting/tectonic/issues/765.
+"""
+function patch_tectonic_url()
+    old_url = "https://archive.org/services/purl/net/pkgwpub/tectonic-default"
+    # The new URL seems to be required to have the same length as the old URL for patching to work.
+    new_url = "https://tectonicredirectmirrorabc.netlify.app/tectonic-default"
+    tectonic() do bin
+        run(`chmod 775 $bin`)
+        arg = "s@$(old_url)@$(new_url)@"
+        cmd = `sed -i $arg $bin`
+        run(cmd)
+    end
+    return nothing
+end

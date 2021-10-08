@@ -391,6 +391,17 @@ function build_all(; project="default", extra_head="", fail_on_error=false)
     build_sitemap = true
     html(; project, extra_head, fail_on_error, build_sitemap)
     write_extra_html_files(project)
-    pdf(; project)
+    try
+        pdf(; project)
+    catch e
+        # Only patch in CI.
+        if IS_CI
+            println("PDF generation failed. Patching the archive.org URL and trying again")
+            patch_tectonic_url()
+            pdf(; project)
+        else
+            throw(e)
+        end
+    end
     docx(; project)
 end
