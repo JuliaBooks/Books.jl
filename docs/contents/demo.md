@@ -439,7 +439,10 @@ or, with a string
 scob("s = \"Hello\"")
 ```
 
-Another way to change the output is via the keyword arguments `process` and `post` for `sco`.
+Another way to change the output is via the keyword arguments `pre`, `process` and `post` for `sco`.
+The idea of these arguments is that they allow you to pass a function to alter the processing that Books.jl does.
+`pre` is applied **before** `Books.convert_output`, `process` is applied **instead** of `Books.convert_output` and `post` is applied **after** `Books.convert_output`.
+For example, to force books to convert a DataFrame to a string instead of a Markdown table, use:
 
     ```jl
     s = "df = DataFrame(A = [1], B = [Date(2018)])"
