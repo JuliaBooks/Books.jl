@@ -307,6 +307,7 @@ function pdf(; project="default")
     output = "--output=$output_filename"
     metadata_path = combined_metadata_path(project)
     metadata = "--metadata-file=$metadata_path"
+    output_block_filter = joinpath(PROJECT_ROOT, "src", "output-block.lua")
     input_files = ignore_homepage(project, inputs(project))
     listings_unicode_path = joinpath(PROJECT_ROOT, "defaults", "julia_listings_unicode.tex")
     listings_path = joinpath(PROJECT_ROOT, "defaults", "julia_listings.tex")
@@ -322,6 +323,7 @@ function pdf(; project="default")
         csl();
         metadata;
         template;
+        "--lua-filter=$output_block_filter";
         "--listings";
         pdf_engine;
         # Print engine info. Extremely useful for debugging.

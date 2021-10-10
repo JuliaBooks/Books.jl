@@ -16,23 +16,11 @@ git-tree-sha1 = "abf95d66dacf271c927a922ec729b5276e3a4b44"
 lazy = true
 os = "linux"
 arch = "x86_64"
-libc = "musl"
 git-tree-sha1 = "4e6be1718b95ca6b28c2072f7ec676a35a0aea94"
 
     [[Tectonic.download]]
     sha256 = "e46767ab9edc8cd83666a293020c290c984470d984f6f6e2f53454c0869c3dd4"
     url = "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.7.1/tectonic-0.7.1-x86_64-unknown-linux-musl.tar.gz"
-
-[[Tectonic]]
-lazy = true
-os = "linux"
-arch = "x86_64"
-libc = "glibc"
-git-tree-sha1 = "6f6dfab970aad1671eb771b077a2d559b35b51f2"
-
-    [[Tectonic.download]]
-    sha256 = "3a128a4f2302033c350f9a18dc35a48f3034173d9e02b80c00ae4f83ee506cde"
-    url = "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.7.1/tectonic-0.7.1-x86_64-unknown-linux-gnu.tar.gz"
 
 [[Tectonic]]
 lazy = true

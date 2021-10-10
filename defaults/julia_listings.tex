@@ -3,6 +3,47 @@
 \usepackage{listings}
 \usepackage{xcolor}
 
+\definecolor{highlight-red}{HTML}{d73a49}
+\definecolor{highlight-background}{HTML}{f2f2f2}
+\definecolor{highlight-lightbackground}{HTML}{fcfcfc}
+% Inline code should have a gray background.
+% That's not working (yet), so making the font color a bit more light.
+% The website uses hsl(0, 0, 15) == #262626
+\definecolor{highlight-gray}{HTML}{333333}
+\definecolor{highlight-lightgray}{HTML}{757575}
+\definecolor{highlight-blue}{HTML}{005cc5}
+\definecolor{highlight-darkblue}{HTML}{032f62}
+\definecolor{highlight-orange}{HTML}{e36209}
+
+\lstdefinelanguage{Output}{
+  backgroundcolor = \color{highlight-lightbackground},
+  % linespread is necessary to avoid white space https://tex.stackexchange.com/a/129380/92217.
+  basicstyle = \JuliaMonoRegular\linespread{1.5}\scriptsize\color{highlight-gray},
+  numberstyle = \JuliaMonoRegular\scriptsize\color{highlight-red}, % not doing anything?
+  commentstyle = \color[HTML]{AAAAAA},
+  rulecolor = \color[HTML]{000000},
+  postbreak = \usebox\mypostbreak,
+  % none|leftline|topline|bottomline|lines|single|shadowbox
+  frame = lines,
+  frameround = tttt,
+  rulecolor = \color{highlight-lightgray},
+  framesep = 1pt, % Higher means larger corner diameter.
+  framexleftmargin = 3pt,
+  framextopmargin = 3pt,
+  framexbottommargin = 3pt,
+  xleftmargin = 2pt, % Spacing from side of page.
+  tabsize = 4,
+  captionpos = b,
+  breaklines = true,
+  breakatwhitespace = false,
+  showstringspaces = false,
+  showspaces = false,
+  showtabs = false,
+  columns = fullflexible,
+  keepspaces = true,
+  numbers = none, % Line numbers.
+}
+
 \lstdefinelanguage{Julia}{
     % functions
     keywords=[3]{abs,abs2,abspath,accept,accumulate,accumulate!,acos,acos_fast,acosd,acosh,acosh_fast,acot,acotd,acoth,acsc,acscd,acsch,adjoint,adjoint!,all,all!,allunique,angle,angle_fast,any,any!,append!,apropos,ascii,asec,asecd,asech,asin,asin_fast,asind,asinh,asinh_fast,assert,asyncmap,asyncmap!,atan,atan2,atan2_fast,atan_fast,atand,atanh,atanh_fast,atexit,atreplinit,axes,backtrace,base,basename,beta,big,bin,bind,binomial,bitbroadcast,bitrand,bits,bitstring,bkfact,bkfact!,blkdiag,broadcast,broadcast!,broadcast_getindex,broadcast_setindex!,bswap,bytes2hex,cat,catch_backtrace,catch_stacktrace,cbrt,cbrt_fast,cd,ceil,cfunction,cglobal,charwidth,checkbounds,checkindex,chmod,chol,cholfact,cholfact!,chomp,chop,chown,chr2ind,circcopy!,circshift,circshift!,cis,cis_fast,clamp,clamp!,cld,clipboard,close,cmp,coalesce,code_llvm,code_lowered,code_native,code_typed,code_warntype,codeunit,codeunits,collect,colon,complex,cond,condskeel,conj,conj!,connect,consume,contains,convert,copy,copy!,copysign,copyto!,cor,cos,cos_fast,cosc,cosd,cosh,cosh_fast,cospi,cot,cotd,coth,count,count_ones,count_zeros,countlines,countnz,cov,cp,cross,csc,cscd,csch,ctime,ctranspose,ctranspose!,cummax,cummin,cumprod,cumprod!,cumsum,cumsum!,current_module,current_task,dec,deepcopy,deg2rad,delete!,deleteat!,den,denominator,deserialize,det,detach,diag,diagind,diagm,diff,digits,digits!,dirname,disable_sigint,display,displayable,displaysize,div,divrem,done,dot,download,dropzeros,dropzeros!,dump,eachcol,eachindex,eachline,eachmatch,edit,eig,eigfact,eigfact!,eigmax,eigmin,eigvals,eigvals!,eigvecs,eltype,empty,empty!,endof,endswith,enumerate,eof,eps,equalto,error,esc,escape_string,evalfile,exit,exp,exp10,exp10_fast,exp2,exp2_fast,exp_fast,expanduser,expm,expm!,expm1,expm1_fast,exponent,extrema,eye,factorial,factorize,falses,fd,fdio,fetch,fieldcount,fieldname,fieldnames,fieldoffset,filemode,filesize,fill,fill!,filter,filter!,finalize,finalizer,find,findfirst,findin,findlast,findmax,findmax!,findmin,findmin!,findn,findnext,findnz,findprev,first,fld,fld1,fldmod,fldmod1,flipbits!,flipdim,flipsign,float,floor,flush,fma,foldl,foldr,foreach,frexp,full,fullname,functionloc,gamma,gc,gc_enable,gcd,gcdx,gensym,get,get!,get_zero_subnormals,getaddrinfo,getalladdrinfo,gethostname,getindex,getipaddr,getkey,getnameinfo,getpeername,getpid,getsockname,givens,gperm,gradient,hash,haskey,hcat,hessfact,hessfact!,hex,hex2bytes,hex2bytes!,hex2num,homedir,htol,hton,hvcat,hypot,hypot_fast,identity,ifelse,ignorestatus,im,imag,in,include_dependency,include_string,ind2chr,ind2sub,indexin,indices,indmax,indmin,info,insert!,instances,intersect,intersect!,inv,invmod,invperm,invpermute!,ipermute!,ipermutedims,is,is_apple,is_bsd,is_linux,is_unix,is_windows,isabspath,isapprox,isascii,isassigned,isbits,isblockdev,ischardev,isconcrete,isconst,isdiag,isdir,isdirpath,isempty,isequal,iseven,isfifo,isfile,isfinite,ishermitian,isimag,isimmutable,isinf,isinteger,isinteractive,isleaftype,isless,isletter,islink,islocked,ismarked,ismatch,ismissing,ismount,isnan,isodd,isone,isopen,ispath,isperm,isposdef,isposdef!,ispow2,isqrt,isreadable,isreadonly,isready,isreal,issetgid,issetuid,issocket,issorted,issparse,issticky,issubnormal,issubset,issubtype,issymmetric,istaskdone,istaskstarted,istextmime,istril,istriu,isvalid,iswritable,iszero,join,joinpath,keys,keytype,kill,kron,last,lbeta,lcm,ldexp,ldltfact,ldltfact!,leading_ones,leading_zeros,length,less,lexcmp,lexless,lfact,lgamma,lgamma_fast,linearindices,linreg,linspace,listen,listenany,lock,log,log10,log10_fast,log1p,log1p_fast,log2,log2_fast,log_fast,logabsdet,logdet,logging,logm,logspace,lpad,lq,lqfact,lqfact!,lstat,lstrip,ltoh,lu,lufact,lufact!,lyap,macroexpand,map,map!,mapfoldl,mapfoldr,mapreduce,mapreducedim,mapslices,mark,match,matchall,max,max_fast,maxabs,maximum,maximum!,maxintfloat,mean,mean!,median,median!,merge,merge!,method_exists,methods,methodswith,middle,midpoints,mimewritable,min,min_fast,minabs,minimum,minimum!,minmax,minmax_fast,missing,mkdir,mkpath,mktemp,mktempdir,mod,mod1,mod2pi,modf,module_name,module_parent,mtime,muladd,mv,names,nb_available,ncodeunits,ndigits,ndims,next,nextfloat,nextind,nextpow,nextpow2,nextprod,nnz,nonzeros,norm,normalize,normalize!,normpath,notify,ntoh,ntuple,nullspace,num,num2hex,numerator,nzrange,object_id,occursin,oct,oftype,one,ones,oneunit,open,operm,ordschur,ordschur!,pairs,parent,parentindexes,parentindices,parse,partialsort,partialsort!,partialsortperm,partialsortperm!,peakflops,permute,permute!,permutedims,permutedims!,pi,pinv,pipeline,pointer,pointer_from_objref,pop!,popdisplay,popfirst!,position,pow_fast,powermod,precision,precompile,prepend!,prevfloat,prevind,prevpow,prevpow2,print,print_shortest,print_with_color,println,process_exited,process_running,prod,prod!,produce,promote,promote_rule,promote_shape,promote_type,push!,pushdisplay,pushfirst!,put!,pwd,qr,qrfact,qrfact!,quantile,quantile!,quit,rad2deg,rand,rand!,randcycle,randcycle!,randexp,randexp!,randjump,randn,randn!,randperm,randperm!,randstring,randsubseq,randsubseq!,range,rank,rationalize,read,read!,readandwrite,readavailable,readbytes!,readchomp,readdir,readline,readlines,readlink,readstring,readuntil,real,realmax,realmin,realpath,recv,recvfrom,redirect_stderr,redirect_stdin,redirect_stdout,redisplay,reduce,reducedim,reenable_sigint,reim,reinterpret,reload,relpath,rem,rem2pi,repeat,replace,replace!,repmat,repr,reprmime,reset,reshape,resize!,rethrow,retry,reverse,reverse!,reverseind,rm,rol,rol!,ror,ror!,rot180,rotl90,rotr90,round,rounding,rowvals,rpad,rsearch,rsearchindex,rsplit,rstrip,run,scale!,schedule,schur,schurfact,schurfact!,search,searchindex,searchsorted,searchsortedfirst,searchsortedlast,sec,secd,sech,seek,seekend,seekstart,select,select!,selectperm,selectperm!,send,serialize,set_zero_subnormals,setdiff,setdiff!,setenv,setindex!,setprecision,setrounding,shift!,show,showall,showcompact,showerror,shuffle,shuffle!,sign,signbit,signed,signif,significand,similar,sin,sin_fast,sinc,sincos,sind,sinh,sinh_fast,sinpi,size,sizehint!,sizeof,skip,skipchars,skipmissing,sleep,slicedim,sort,sort!,sortcols,sortperm,sortperm!,sortrows,sparse,sparsevec,spawn,spdiagm,speye,splice!,split,splitdir,splitdrive,splitext,spones,sprand,sprandn,sprint,spzeros,sqrt,sqrt_fast,sqrtm,squeeze,srand,stacktrace,start,startswith,stat,std,stdm,step,stride,strides,string,stringmime,strip,strwidth,sub2ind,subtypes,success,sum,sum!,sumabs,sumabs2,summary,supertype,svd,svdfact,svdfact!,svdvals,svdvals!,sylvester,symdiff,symdiff!,symlink,systemerror,take!,takebuf_array,takebuf_string,tan,tan_fast,tand,tanh,tanh_fast,task_local_storage,tempdir,tempname,thisind,tic,time,time_ns,timedwait,to_indices,toc,toq,touch,trace,trailing_ones,trailing_zeros,transcode,transpose,transpose!,tril,tril!,triu,triu!,trues,trunc,truncate,trylock,tryparse,typeintersect,typejoin,typemax,typemin,unescape_string,union,union!,unique,unique!,unlock,unmark,unsafe_copy!,unsafe_copyto!,unsafe_load,unsafe_pointer_to_objref,unsafe_read,unsafe_store!,unsafe_string,unsafe_trunc,unsafe_wrap,unsafe_write,unshift!,unsigned,uperm,valtype,values,var,varinfo,varm,vcat,vec,vecdot,vecnorm,versioninfo,view,wait,walkdir,warn,which,whos,widemul,widen,withenv,workspace,write,xor,yield,yieldto,zero,zeros,zip,applicable,eval,fieldtype,getfield,invoke,isa,isdefined,nfields,nothing,setfield!,throw,tuple,typeassert,typeof,uninitialized,undef},%
@@ -22,16 +63,6 @@
     literate=*{-}{-}1,
     alsoletter=!?
 }
-
-\definecolor{highlight-red}{HTML}{d73a49}
-\definecolor{highlight-background}{HTML}{f5f5f5}
-% Inline code should have a gray background.
-% That's not working (yet), so making the font color a bit more light.
-% The website uses hsl(0, 0, 15) == #262626
-\definecolor{highlight-gray}{HTML}{333333}
-\definecolor{highlight-blue}{HTML}{005cc5}
-\definecolor{highlight-darkblue}{HTML}{032f62}
-\definecolor{highlight-orange}{HTML}{e36209}
 
 % Thanks to https://tex.stackexchange.com/questions/570945.
 \newsavebox\mypostbreak
