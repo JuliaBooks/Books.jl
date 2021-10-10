@@ -28,7 +28,7 @@ end
         text = lstrip_lines(text)
         expected = """
             <url>
-            <loc>https://rikhuijzer.github.io/Books.jl/welcome$html_suffix</loc>
+            <loc>https://books.huijzer.xyz/welcome$html_suffix</loc>
             <lastmod>$(today())</lastmod>
             <changefreq>monthly</changefreq>
             </url>
