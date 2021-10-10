@@ -7,7 +7,7 @@ local function CodeBlock (elem)
     if elem.c[1][2][1] == "language-julia" then
         return pandoc.RawBlock("latex", "\n\\begin{lstlisting}[language=Julia]\n"..elem.text.."\n\\end{lstlisting}\n")
     elseif elem.c[1][2][1] == "output" then
-        return pandoc.RawBlock("latex", "\n\\begin{lstlisting}[language=output]\n"..elem.text.."\n\\end{lstlisting}\n")
+        return pandoc.RawBlock("latex", "\n\\begin{lstlisting}[language=Output]\n"..elem.text.."\n\\end{lstlisting}\n")
     else
         return elem
     end

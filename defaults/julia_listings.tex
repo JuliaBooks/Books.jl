@@ -4,28 +4,29 @@
 \usepackage{xcolor}
 
 \definecolor{highlight-red}{HTML}{d73a49}
-\definecolor{highlight-background}{HTML}{f5f5f5}
+\definecolor{highlight-background}{HTML}{f2f2f2}
+\definecolor{highlight-lightbackground}{HTML}{fcfcfc}
 % Inline code should have a gray background.
 % That's not working (yet), so making the font color a bit more light.
 % The website uses hsl(0, 0, 15) == #262626
 \definecolor{highlight-gray}{HTML}{333333}
+\definecolor{highlight-lightgray}{HTML}{757575}
 \definecolor{highlight-blue}{HTML}{005cc5}
 \definecolor{highlight-darkblue}{HTML}{032f62}
 \definecolor{highlight-orange}{HTML}{e36209}
 
-\lstdefinelanguage{output}{}
-
-\lstdefinestyle{output_style}{
-  language = output,
-  backgroundcolor = \color{highlight-background},
+\lstdefinelanguage{Output}{
+  backgroundcolor = \color{highlight-lightbackground},
   % linespread is necessary to avoid white space https://tex.stackexchange.com/a/129380/92217.
   basicstyle = \JuliaMonoRegular\linespread{1.5}\scriptsize\color{highlight-gray},
   numberstyle = \JuliaMonoRegular\scriptsize\color{highlight-red}, % not doing anything?
   commentstyle = \color[HTML]{AAAAAA},
   rulecolor = \color[HTML]{000000},
   postbreak = \usebox\mypostbreak,
-  frame = dash,
+  % none|leftline|topline|bottomline|lines|single|shadowbox
+  frame = single,
   frameround = tttt,
+  rulecolor = \color{highlight-lightgray},
   framesep = 1pt, % Higher means larger corner diameter.
   framexleftmargin = 3pt,
   framextopmargin = 3pt,
@@ -42,7 +43,6 @@
   keepspaces = true,
   numbers = none, % Line numbers.
 }
-\lstset{style=output_style}
 
 \lstdefinelanguage{Julia}{
     % functions
