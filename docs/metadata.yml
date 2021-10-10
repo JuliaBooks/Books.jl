@@ -1,11 +1,9 @@
 ---
 title: Books.jl
 subtitle: Create books with Julia
-book: true # Set to false to get a shorter PDF.
 author:
   - Rik Huijzer
   - and contributors
-pdf-footer: ""
 
 # An example additional header include for html.
 # Note that the url will be updated by `Books.fix_links`.
@@ -16,10 +14,14 @@ header-includes:
   ```
 mousetrap: true
 
-# Useful for printing.
-links-as-notes: true
+#
+# PDF only settings.
+#
+pdf-footer: ""
 
-# Only used in PDF.
+# Avoid adding a blank page before each chapter.
+disable-cleardoublepage: true
+
 titlepage-top: >
   \begin{tabular}{l}
   Rik Huijzer\\

@@ -212,6 +212,10 @@ $endif$
 % Probably doesn't hurt.
 \usepackage{marginfix}
 
+$if(disable-cleardoublepage)$
+\let\cleardoublepage\clearpage
+$endif$
+
 \begin{document}
 
 \makeatletter
