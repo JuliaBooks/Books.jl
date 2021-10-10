@@ -225,7 +225,7 @@ julia> cd(pkgdir(Books)) do
 julia> cd(joinpath(pkgdir(Books), "docs")) do
            Books.ci_url_prefix("test")
        end
-"/Books.jl"
+"/Example.jl"
 ```
 """
 function ci_url_prefix(project)
