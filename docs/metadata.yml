@@ -31,5 +31,5 @@ titlepage-top: >
   \end{tabular}
 
 titlepage-bottom: >
-  \url{https://github.com/rikhuijzer/Books.jl}
+  \url{https://books.huijzer.xyz}
 ---

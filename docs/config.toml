@@ -33,6 +33,6 @@
     "test"
   ]
 
-  online_url = "https://rikhuijzer.github.io"
-  online_url_prefix = "/Books.jl"
+  online_url = "https://example.com"
+  online_url_prefix = "/Example.jl"
 

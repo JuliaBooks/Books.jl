@@ -2,7 +2,7 @@
 
 Create books with Julia.
 
-[![CI Testing](https://github.com/rikhuijzer/Books.jl/workflows/CI/badge.svg)](https://github.com/rikhuijzer/Books.jl/actions?query=workflow%3ACI+branch%3Amain)
+[![CI Testing](https://github.com/JuliaBooks/Books.jl/workflows/CI/badge.svg)](https://github.com/JuliaBooks/Books.jl/actions?query=workflow%3ACI+branch%3Amain)
 [![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/invenia/BlueStyle)
 [![ColPrac: Contributor's Guide on Collaborative Practices for Community Packages](https://img.shields.io/badge/ColPrac-Contributor's%20Guide-blueviolet)](https://github.com/SciML/ColPrac)
 
@@ -34,7 +34,7 @@ To install this package (Julia 1.6/1.7 on MacOS/Linux), use
 pkg> add Books
 ```
 
-See, the [documentation](https://rikhuijzer.github.io/Books.jl) for more information.
+See, the [documentation](https://books.huijzer.xyz) for more information.
 
 ### Windows
 

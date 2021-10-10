@@ -76,8 +76,8 @@
         actual = Books.fix_links(names, pages, url_prefix) |> last |> first
         expected = """
             <!DOCTYPE html>
-            <link rel="stylesheet" href="/Books.jl/files/style.css"/>
-            <a href="/Books.jl/test$(Books.HTML_SUFFIX)#sec:foo">Foo</a>
+            <link rel="stylesheet" href="/Example.jl/files/style.css"/>
+            <a href="/Example.jl/test$(Books.HTML_SUFFIX)#sec:foo">Foo</a>
             <h2 data-number="3.5" id="sec:foo"><span class="header-section-number">3.5</span> Foo</h2>
             <p> <a href="https://www.example.com">Jump</a></p>
             """

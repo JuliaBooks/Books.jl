@@ -13,11 +13,11 @@ end
 
 @testset "sitemap" begin
     html_suffix = Books.HTML_SUFFIX
-    online_url = "https://example.com"
+    online_url = "https://example.github.io"
     online_url_prefix = "Foo.jl/"
     link = "index"
     actual = Books.html_loc(online_url, online_url_prefix, link)
-    @test actual == "https://example.com/Foo.jl/index$(html_suffix)"
+    @test actual == "https://example.github.io/Foo.jl/index$(html_suffix)"
 
     project = "test"
     cd(joinpath(Books.PROJECT_ROOT, "docs")) do
@@ -28,7 +28,7 @@ end
         text = lstrip_lines(text)
         expected = """
             <url>
-            <loc>https://rikhuijzer.github.io/Books.jl/welcome$html_suffix</loc>
+            <loc>https://example.com/Example.jl/welcome$html_suffix</loc>
             <lastmod>$(today())</lastmod>
             <changefreq>monthly</changefreq>
             </url>
