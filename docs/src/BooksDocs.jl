@@ -30,6 +30,8 @@ function build()
         <meta name="google-site-verification" content="deJcoJ2nJMQFPa1hJZULlns4yYOCQXsfcsVdafQMgdc" />
         <!-- Privacy-friendly analytics via Fathom. -->
         <script src="https://cdn.usefathom.com/script.js" data-site="WBQVJWZZ" defer></script>
+        <!-- Privacy-friendly analytics via Pirsch. -->
+        <script defer type="text/javascript" src="https://api.pirsch.io/pirsch.js" id="pirschjs" data-code="0bjwF9vL4Z9Chiae5YEpufSR0rx8b1tL"></script>
         """
     Books.build_all(; extra_head, fail_on_error)
 end
