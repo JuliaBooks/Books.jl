@@ -16,19 +16,19 @@ git-tree-sha1 = "abf95d66dacf271c927a922ec729b5276e3a4b44"
 lazy = true
 os = "linux"
 arch = "x86_64"
-git-tree-sha1 = "4e6be1718b95ca6b28c2072f7ec676a35a0aea94"
+git-tree-sha1 = "6476980862b8c80d4cd5dd03c3ccf0de2aa6d78c"
 
     [[Tectonic.download]]
-    sha256 = "e46767ab9edc8cd83666a293020c290c984470d984f6f6e2f53454c0869c3dd4"
-    url = "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.7.1/tectonic-0.7.1-x86_64-unknown-linux-musl.tar.gz"
+    sha256 = "c75d5044b5d60392895f2dac2846d9573fb581f3871d9be84d734b9cb305377c"
+    url = "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.8.0/tectonic-0.8.0-x86_64-unknown-linux-musl.tar.gz"
 
 [[Tectonic]]
 lazy = true
 os = "macos"
 arch = "x86_64"
-git-tree-sha1 = "14162c715ca3bf18c65382c933951c6e5d4696f5"
+git-tree-sha1 = "1fa5a6a617eb3345cb6baf67f288d9d935954a46"
 
     [[Tectonic.download]]
-    sha256 = "4311c5f77d89f11be2f56c14997c8b850f748038f679b8e73c5fe8601a50cba4"
-    url = "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.7.1/tectonic-0.7.1-x86_64-apple-darwin.tar.gz"
+    sha256 = "2868c8a8e57671153734d4a5ab942ebdd3f0907a1782f2987baa58bbedcad1f2"
+    url = "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.8.0/tectonic-0.8.0-x86_64-apple-darwin.tar.gz"
 
