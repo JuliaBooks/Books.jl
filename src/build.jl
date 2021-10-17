@@ -230,6 +230,9 @@ julia> cd(joinpath(pkgdir(Books), "docs")) do
 """
 function ci_url_prefix(project)
     user_setting = config(project, "online_url_prefix")
+    if !startswith(user_setting, '/') && user_setting != ""
+        user_setting = '/' * user_setting
+    end
     return user_setting
 end
 
