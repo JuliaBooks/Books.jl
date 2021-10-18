@@ -237,7 +237,7 @@ function ci_url_prefix(project)
 end
 
 @memoize function highlight(url_prefix)
-    highlight_dir = joinpath(Artifacts.artifact"Highlight", "cdn-release-11.1.0")
+    highlight_dir = joinpath(Artifacts.artifact"Highlight", "cdn-release-11.3.1")
 
     highlight_name = "highlight.min.js"
     highlight_path = joinpath(highlight_dir, "build", highlight_name)

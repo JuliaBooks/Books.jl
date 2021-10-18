@@ -6,11 +6,11 @@ git-tree-sha1 = "8730bd1d8cbb19f36e0ca10236011fd72083746f"
     url = "https://github.com/cormullion/juliamono/archive/v0.042.tar.gz"
 
 [Highlight]
-git-tree-sha1 = "abf95d66dacf271c927a922ec729b5276e3a4b44"
+git-tree-sha1 = "b07ca488bccba8b175df58503dbc97c86b4e6059"
 
     [[Highlight.download]]
-    sha256 = "7c1a68258e93aca65f7a6a475be7d315b43a107f872a1db20a637c5d447d22ea"
-    url = "https://github.com/highlightjs/cdn-release/archive/refs/tags/11.1.0.tar.gz"
+    sha256 = "ef827ce97c792fd59b0b772a87bfa34d3e88a81dbd1dd154a29ed97dbd7a450e"
+    url = "https://github.com/highlightjs/cdn-release/archive/refs/tags/11.3.1.tar.gz"
 
 [[Tectonic]]
 lazy = true
