@@ -8,11 +8,23 @@
   Create books with Julia
 </h3>
 
-[![CI Testing](https://github.com/JuliaBooks/Books.jl/workflows/CI/badge.svg)](https://github.com/JuliaBooks/Books.jl/actions?query=workflow%3ACI+branch%3Amain)
-[![Documentation](https://img.shields.io/badge/Documentation-main-blue)](https://books.huijzer.xyz)
-[![Code Style: Blue](https://img.shields.io/badge/Code%20Style-Blue-4495d1.svg)](https://github.com/invenia/BlueStyle)
-[![ColPrac: Contributor's Guide on Collaborative Practices for Community Packages](https://img.shields.io/badge/ColPrac-Contributor's%20Guide-blueviolet)](https://github.com/SciML/ColPrac)
-[![Site Analytics](https://img.shields.io/badge/Site-Analytics-blue)](https://books.pirsch.io)
+<p align="center">
+    <a href="https://github.com/JuliaBooks/Books.jl/actions?query=workflow%3ACI+branch%3Amain">
+        <img src="https://github.com/JuliaBooks/Books.jl/workflows/CI/badge.svg" alt="CI">
+    </a>
+    <a href="https://books.huijzer.xyz">
+        <img src="https://img.shields.io/badge/Documentation-main-blue" alt="Documentation">
+    </a>
+    <a href="https://github.com/invenia/BlueStyle">
+        <img src="https://img.shields.io/badge/Code%20Style-Blue-4495d1.svg" alt="Code Style Blue">
+    </a>
+    <a href="https://github.com/SciML/ColPrac">
+        <img src="https://img.shields.io/badge/ColPrac-Contributor's%20Guide-blueviolet" alt="Collaborative Practices for Community Packages">
+    </a>
+    <a href="https://books.pirsch.io">
+        <img src="https://img.shields.io/badge/Site-Analytics-blue" alt="Documentation analytics">
+    </a>
+</p>
 
 In a nutshell, this package is meant to generate books (or reports or dashboards) with embedded Julia output.
 Via Pandoc, the package can live serve a website and build various outputs including a website, PDF, and DOCX.
