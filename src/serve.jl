@@ -32,10 +32,9 @@ function custom_callback(file::AbstractString, project::AbstractString)
     LiveServer.file_changed_callback(file)
 end
 
-
-function default_simplewatcher(project, extra_directories)
+function custom_simplewatcher(project, extra_directories)
     # The callback, defined by LiveServer.jl, receives a file.
-    cb = file -> custom_callback(file, project)
+    cb(file) = custom_callback(file, project)
     sw = LiveServer.SimpleWatcher(cb)
 
     for (root, dirs, files) in walkdir(".")
@@ -55,7 +54,7 @@ function serve(; simplewatcher=nothing, host::String="127.0.0.1",
 
     if isnothing(simplewatcher)
         extra_directories = config(project, "extra_directories")
-        simplewatcher = default_simplewatcher(project, extra_directories)
+        simplewatcher = custom_simplewatcher(project, extra_directories)
     end
     mkpath(dir)
     html(; project)
