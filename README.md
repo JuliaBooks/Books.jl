@@ -1,10 +1,18 @@
-# Books.jl
+<p align="center">
+  <img width="60%" src="https://user-images.githubusercontent.com/20724914/137941103-50f5d3a8-b447-4b09-807d-7161ceeadf34.png">
+</p>
 
-Create books with Julia.
+<h1 align="center">Books.jl</h1>
+
+<h3 align="center">
+  Create books with Julia
+</h3>
 
 [![CI Testing](https://github.com/JuliaBooks/Books.jl/workflows/CI/badge.svg)](https://github.com/JuliaBooks/Books.jl/actions?query=workflow%3ACI+branch%3Amain)
-[![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/invenia/BlueStyle)
+[![Documentation](https://img.shields.io/badge/Documentation-main-blue)](https://books.huijzer.xyz)
+[![Code Style: Blue](https://img.shields.io/badge/Code%20Style-Blue-4495d1.svg)](https://github.com/invenia/BlueStyle)
 [![ColPrac: Contributor's Guide on Collaborative Practices for Community Packages](https://img.shields.io/badge/ColPrac-Contributor's%20Guide-blueviolet)](https://github.com/SciML/ColPrac)
+[![Site Analytics](https://img.shields.io/badge/Site-Analytics-blue)](https://books.pirsch.io)
 
 In a nutshell, this package is meant to generate books (or reports or dashboards) with embedded Julia output.
 Via Pandoc, the package can live serve a website and build various outputs including a website, PDF, and DOCX.
