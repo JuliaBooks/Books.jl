@@ -45,7 +45,7 @@ If you do not want numbered sections, but instead a more dynamic website with li
 If you want a small report instead of a book with numbered sections, then [Weave.jl](https://github.com/JunoLab/Weave.jl) might be more suitable for your problem.
 For smaller projects and a friendlier interface, take a look at [Pluto.jl](https://github.com/fonsp/Pluto.jl).
 
-Currently, this package is used to write the [Julia Data Science book](https://juliadatascience.io).
+This package was used to write the [Julia Data Science book](https://juliadatascience.io).
 
 ## Usage
 
