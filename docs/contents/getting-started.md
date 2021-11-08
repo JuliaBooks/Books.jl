@@ -28,6 +28,12 @@ The `config.toml` file is read by Books.jl before calling Pandoc, so contains se
 Still, these defaults can be overwritten.
 If you also want to override the templates, then see @sec:templates.
 
+To generate the PDF, use
+
+```
+julia> pdf()
+```
+
 ## metadata.yml {#sec:metadata}
 
 The `metadata.yml` file is read by Pandoc.
