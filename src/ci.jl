@@ -1,5 +1,4 @@
 is_ci() = "CI" in keys(ENV)
-const IS_CI = is_ci()
 
 """
     html_suffix()
