@@ -166,7 +166,7 @@ function write_input_markdown(project; skip_index=false)::String
         @warn "$(dir) directory doesn't exist. Did you run `gen()`?"
         mkpath(dir)
     end
-    markdown_path = joinpath(Books.GENERATED_DIR, "input.md")
+    markdown_path = joinpath(dir, "input.md")
     write(markdown_path, text)
     return markdown_path
 end
