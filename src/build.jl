@@ -161,6 +161,11 @@ function write_input_markdown(project; skip_index=false)::String
     texts = read.(files, String)
     texts = embed_output.(texts)
     text = join(texts, '\n')
+    dir = Books.GENERATED_DIR
+    if !isdir(dir)
+        @warn "$(dir) directory doesn't exist. Did you run `gen()`?"
+        mkpath(dir)
+    end
     markdown_path = joinpath(Books.GENERATED_DIR, "input.md")
     write(markdown_path, text)
     return markdown_path
