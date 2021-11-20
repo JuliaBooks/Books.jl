@@ -488,8 +488,20 @@ which will show as:
 
 ### Fonts
 
-The code blocks default to JuliaMono in html and PDF.
-Ligatures from JuliaMono are disabled. For example, none of these symbols are combined into a single glyph.
+The code blocks default to JuliaMono in HTML and PDF.
+The font automatically works in HTML even when JuliaMono is not globally installed on the system.
+The font **should** automatically work in PDF too, but sometimes it doesn't.
+If it doesn't work, try to manually install the font files located at `Books.JULIAMONO_PATH`.
+On Linux, this can be done via `fontconfig`:
+
+```
+julia> using Books
+
+julia> run(`fc-cache --force --verbose $(Books.JULIAMONO_PATH)`)
+```
+
+Ligatures from JuliaMono are disabled.
+For example, none of these symbols are combined into a single glyph.
 
 ```
 |> => and <=
