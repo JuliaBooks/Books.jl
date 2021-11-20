@@ -44,9 +44,6 @@ jobs:
       - name: Install Julia dependencies
         uses: julia-actions/julia-buildpkg@latest
 
-      - name: Install extra dependencies
-        run: julia --project -e 'using Books; Books.install_dependencies()'
-
       - uses: julia-actions/julia-runtest@v1
 
       - name: Instantiate BooksDocs

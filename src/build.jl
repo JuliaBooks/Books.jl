@@ -339,6 +339,7 @@ function pdf(; project="default")
         "--variable=listings-unicode-path:$listings_unicode_path";
         "--variable=listings-path:$listings_path";
         "--variable=build-info:$build_info";
+        "--variable=juliamono-path:$JULIAMONO_PATH";
         extra_args
     ]
     output_tex_filename = joinpath(BUILD_DIR, "$file.tex")

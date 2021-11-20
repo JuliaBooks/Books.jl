@@ -29,42 +29,6 @@ function nonempty_run(args::Vector)
 end
 
 """
-    install_extra_fonts()
-
-For some reason, this is required since I couldn't get Tectonic to work with `fontconfig` and `Path`.
-Installing fonts globally is the most reliable workaround that I can find.
-The benefit is that it's easy to verify the installation via `fc-list | grep "Julia"`.
-"""
-function install_extra_fonts()
-    name = "juliamono-$JULIAMONO_VERSION"
-    dir = joinpath(Artifacts.artifact"JuliaMono", name)
-    # See `fc-cache --force --verbose` for folders that `fc-cache` inspects.
-    # Don't try to pass a dir to `fc-cache`, this is ignored on my pc for some reason.
-    target_dir = joinpath(homedir(), ".local", "share", "fonts")
-    mkpath(target_dir)
-    for file in readdir(dir)
-        cp(joinpath(dir, file), joinpath(target_dir, file); force=true)
-    end
-    return
-
-    files = readdir(ttf_dir)
-    mkpath(fonts_dir)
-    println("Moving files to $fonts_dir")
-    for file in files
-        from = joinpath(ttf_dir, file)
-        to = joinpath(fonts_dir, file)
-        mv(from, to; force=true)
-    end
-
-    # Update fontconfig cache; not sure if it is necessary.
-    run(`fc-cache --force --verbose $fonts_dir`)
-end
-
-function install_dependencies()
-    install_extra_fonts()
-end
-
-"""
     write_extra_html_files(project)
 
 Write "robots.txt" and "404.html".
