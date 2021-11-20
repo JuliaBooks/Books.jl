@@ -29,6 +29,14 @@ const BUILD_DIR = "_build"
 const JULIAMONO_VERSION = "0.042"
 mkpath(BUILD_DIR)
 
+function juliamono_path()
+    artifact = Artifacts.artifact"JuliaMono"
+    dir = joinpath(artifact, "juliamono-$JULIAMONO_VERSION")
+    # The forward slash is required by LaTeX.
+    return dir * '/'
+end
+const JULIAMONO_PATH = juliamono_path()
+
 include("defaults.jl")
 include("ci.jl")
 include("sitemap.jl")

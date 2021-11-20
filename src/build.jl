@@ -297,14 +297,6 @@ function ignore_homepage(project, input_paths)
     override ? input_paths : input_paths[2:end]
 end
 
-function juliamono_path()
-    artifact = Artifacts.artifact"JuliaMono"
-    dir = joinpath(artifact, "juliamono-$JULIAMONO_VERSION")
-    # The forward slash is required by LaTeX.
-    dir * '/'
-end
-const JULIAMONO_PATH = juliamono_path()
-
 function pdf(; project="default")
     input_path = write_input_markdown(project; skip_index=true)
     copy_extra_directories(project)

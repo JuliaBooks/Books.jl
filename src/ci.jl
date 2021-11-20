@@ -77,3 +77,8 @@ function write_extra_html_files(project)
     write(path, robots)
     return nothing
 end
+
+function fc_cache()
+    # This shouldn't be necessary but apparently it is.
+    run(`fc-cache --force --verbose $JULIAMONO_PATH`)
+end
