@@ -78,7 +78,7 @@ function write_extra_html_files(project)
     return nothing
 end
 
-function fc_cache()
-    # This shouldn't be necessary but apparently it is.
+function install_juliamono()
+    # This shouldn't be necessary but apparently it is :\.
     run(`fc-cache --force --verbose $JULIAMONO_PATH`)
 end

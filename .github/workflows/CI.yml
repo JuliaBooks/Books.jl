@@ -44,8 +44,8 @@ jobs:
       - name: Install Julia dependencies
         uses: julia-actions/julia-buildpkg@latest
 
-      - name: Force fc-cache
-        run: julia --project -e 'using Books; Books.fc_cache()'
+      - name: Install JuliaMono
+        run: julia --project -e 'using Books; Books.install_juliamono()'
 
       - uses: julia-actions/julia-runtest@v1
 
