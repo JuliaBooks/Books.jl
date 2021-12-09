@@ -21,7 +21,7 @@ end
 
     project = "test"
     cd(joinpath(Books.PROJECT_ROOT, "docs")) do
-        h = Books.pandoc_html(project)
+        h = Books._pandoc_html(project, online_url_prefix)
         text = Books.sitemap(project, h)
         @test startswith(text, "<?xml")
         @test endswith(rstrip(text), "</urlset>")

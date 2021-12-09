@@ -1,5 +1,6 @@
 @testset "build" begin
     docs_dir = joinpath(Books.PROJECT_ROOT, "docs")
+    url_prefix = ""
     out = cd(docs_dir) do
         test_markdown_path = joinpath(docs_dir, "contents", "test.md")
         test_markdown = raw"""
@@ -16,7 +17,7 @@
 
         mkpath(joinpath(Books.BUILD_DIR, "images"))
         gen("test"; project="test")
-        out = Books.pandoc_html("test")
+        out = Books._pandoc_html("test", url_prefix)
         return out
     end
 
@@ -48,13 +49,13 @@
         mkpath(joinpath(Books.BUILD_DIR, "images"))
         gen("test"; project="test")
         try
-            Books.pandoc_html("test"; fail_on_error=true)
-            error("Expected pandoc_html to fail.")
+            Books._pandoc_html("test", url_prefix; fail_on_error=true)
+            error("Expected _pandoc_html to fail.")
         catch
         end
         try
             Books.html("test", fail_on_error=false)
-            error("Expected pandoc_html to fail.")
+            error("Expected _pandoc_html to fail.")
         catch
         end
     end

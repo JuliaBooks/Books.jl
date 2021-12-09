@@ -182,7 +182,7 @@ function verify_cross_references(h)
     end
 end
 
-function pandoc_html(project::AbstractString; fail_on_error=false)
+function _pandoc_html(project::AbstractString, url_prefix::AbstractString; fail_on_error=false)
     input_path = write_input_markdown(project)
     copy_extra_directories(project)
     html_template_path = pandoc_file("template.html")
@@ -195,7 +195,7 @@ function pandoc_html(project::AbstractString; fail_on_error=false)
     copy_mousetrap()
     copy_juliamono()
 
-    args = [
+    args = String[
         input_path;
         crossref;
         citeproc;
@@ -206,8 +206,10 @@ function pandoc_html(project::AbstractString; fail_on_error=false)
         metadata;
         template;
         extra_args;
+        # The url_prefix is either "" or startswith '/'.
+        "--variable=url-prefix:$url_prefix";
         # output
-    ]::Vector{String}
+    ]
     _, out = call_pandoc(args)
     if fail_on_error
         verify_cross_references(out)
@@ -280,11 +282,11 @@ function html(; project="default", extra_head="", fail_on_error=false, build_sit
     if config(project, "highlight")::Bool
         extra_head = extra_head * highlight(url_prefix)
     end
-    h = pandoc_html(project; fail_on_error)
+    h = _pandoc_html(project, url_prefix; fail_on_error)
     if build_sitemap
         sitemap(project, h)
     end
-    write_html_pages(url_prefix, h, extra_head)
+    return write_html_pages(url_prefix, h, extra_head)
 end
 
 """
@@ -296,14 +298,14 @@ However, the user can show the homepage also to offline visitors via the configu
 function ignore_homepage(project, input_paths)
     c = config(project)
     override::Bool = config(project, "include_homepage_outside_html")
-    override ? input_paths : input_paths[2:end]
+    return override ? input_paths : input_paths[2:end]
 end
 
 function juliamono_path()
     artifact = Artifacts.artifact"JuliaMono"
     dir = joinpath(artifact, "juliamono-$JULIAMONO_VERSION")
     # The forward slash is required by LaTeX.
-    dir * '/'
+    return dir * '/'
 end
 const JULIAMONO_PATH = juliamono_path()
 

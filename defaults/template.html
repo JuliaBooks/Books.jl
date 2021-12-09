@@ -16,13 +16,12 @@ $endif$
   <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
   <link rel="stylesheet" href="/style.css"/>
   $if(mousetrap)$
-  <script src="/mousetrap.min.js"></script>
+  <script src="$url-prefix$/mousetrap.min.js"></script>
   $endif$
-  <!-- TODO: Add url_prefix. -->
   <style>
   @font-face {
     font-family: JuliaMono-Regular;
-    src: url("/JuliaMono-Regular.woff2");
+    src: url("$url-prefix$/JuliaMono-Regular.woff2");
   }
   </style>
 $for(header-includes)$
