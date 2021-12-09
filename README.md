@@ -59,9 +59,8 @@ See, the [documentation](https://books.huijzer.xyz) for more information.
 ### Windows
 
 Currently, this package (probably) does not work on Windows.
-The fixes should be fairly easy.
-I simply have to look into it a bit more.
-
+This seems to be due to differences in maximum file path lengths.
+I have to look into it a bit more to fix it, but it's not a priority for me.
 
 ### Getting help
 
