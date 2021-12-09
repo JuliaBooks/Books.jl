@@ -36,7 +36,6 @@ code-block-font-size: \scriptsize
 
 titlepage: true
 linkReferences: true
-bibliography: bibliography.bib
 link-citations: true
 
 # These table of contents settings only affect the PDF.
