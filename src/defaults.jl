@@ -69,7 +69,17 @@ end
 
 function user_config(project::AbstractString)
     path = "config.toml"
-    isfile(path) ? project_info(path, project) : nothing
+    if isfile(path)
+        return project_info(path, project)
+    else
+        default_config_path = joinpath(Books.DEFAULTS_DIR, "config.toml")
+        absolute_config_path = joinpath(pwd(), "config.toml")
+        msg = """
+            No file found at $absolute_config_path.
+            (See $default_config_path for an example configuration.)
+            """
+        @warn msg
+    end
 end
 
 """

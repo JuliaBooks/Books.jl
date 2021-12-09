@@ -222,12 +222,14 @@ Return the url prefix when `is_ci() == true`.
 
 # Example
 ```jldoctest
-julia> cd(pkgdir(Books)) do
+julia> docs_dir = joinpath(pkgdir(Books), "docs");
+
+julia> cd(docs_dir) do
            Books.ci_url_prefix("default")
        end
 ""
 
-julia> cd(joinpath(pkgdir(Books), "docs")) do
+julia> cd(docs_dir) do
            Books.ci_url_prefix("test")
        end
 "/Example.jl"

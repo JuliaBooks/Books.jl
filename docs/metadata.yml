@@ -22,6 +22,8 @@ pdf-footer: ""
 # Avoid adding a blank page before each chapter.
 disable-cleardoublepage: true
 
+bibliography: bibliography.bib
+
 titlepage-top: >
   \begin{tabular}{l}
   Rik Huijzer\\
