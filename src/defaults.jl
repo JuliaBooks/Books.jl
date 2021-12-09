@@ -78,7 +78,7 @@ function user_config(project::AbstractString)
             No file found at $absolute_config_path.
             (See $default_config_path for an example configuration.)
             """
-        error(msg)
+        @warn msg
     end
 end
 
