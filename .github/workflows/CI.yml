@@ -17,12 +17,12 @@ jobs:
   test-and-deploy:
     name: Test and deploy
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
         version:
-          - "1.6.5" # Note that this version number is used in the conditional below.
+          - "1.6"
           - "1.7"
         os:
           - ubuntu-latest
@@ -36,7 +36,9 @@ jobs:
         with:
           version: ${{ matrix.version }}
 
-      - uses: julia-actions/cache-artifacts@v1
+      - uses: julia-actions/cache@v1
+        with:
+          cache-registries: "true"
 
       - name: Install Julia dependencies
         uses: julia-actions/julia-buildpkg@latest
@@ -59,8 +61,7 @@ jobs:
           GKSwstype: "100"
 
       - name: Deploy to secondary branch
-        # Always updates documentation when ubuntu passes, which is fine.
-        if: ${{ ( github.event_name == 'push' || github.event_name == 'workflow_dispatch') && matrix.version == '1.6.5' }}
+        if: ${{ ( github.event_name == 'push' || github.event_name == 'workflow_dispatch') && startsWith(matrix.version, '1.6') }}
         uses: peaceiris/actions-gh-pages@v3
         with:
           cname: books.huijzer.xyz
