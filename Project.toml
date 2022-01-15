@@ -25,7 +25,7 @@ pandoc_crossref_jll = "f96e3c25-ae70-5588-8d8e-4a7ab3ba4c45"
 pandoc_jll = "c5432543-76ad-5c9d-82bf-db097047a5e2"
 
 [compat]
-CairoMakie = "0.5, 0.6"
+CairoMakie = "0.5, 0.6, 0.7"
 CodeTracking = "1.0"
 DataFrames = "0.22, 1.0, 1.1, 1.2"
 Latexify = "0.15"
