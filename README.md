@@ -27,7 +27,7 @@
 </p>
 
 In a nutshell, this package is meant to generate books (or reports or dashboards) with embedded Julia output.
-Via Pandoc, the package can live serve a website and build various outputs including a website, PDF, and DOCX.
+Via Pandoc, the package can live serve a website and build various outputs including a website and PDF.
 For many standard output types, such as DataFrames and plots, the package can run your code and will automatically handle proper embedding in the output documents, and also try to guess suitable captions and labels.
 Also, it is possible to work via the live server, which shows changes within seconds.
 
@@ -35,17 +35,16 @@ This package assumes that:
 
 - the user is comfortable with managing two REPLs,
 - the user wants to run Julia code and embed the output in a book,
-- the book (website, PDF and DOCX) is built via CI, and
+- the book (website and PDF) is built via CI, and
 - Markdown sections and subsections (level 2) should be numbered and listed in the HTML menu.
 
 The reason that numbering of sections is always assumed is to allow the book to be printed.
 Without section numbers, it is difficult to refer to other parts of the book.
 
-If you do not want numbered sections, but instead a more dynamic website with links, then checkout [Franklin.jl](https://github.com/tlienart/Franklin.jl).
+If you do not want numbered sections, but instead a more dynamic website with links, then checkout [Franklin.jl](https://github.com/tlienart/Franklin.jl) or my [template repository for Franklin with Pluto](https://github.com/rikhuijzer/JuliaTutorialsTemplate).
 If you want a small report instead of a book with numbered sections, then [Weave.jl](https://github.com/JunoLab/Weave.jl) might be more suitable for your problem.
-For smaller projects and a friendlier interface, take a look at [Pluto.jl](https://github.com/fonsp/Pluto.jl).
 
-This package was used to write the [Julia Data Science book](https://juliadatascience.io).
+This package is used to create the [Julia Data Science book](https://juliadatascience.io).
 
 ## Usage
 
