@@ -14,9 +14,15 @@ You can see a demonstration of the features and usage examples in @sec:demo.
 
 **Maintenance mode**
 
-As it stands now (2022-02-01), this project is in maintenance mode.
-Feel free to use it, we've successfully published the [Julia Data Science](https://juliadatascience.io/) book with it so everything should work.
+As it stands now, this project is in maintenance mode.
+My main focus will be [PlutoStaticHTML.jl](https://github.com/rikhuijzer/PlutoStaticHTML.jl) in the near future because it is much easier to use, more versatile, more quick and more reliable.
+In PlutoStaticHTML.jl, the code is evaluated by Pluto, and PlutoStaticHTML grabs the outputs and converts them to HTML.
+For an example site with that package, see the [**Julia Tutorials Template**](https://rikhuijzer.github.io/JuliaTutorialsTemplate/).
+
+Using Books.jl will still remain possible.
+We've successfully published the [Julia Data Science](https://juliadatascience.io/) book with it so everything should work.
 Also, I'm motivated to maintain this package because I might write my thesis with it in about a year.
+
 However, I personally don't believe much more in the approach taken in this project for two reasons:
 
 First, PDFs are overrated.
@@ -39,14 +45,7 @@ Correctly evaluating code is **hard**.
 For example, this package manually has to implement some overrides for `show` for different plotting objects such as Makie plots and DataFrames, but is far from complete.
 Packages such as [Pluto.jl](https://plutojl.org) or Jupyter have spent much time on all these overrides too, but managing it all for a book package seems to be too much.
 
-So, instead, my main focus will be [PlutoStaticHTML.jl](https://github.com/rikhuijzer/PlutoStaticHTML.jl) in the near future because it is much more promising.
-In PlutoStaticHTML.jl, the code is evaluated by Pluto, and PlutoStaticHTML grabs the outputs and converts them to HTML.
-This is much more reliable in regards to handling different output formats and, more importantly, it's extremely reliable.
-So far, I found that if the Pluto notebook works when running it in Pluto, then PlutoStaticHTML will work too.
-With other systems such as Books.jl, but even Documenter.jl and Franklin.jl things have been not been so stable unfortunately which is probably due to the fact that Pluto always evaluates everything in a stand-alone process.
-
 Anyway, so if you really want to have PDFs, then I hope you can use Books.jl successfully.
 Feel free to ask questions on Discourse and I'll try to help out.
-If you can go without PDFs, then definitely checkout PlutoStaticHTML.jl.
-For an example site with that package, see [Julia Tutorials Template](https://rikhuijzer.github.io/JuliaTutorialsTemplate/).
+If you can go without PDFs, then copy the template at [Julia Tutorials Template](https://rikhuijzer.github.io/JuliaTutorialsTemplate/).
 
