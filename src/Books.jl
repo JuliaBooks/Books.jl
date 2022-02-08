@@ -26,7 +26,7 @@ using pandoc_jll: pandoc
 const GENERATED_DIR = "_gen"
 const DEFAULTS_DIR = joinpath(PROJECT_ROOT, "defaults")
 const BUILD_DIR = "_build"
-const JULIAMONO_VERSION = "0.042"
+const JULIAMONO_VERSION = "0.044"
 mkpath(BUILD_DIR)
 
 include("defaults.jl")
