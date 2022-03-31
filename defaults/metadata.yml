@@ -27,6 +27,9 @@ geometry:
 # A setting for the PDF. I don't know whether it is important.
 lang: en-US
 
+# Setting CJK font
+#CJKmainfont: Noto Serif CJK SC
+
 links-as-notes: true
 
 tags: [pandoc, Books.jl, JuliaLang]
