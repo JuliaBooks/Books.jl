@@ -57,8 +57,8 @@ $endif$
 ]
 
 $if(CJKmainfont)$
-  \usepackage{xeCJK}
-  \setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+\usepackage{xeCJK}
+\setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
 $endif$
 
 $if(graphics)$
