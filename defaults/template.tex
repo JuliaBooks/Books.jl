@@ -1,3 +1,7 @@
+$if(CJKmainfont)$
+\PassOptionsToPackage{space}{xeCJK}
+$endif$
+%
 \documentclass[
   notoc % Suppress Tufte style table of contents.
 ]{tufte-book}
@@ -51,6 +55,11 @@
   Contextuals=Alternate,
   Ligatures=NoCommon
 ]
+
+$if(CJKmainfont)$
+\usepackage{xeCJK}
+\setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+$endif$
 
 $if(graphics)$
 \usepackage{graphicx}
