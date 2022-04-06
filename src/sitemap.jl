@@ -53,4 +53,4 @@ function sitemap(project, h)
     write(path, text)
     return text
 end
-
+precompile(sitemap, (String, String))

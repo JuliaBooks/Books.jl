@@ -271,7 +271,13 @@ function expand_path(p)
 end
 
 """
-    gen(paths::Vector; M=Main, fail_on_error=false, project="default")
+    gen(
+        paths::Vector{String};
+        M=Main,
+        fail_on_error::Bool=false,
+        project="default",
+        call_html::Bool=true
+    )
 
 Populate the files in `$(Books.GENERATED_DIR)/` by calling the required methods.
 These methods are specified by the filename and will output to that filename.
@@ -282,8 +288,13 @@ After calling the methods, this method will also call `html()` to update the sit
 `call_html == true`.
 """
 
-function gen(paths::Vector{String};
-        M=Main, fail_on_error=false, project="default", call_html=true)
+function gen(
+        paths::Vector{String};
+        M=Main,
+        fail_on_error::Bool=false,
+        project="default",
+        call_html::Bool=true
+    )
 
     mkpath(GENERATED_DIR)
     paths = [contains(dirname(p), "contents") ? p : expand_path(p) for p in paths]
@@ -303,6 +314,15 @@ function gen(paths::Vector{String};
     return nothing
 end
 
+function gen(; M=Main, fail_on_error=false, project="default", call_html=true)
+    paths = inputs(project)
+    first_file = first(paths)
+    if !isfile(first_file)
+        error("Couldn't find $first_file. Is there a valid project in $(pwd())?")
+    end
+    gen(paths; M, fail_on_error, project, call_html)
+end
+
 """
     gen(path::AbstractString; kwargs...)
 
@@ -312,12 +332,4 @@ function gen(path::AbstractString; kwargs...)
     path = string(path)::String
     gen([path]; kwargs...)
 end
-
-function gen(; M=Main, fail_on_error=false, project="default", call_html=true)
-    paths = inputs(project)
-    first_file = first(paths)
-    if !isfile(first_file)
-        error("Couldn't find $first_file. Is there a valid project in $(pwd())?")
-    end
-    gen(paths; M, fail_on_error, project, call_html)
-end
+precompile(gen, (String,))

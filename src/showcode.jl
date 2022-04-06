@@ -139,6 +139,7 @@ function scob(expr::AbstractString; M=Main)
     post = output_block
     sco(expr; M, post)
 end
+precompile(scob, (String,))
 
 """
     sc(expr::AbstractString; M=Main)
@@ -150,6 +151,7 @@ function sc(expr::AbstractString; M=Main)
     code = remove_hide_comment(expr)
     code = code_block(strip(code))
 end
+precompile(sc, (String,))
 
 function sco_macro_helper(
         f::Function,

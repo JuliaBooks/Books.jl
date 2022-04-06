@@ -11,8 +11,9 @@ Define a code `block` which needs to be evaluated in module `mod`.
 By default, the module in which the code is evaluated is shown above the code block.
 This can be disabled via `hide_module`.
 """
-code(block::AbstractString; mod=Main, hide_module=false) =
-    Code(rstrip(block), mod, hide_module)
+function code(block::AbstractString; mod=Main, hide_module::Bool=false)
+    return Code(rstrip(block), mod, hide_module)
+end
 
 """
     ImageOptions(object; width=nothing, height=nothing)
@@ -77,7 +78,8 @@ struct Options
     label::Union{AbstractString,Nothing,Missing}
     link_attributes::Union{AbstractString,Nothing,Missing}
 
-    function Options(object;
+    function Options(
+        object;
         filename=missing,
         caption=missing,
         label=missing,
@@ -104,6 +106,7 @@ julia> Options.(objects, filenames)
 ```
 """
 Options(object, filename::AbstractString) = Options(object; filename)
+precompile(Options, (Int, String))
 
 function convert_output(expr, path, out::Code)::String
     block = out.block

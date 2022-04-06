@@ -61,3 +61,4 @@ function serve(; simplewatcher=nothing, host::String="127.0.0.1",
     port = config(project, "port")::Int
     LiveServer.serve(simplewatcher; verbose, host, port, dir)
 end
+precompile(serve, ())
