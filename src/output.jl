@@ -234,7 +234,7 @@ This passes the objects through show to use the overrides that package creators 
 
 # Example
 
-```jldoctest
+```
 julia> using MCMCChains
 
 julia> chn = Chains([1]; info=(start_time=[1.0], stop_time=[1.0]));
