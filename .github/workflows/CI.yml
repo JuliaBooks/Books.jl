@@ -23,7 +23,7 @@ jobs:
       matrix:
         version:
           - "1.6"
-          - "1.7"
+          - "1"
         os:
           - ubuntu-latest
 
@@ -37,11 +37,9 @@ jobs:
           version: ${{ matrix.version }}
 
       - uses: julia-actions/cache@v1
-        with:
-          cache-registries: "true"
 
       - name: Install Julia dependencies
-        uses: julia-actions/julia-buildpkg@latest
+        uses: julia-actions/julia-buildpkg@v1
 
       - name: Install extra dependencies
         run: julia --project -e 'using Books; Books.install_dependencies()'

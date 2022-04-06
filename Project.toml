@@ -1,9 +1,10 @@
 name = "Books"
 uuid = "939d5c6b-51ae-42e7-97ca-7564d0d4ad91"
 authors = ["Rik Huijzer <t.h.huijzer@rug.nl>"]
-version = "1.2.4"
+version = "1.2.5"
 
 [deps]
+AlgebraOfGraphics = "cbdf2221-f076-402e-a563-3d30da359d67"
 Artifacts = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 CodeTracking = "da1fd8a2-8d9e-5ec2-8556-3022fb5608a2"
@@ -25,9 +26,10 @@ pandoc_crossref_jll = "f96e3c25-ae70-5588-8d8e-4a7ab3ba4c45"
 pandoc_jll = "c5432543-76ad-5c9d-82bf-db097047a5e2"
 
 [compat]
+AlgebraOfGraphics = "0.6"
 CairoMakie = "0.5, 0.6, 0.7"
 CodeTracking = "1.0"
-DataFrames = "0.22, 1.0, 1.1, 1.2"
+DataFrames = "0.22, 1"
 Latexify = "0.15"
 LiveServer = "0.6, 0.7"
 Makie = "0.15, 0.16"
