@@ -1,7 +1,7 @@
 name = "Books"
 uuid = "939d5c6b-51ae-42e7-97ca-7564d0d4ad91"
 authors = ["Rik Huijzer <t.h.huijzer@rug.nl>"]
-version = "1.2.6"
+version = "1.2.7"
 
 [deps]
 AlgebraOfGraphics = "cbdf2221-f076-402e-a563-3d30da359d67"
