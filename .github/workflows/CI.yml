@@ -17,6 +17,7 @@ jobs:
   test-and-deploy:
     name: Test and deploy
     runs-on: ${{ matrix.os }}
+    permissions: write-all
     timeout-minutes: 45
     strategy:
       fail-fast: false
