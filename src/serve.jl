@@ -15,7 +15,7 @@ end
     rebuild_neccesary(file)::Bool
 
 Avoid rebuilds if possible.
-For example, calling Pandoc is not neccesary for svg images.
+For example, calling Pandoc is not necessary for svg images.
 """
 function rebuild_neccesary(file::AbstractString)::Bool
     _, extension = splitext(file)

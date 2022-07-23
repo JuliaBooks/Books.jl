@@ -33,7 +33,7 @@ This way, the website remains responsive when the computations are running.
 Thanks to LiveServer.jl and Pandoc, updating the page after changing text or code takes less than a second.
 Also, because the `serve` process does relatively few things, it almost never crashes.
 
-As another benefit, the decoupling allows you to have more flexiblity in when you want to run what code.
+As another benefit, the decoupling allows you to have more flexibility in when you want to run what code.
 In combination with Revise.jl, you can quickly update your code and see the updated output.
 
 Finally, a big difference with this package and other packages is that you decide yourself what you want to show for a code block.
