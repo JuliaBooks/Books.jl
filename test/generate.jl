@@ -7,10 +7,8 @@
 
     @test contains(B.convert_output(nothing, nothing, DataFrame(A = [1])), "---")
 
-    Books.is_image(plot::Plot) = true
-    Books.svg(svg_path::String, p::Plot) = savefig(p, svg_path)
-    Books.png(png_path::String, p::Plot) = savefig(p, png_path)
-    p = plot(1:30, 1:30.^2)
+    I = 1:30
+    p = plot(I, I.^2)
 
     mktemp() do path, io
         @test contains(B.convert_output("tmp", nothing, p), ".png")

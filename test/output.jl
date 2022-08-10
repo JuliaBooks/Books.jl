@@ -8,14 +8,14 @@
     # Without escaping the underscores (_), Latexify would change _ to *.
     @test contains(out, "foo_bar_baz")
 
-    p = lines(1:30)
-    filename = "makietest"
+    p = plot(1:30, 1:30)
+    filename = "plotstest"
     opts = Options(p; filename)
     out = Books.convert_output(missing, missing, opts)
-    @test out == "![Makietest.](_build/im/makietest.png){#fig:makietest}"
+    @test out == "![Plotstest.](_build/im/plotstest.png){#fig:plotstest}"
 
     link_attributes = "width=50%"
     opts = Options(p; filename, link_attributes)
     out = Books.convert_output(missing, missing, opts)
-    @test out == "![Makietest.](_build/im/makietest.png){width=50% #fig:makietest}"
+    @test out == "![Plotstest.](_build/im/plotstest.png){width=50% #fig:plotstest}"
 end
