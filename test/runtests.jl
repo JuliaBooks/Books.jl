@@ -38,3 +38,5 @@ Books.png(png_path::String, p::Plot) = savefig(p, png_path)
     include("sitemap.jl")
     include("generate.jl")
 end
+
+nothing

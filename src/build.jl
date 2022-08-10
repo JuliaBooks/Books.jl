@@ -86,7 +86,7 @@ end
 
 @memoize function copy_juliamono()
     filename = "JuliaMono-Regular.woff2"
-    from_path = joinpath(JULIAMONO_PATH, "webfonts", filename)
+    from_path = joinpath(juliamono_dir(), "webfonts", filename)
     cp(from_path, joinpath(BUILD_DIR, filename); force=true)
 end
 
@@ -301,13 +301,10 @@ function ignore_homepage(project, input_paths)
     return override ? input_paths : input_paths[2:end]
 end
 
-function juliamono_path()
+function juliamono_dir()
     artifact = Artifacts.artifact"JuliaMono"
-    dir = joinpath(artifact, "juliamono-$JULIAMONO_VERSION")
-    # The forward slash is required by LaTeX.
-    return dir * '/'
+    return joinpath(artifact, "juliamono-$JULIAMONO_VERSION")
 end
-const JULIAMONO_PATH = juliamono_path()
 
 function pdf(; project="default")
     input_path = write_input_markdown(project; skip_index=true)
@@ -323,6 +320,7 @@ function pdf(; project="default")
     input_files = ignore_homepage(project, inputs(project))
     listings_unicode_path = joinpath(PKGDIR, "defaults", "julia_listings_unicode.tex")
     listings_path = joinpath(PKGDIR, "defaults", "julia_listings.tex")
+
     build_info = today()
 
     tectonic = joinpath(Artifacts.artifact"Tectonic", "tectonic")
@@ -342,6 +340,7 @@ function pdf(; project="default")
         "--pdf-engine-opt=--print";
         "--variable=listings-unicode-path:$listings_unicode_path";
         "--variable=listings-path:$listings_path";
+        "--variable=juliamono-dir:$(juliamono_dir())";
         "--variable=build-info:$build_info";
         extra_args
     ]
