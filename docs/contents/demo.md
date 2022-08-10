@@ -396,6 +396,8 @@ This time, we also pass `link_attributes` to Pandoc (@fig:makie) to shrink the i
 
 For an example of a multilingual book setup, say English and Chinese, see the book by [Jun Tian](https://github.com/LearnJuliaTheFunWay/LearnJuliaTheFunWay.jl).
 
+For an example of a multilingual book setup, say English and Chinese, see <https://juliadatascience.io>.
+
 ### Footnotes
 
 Footnotes can be added via regular Markdown syntax:
