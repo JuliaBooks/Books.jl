@@ -1,7 +1,3 @@
-using AlgebraOfGraphics
-using CairoMakie
-using DataFrames
-
 @testset "generate" begin
     @test code_block("lorem") == """
         ```language-julia
@@ -11,13 +7,13 @@ using DataFrames
 
     @test contains(B.convert_output(nothing, nothing, DataFrame(A = [1])), "---")
 
-    X = 1:30
-    df = (x=X, y=X.*2)
-    xy = data(df) * mapping(:x, :y)
-    fg = draw(xy)
+    Books.is_image(plot::Plot) = true
+    Books.svg(svg_path::String, p::Plot) = savefig(p, svg_path)
+    Books.png(png_path::String, p::Plot) = savefig(p, png_path)
+    p = plot(1:30, 1:30.^2)
 
     mktemp() do path, io
-        @test contains(B.convert_output("tmp", nothing, fg), ".png")
+        @test contains(B.convert_output("tmp", nothing, p), ".png")
     end
     im_dir = joinpath(B.BUILD_DIR, "im")
     rm(im_dir; force=true, recursive=true)

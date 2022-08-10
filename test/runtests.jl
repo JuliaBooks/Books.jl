@@ -1,13 +1,13 @@
+import Books
 import Pkg
 
 using Books
-using CairoMakie
 using DataFrames
 using Dates: today
 using Documenter:
     DocMeta,
     doctest
-using Makie: lines
+using Plots: Plot, plot, savefig
 using Test
 
 B = Books
@@ -22,7 +22,7 @@ DocMeta.setdocmeta!(
   recursive=true
 )
 
-if VERSION in Pkg.Types.VersionRange(v"1.6", v"1.6.10")
+if !(VERSION in Pkg.Types.VersionRange(v"1.6", v"1.6.10"))
     doctest(Books)
 end
 
