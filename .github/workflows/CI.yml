@@ -42,9 +42,6 @@ jobs:
       - name: Install Julia dependencies
         uses: julia-actions/julia-buildpkg@v1
 
-      - name: Install extra dependencies
-        run: julia --project -e 'using Books; Books.install_dependencies()'
-
       - uses: julia-actions/julia-runtest@v1
         env:
           GKS_ENCODING: "utf8"

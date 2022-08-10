@@ -44,17 +44,26 @@ $endif$
   BoldItalicFont = *-bolditalic,
 ]
 
-\newfontfamily\JuliaMono{JuliaMono}[
-  UprightFont = *-Regular,
-  BoldFont = *-Bold
+\usepackage{fontspec}
+\setmonofont{JuliaMono-Medium.ttf}[
+    % Do not remove the trailing forward slash.
+    Path = $juliamono-dir$/,
+    Contextuals = Alternate,
+    Ligatures = NoCommon
 ]
-\newfontface\JuliaMonoRegular{JuliaMono-Regular}
-\newfontface\JuliaMonoBold{JuliaMono-Bold}
 
-\setmonofont{JuliaMono-Medium}[
-  Contextuals=Alternate,
-  Ligatures=NoCommon
+\newfontface\JuliaMonoRegular{JuliaMono-Regular.ttf}[
+    Path = $juliamono-dir$/,
+    Contextuals = Alternate,
+    Ligatures = NoCommon
 ]
+
+\newfontface\JuliaMonoBold{JuliaMono-Bold.ttf}[
+    Path = $juliamono-dir$/,
+    Contextuals = Alternate,
+    Ligatures = NoCommon
+]
+
 
 $if(CJKmainfont)$
 \usepackage{xeCJK}
