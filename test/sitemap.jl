@@ -20,7 +20,7 @@ end
     @test actual == "https://example.github.io/Foo.jl/index$(html_suffix)"
 
     project = "test"
-    cd(joinpath(Books.PROJECT_ROOT, "docs")) do
+    cd(joinpath(Books.PKGDIR, "docs")) do
         h = Books._pandoc_html(project, online_url_prefix)
         text = Books.sitemap(project, h)
         @test startswith(text, "<?xml")

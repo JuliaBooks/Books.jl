@@ -7,7 +7,7 @@
         <img src="$(B.BUILD_DIR)/im/bar.png" alt="bar" />
         """
     url_prefix = ""
-    cd(joinpath(Books.PROJECT_ROOT, "docs")) do
+    cd(joinpath(Books.PKGDIR, "docs")) do
         dir = joinpath(Books.BUILD_DIR, "im")
         mkpath(dir)
         touch(joinpath(dir, "example.svg"))

@@ -1,9 +1,10 @@
 module Books
 
-const PROJECT_ROOT = string(pkgdir(Books))::String
+using RelocatableFolders: @path
+const PKGDIR = @path string(pkgdir(Books))::String
 
 let
-    path = joinpath(PROJECT_ROOT, "README.md")
+    path = joinpath(PKGDIR, "README.md")
     text = read(path, String)
     @doc text Books
 end
@@ -24,7 +25,7 @@ using pandoc_crossref_jll: pandoc_crossref_path
 using pandoc_jll: pandoc
 
 const GENERATED_DIR = "_gen"
-const DEFAULTS_DIR = joinpath(PROJECT_ROOT, "defaults")
+const DEFAULTS_DIR = joinpath(PKGDIR, "defaults")
 const BUILD_DIR = "_build"
 const JULIAMONO_VERSION = "0.045"
 mkpath(BUILD_DIR)
