@@ -46,6 +46,9 @@ jobs:
         run: julia --project -e 'using Books; Books.install_dependencies()'
 
       - uses: julia-actions/julia-runtest@v1
+        env:
+          GKS_ENCODING: "utf8"
+          GKSwstype: "100"
 
       - name: Instantiate BooksDocs
         run: julia --project=docs/ -e '
@@ -54,7 +57,7 @@ jobs:
       - name: Build docs
         run: |
           cd docs
-          julia --project -e 'using BooksDocs; M = BooksDocs; BooksDocs.build()'
+          julia --project -e 'using BooksDocs; BooksDocs.build()'
         env:
           GKS_ENCODING: "utf8"
           GKSwstype: "100"
