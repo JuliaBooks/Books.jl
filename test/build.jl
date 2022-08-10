@@ -1,5 +1,5 @@
 @testset "build" begin
-    docs_dir = joinpath(Books.PROJECT_ROOT, "docs")
+    docs_dir = joinpath(Books.PKGDIR, "docs")
     url_prefix = ""
     out = cd(docs_dir) do
         test_markdown_path = joinpath(docs_dir, "contents", "test.md")

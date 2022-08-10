@@ -1,12 +1,12 @@
 const crossref_bin = string(pandoc_crossref_path)::String
 const crossref = "--filter=$crossref_bin"
-const include_lua_filter = joinpath(PROJECT_ROOT, "src", "include-codeblocks.lua")
+const include_lua_filter = joinpath(PKGDIR, "src", "include-codeblocks.lua")
 const include_files = "--lua-filter=$include_lua_filter"
 const citeproc = "--citeproc"
 
 function pandoc_file(filename)
     user_path = joinpath("pandoc", filename)
-    fallback_path = joinpath(PROJECT_ROOT, "defaults", filename)
+    fallback_path = joinpath(PKGDIR, "defaults", filename)
     isfile(user_path) ? user_path : fallback_path
 end
 
@@ -319,10 +319,10 @@ function pdf(; project="default")
     output = "--output=$output_filename"
     metadata_path = combined_metadata_path(project)
     metadata = "--metadata-file=$metadata_path"
-    output_block_filter = joinpath(PROJECT_ROOT, "src", "output-block.lua")
+    output_block_filter = joinpath(PKGDIR, "src", "output-block.lua")
     input_files = ignore_homepage(project, inputs(project))
-    listings_unicode_path = joinpath(PROJECT_ROOT, "defaults", "julia_listings_unicode.tex")
-    listings_path = joinpath(PROJECT_ROOT, "defaults", "julia_listings.tex")
+    listings_unicode_path = joinpath(PKGDIR, "defaults", "julia_listings_unicode.tex")
+    listings_path = joinpath(PKGDIR, "defaults", "julia_listings.tex")
     build_info = today()
 
     tectonic = joinpath(Artifacts.artifact"Tectonic", "tectonic")

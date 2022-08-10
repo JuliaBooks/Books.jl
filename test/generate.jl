@@ -47,7 +47,7 @@ using DataFrames
     @test match(Books.CODEBLOCK_PATTERN, evaluated_block)[1] == "foo"
 
     function read_outcome(block::AbstractString)
-        cd(joinpath(Books.PROJECT_ROOT, "docs")) do
+        cd(joinpath(Books.PKGDIR, "docs")) do
             exprs = Books.extract_expr(block)
             userexpr = first(exprs)
             Books.evaluate_and_write(Main, userexpr)
