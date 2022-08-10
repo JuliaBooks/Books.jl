@@ -1,5 +1,6 @@
 module BooksDocs
 
+import Books
 import IOCapture
 import Latexify
 import MCMCChains
@@ -7,7 +8,6 @@ import Statistics
 import TOML
 
 using Reexport
-@reexport using AlgebraOfGraphics
 @reexport using Books
 @reexport using CairoMakie
 @reexport using CodeTracking
@@ -16,24 +16,32 @@ using Reexport
 @reexport using Plots
 
 plot = Plots.plot
+scatter = CairoMakie.scatter
 
 M = BooksDocs
 export M
+
+const MAKIE_PLOT_TYPES = Union{CairoMakie.Makie.Figure, CairoMakie.Makie.FigureAxisPlot}
+Books.is_image(plot::MAKIE_PLOT_TYPES) = true
+
+function makie_save(path::String, p)
+    px_per_unit = 3
+    CairoMakie.FileIO.save(path, p; px_per_unit)
+end
+
+Books.svg(svg_path::String, p::MAKIE_PLOT_TYPES) = makie_save(svg_path, p)
+Books.png(png_path::String, p::MAKIE_PLOT_TYPES) = makie_save(png_path, p)
+
+Books.is_image(plot::Plots.Plot) = true
+Books.svg(svg_path::String, p::Plots.Plot) = savefig(p, svg_path)
+Books.png(png_path::String, p::Plots.Plot) = savefig(p, png_path)
 
 include("includes.jl")
 
 function build()
     fail_on_error = true
     Books.gen(; fail_on_error)
-    extra_head = """
-        <!-- Google Search Console verification. -->
-        <meta name="google-site-verification" content="deJcoJ2nJMQFPa1hJZULlns4yYOCQXsfcsVdafQMgdc" />
-        <!-- Privacy-friendly analytics via Fathom. -->
-        <script src="https://cdn.usefathom.com/script.js" data-site="WBQVJWZZ" defer></script>
-        <!-- Privacy-friendly analytics via Pirsch. -->
-        <script defer type="text/javascript" src="https://api.pirsch.io/pirsch.js" id="pirschjs" data-code="0bjwF9vL4Z9Chiae5YEpufSR0rx8b1tL"></script>
-        """
-    Books.build_all(; extra_head, fail_on_error)
+    Books.build_all(; fail_on_error)
 end
 
 end # module

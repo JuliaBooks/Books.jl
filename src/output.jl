@@ -143,7 +143,7 @@ function convert_output(expr, path, out::Code)::String
     """
 end
 
-function plotting_filename(expr, path, package::String)
+function image_filename(expr, path, package::String)
     if path isa AbstractString
         file = basename(path)
         file, _ = splitext(file)
@@ -160,6 +160,52 @@ function plotting_filename(expr, path, package::String)
     end
     string(file)::String
 end
+
+function png(png_path::String, object::Any)
+    msg = """
+        Expected `Books.png(png_path::String, object::$(typeof(object))` method since `is_image`.
+        """
+    throw(MethodError(msg))
+end
+
+function svg(svg_path::String, object::Any)
+    msg = """
+        Expected `Books.svg(svg_path::String, object::$(typeof(object))` method since `is_image`.
+        """
+    throw(MethodError(msg))
+end
+
+function convert_image(
+        expr,
+        path,
+        object;
+        caption=missing,
+        label=missing,
+        link_attributes=missing
+    )
+    im_dir = joinpath(BUILD_DIR, "im")
+    mkpath(im_dir)
+
+    file = image_filename(expr, path, "image")
+
+    println("Writing images for $file")
+    png_filename = "$file.png"
+    png_path = joinpath(im_dir, png_filename)
+    # Explicit rm due to https://github.com/JuliaIO/FileIO.jl/issues/338.
+    rm(png_path; force=true)
+    png(png_path, object)
+
+    svg_filename = "$file.svg"
+    svg_path = joinpath(im_dir, svg_filename)
+    rm(svg_path; force=true)
+    im_link = joinpath("im", svg_filename)
+    svg(svg_path, object)
+
+    caption, label = caption_label(expr, caption, label)
+    return pandoc_image(file, png_path; caption, label, link_attributes)
+end
+
+is_image(object::Any) = false
 
 """
     convert_output(expr, path, options::Options)
@@ -197,7 +243,11 @@ function convert_output(expr, path, opts::Options)::String
     caption = opts.caption
     label = opts.label
     link_attributes = opts.link_attributes
-    convert_output(expr, path, object; caption, label, link_attributes)
+    if is_image(object)
+        return convert_image(expr, path, object; caption, label, link_attributes)
+    else
+        return convert_output(expr, path, object; caption, label, link_attributes)
+    end
 end
 
 """
@@ -206,11 +256,9 @@ end
 Return `out` as string.
 This avoids the adding of `"` which `show` does by default.
 """
-convert_output(expr, path, out::AbstractString) = string(out)
-
-convert_output(expr, path, out::VersionNumber) = string(out)
-
-convert_output(expr, path, out::Number) = string(out)
+convert_output(expr, path, out::AbstractString) = string(out)::String
+convert_output(expr, path, out::VersionNumber) = string(out)::String
+convert_output(expr, path, out::Number) = string(out)::String
 
 """
     catch_show(out)
@@ -227,7 +275,7 @@ function catch_show(out)
 end
 
 """
-    convert_output(expr, path, out)
+    convert_output(expr, path, out::Any)
 
 Fallback method for `out::Any`.
 This passes the objects through show to use the overrides that package creators might have provided.
@@ -248,8 +296,12 @@ julia> contains(out, "Summary Statistics")
 true
 ```
 """
-function convert_output(expr, path, out)::String
-    catch_show(out)
+function convert_output(expr, path, out::Any)::String
+    if is_image(out)
+        return convert_image(expr, path, out)
+    else
+        return catch_show(out)
+    end
 end
 
 """
