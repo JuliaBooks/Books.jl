@@ -302,6 +302,7 @@ function show_progress(i, exprs)
     desc = "Current code block (out of $n blocks in total):"
     # Using ProgressUnknown because the ETA calculation is pointless.
     p = ProgressMeter.ProgressUnknown(; dt=0.05)
+    previous_time = time()
     while true
         index = n < i[] ? n : i[]
         path, userexpr, block_number = exprs[index]
@@ -312,10 +313,14 @@ function show_progress(i, exprs)
         ]
         p.counter = index
         ProgressMeter.update!(p; showvalues)
-        if n ≤ i[]
+        if n == index
             break
         end
-        sleep(1)
+        tdiff = time() - previous_time
+        if tdiff < 1
+            sleep(1 - tdiff)
+        end
+        previous_time = time()
     end
     sleep(0.05)
     ProgressMeter.finish!(p)
@@ -372,9 +377,10 @@ function gen(
 
     n = length(exprs)
     i = Ref(1)
-    t = log_progress && !is_ci() ? @task(show_progress(i, exprs)) : nothing
+    t = (log_progress && !is_ci()) ? @task(show_progress(i, exprs)) : nothing
     !isnothing(t) && schedule(t)
     while i[] ≤ n
+        sleep(0.05)
         path, userexpr, block_number = exprs[i[]]
         callpath = _callpath(path)
         out = evaluate_include(userexpr, M, fail_on_error, callpath, block_number)
