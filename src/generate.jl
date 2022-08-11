@@ -327,7 +327,7 @@ function gen(
     end
 
     n = length(exprs)
-    desc = "Progress out of $n code blocks in total:"
+    desc = "Current code block (out of $n blocks in total):"
     # Using ProgressUnknown because the ETA of the normal bar is very unreliable.
     p = ProgressMeter.ProgressUnknown(; desc, dt=0.05)
     sleep(0.05)
