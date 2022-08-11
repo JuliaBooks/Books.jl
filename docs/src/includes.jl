@@ -191,7 +191,7 @@ function makiejl()
     Options(p; caption, label, link_attributes)
 end
 
-chain() = MCMCChains.Chains([1])
+chain() = MCMCChains.Chains(rand(10, 1))
 
 const BACKTICK = '`'
 export BACKTICK

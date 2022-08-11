@@ -1,5 +1,5 @@
 """
-    UserExpr
+    UserExpr(expr::String, indentation::Int)
 
 Struct containing the user provided `expr::String` and it's `indentation::Int` in number of
 spaces.
@@ -173,7 +173,6 @@ function evaluate_and_write(M::Module, userexpr::UserExpr)
     expr = userexpr.expr
     path = escape_expr(expr)
     expr_info = replace(expr, '\n' => "\\n")
-    println("Writing output of `$expr_info`")
 
     ex = Meta.parse("begin $expr end")
     out = Core.eval(M, ex)
@@ -195,7 +194,6 @@ function evaluate_and_write(f::Function)
     expr = "$(function_name)()"
     path = escape_expr(expr)
     expr_info = replace(expr, '\n' => "\\n")
-    println("Writing output of `$expr_info`")
     out = f()
     out = convert_output(expr, path, out)
     out = string(out)::String
@@ -213,7 +211,7 @@ function clean_stacktrace(stacktrace::String)
     stacktrace = join(lines, '\n')
 end
 
-function report_error(userexpr::UserExpr, e)
+function report_error(userexpr::UserExpr, e, callpath::String, block_number::Int)
     expr = userexpr.expr
     path = escape_expr(expr)
     # Source: Franklin.jl/src/eval/run.jl.
@@ -225,7 +223,8 @@ function report_error(userexpr::UserExpr, e)
     stacktrace = sprint(Base.showerror, exc, bt)::String
     stacktrace = clean_stacktrace(stacktrace)
     msg = """
-        Failed to run:
+        Failed to run block $block_number in "$callpath".
+        Code:
         $expr
 
         Details:
@@ -236,11 +235,17 @@ function report_error(userexpr::UserExpr, e)
 end
 
 """
-    evaluate_include(expr::UserExpr, M, fail_on_error::Bool)
+    evaluate_include(expr::UserExpr, M, fail_on_error::Bool, callpath::String, block_number::Int)
 
 For a `path` included in a Markdown file, run the corresponding function and write the output to `path`.
 """
-function evaluate_include(userexpr::UserExpr, M, fail_on_error::Bool)
+function evaluate_include(
+        userexpr::UserExpr,
+        M,
+        fail_on_error::Bool,
+        callpath::String,
+        block_number::Int
+    )
     if isnothing(M)
         # This code isn't really working.
         M = caller_module()
@@ -249,13 +254,14 @@ function evaluate_include(userexpr::UserExpr, M, fail_on_error::Bool)
         evaluate_and_write(M, userexpr)
     else
         try
-            evaluate_and_write(M, userexpr)
+            return evaluate_and_write(M, userexpr)
         catch e
             if e isa InterruptException
                 @info "Process was stopped by a terminal interrupt (CTRL+C)"
                 return e
             end
-            report_error(userexpr, e)
+            report_error(userexpr, e, callpath, block_number)
+            return CapturedException(e, catch_backtrace())
         end
     end
 end
@@ -268,6 +274,20 @@ Not allowing `index.md` because that is confusing with entr(f, ["contents"], [M]
 """
 function expand_path(p)
     joinpath("contents", "$p.md")
+end
+
+function _included_expressions(paths)
+    paths = [contains(dirname(p), "contents") ? p : expand_path(p) for p in paths]
+    exprs = NamedTuple{(:path, :userexpr, :block_number), Tuple{String, UserExpr, Int}}[]
+    for path in paths
+        block_number = 1
+        extracted_exprs = extract_expr(read(path, String))
+        for userexpr in extracted_exprs
+            push!(exprs, (; path, userexpr, block_number))
+            block_number += 1
+        end
+    end
+    return exprs
 end
 
 """
@@ -289,7 +309,8 @@ After calling the methods, this method will also call `html()` to update the sit
 """
 
 function gen(
-        paths::Vector{String};
+        paths::Vector{String},
+        block_number::Union{Nothing,Int}=nothing;
         M=Main,
         fail_on_error::Bool=false,
         project="default",
@@ -297,12 +318,32 @@ function gen(
     )
 
     mkpath(GENERATED_DIR)
-    paths = [contains(dirname(p), "contents") ? p : expand_path(p) for p in paths]
-    included_expr = Iterators.flatten([extract_expr(read(p, String)) for p in paths])
-    # Adding Threads.@threads for each separate path sounds nice but didn't really work in practise.
-    # It wasn't much faster, but did sometimes introduce errors.
-    for expr in included_expr
-        out = evaluate_include(expr, M, fail_on_error)
+    exprs = _included_expressions(paths)
+    if !isnothing(block_number)
+        if length(paths) != 1
+            @error "Expected length of `paths` to be 1 when using `block_number`."
+        end
+        path = only(paths)
+        filter!(e -> e.path == path && e.block_number == block_number, exprs)
+    end
+
+    p = Progress(length(exprs))
+    for (path, userexpr, block_number) in exprs
+        callpath = string(chopprefix(path, "contents/"))::String
+        showvalues = [
+            (:path, callpath),
+            (:block_number, block_number),
+            (:expr, userexpr.expr),
+        ]
+        ProgressMeter.next!(p; showvalues)
+        out = evaluate_include(userexpr, M, fail_on_error, callpath, block_number)
+        if out isa CapturedException
+            filename, _ = splitext(callpath)
+            @info """To re-run the code block that threw the error, use
+                gen("$filename", $block_number; M, [...])
+                """
+            return nothing
+        end
         if out isa InterruptException
             return nothing
         end
@@ -315,20 +356,20 @@ function gen(
 end
 
 function gen(; M=Main, fail_on_error=false, project="default", call_html=true)
+    if !isfile("config.toml")
+        error("Couldn't find `config.toml`. Is there a valid project in $(pwd())?")
+    end
     paths = inputs(project)
     first_file = first(paths)
-    if !isfile(first_file)
-        error("Couldn't find $first_file. Is there a valid project in $(pwd())?")
-    end
     gen(paths; M, fail_on_error, project, call_html)
 end
 
 """
-    gen(path::AbstractString; kwargs...)
+    gen(path::AbstractString, [block_number]; kwargs...)
 
 Convenience method for passing `path::AbstractString` instead of `paths::Vector`.
 """
-function gen(path::AbstractString; kwargs...)
+function gen(path::AbstractString, block_number::Union{Nothing,Int}=nothing; kwargs...)
     path = string(path)::String
     gen([path]; kwargs...)
 end
