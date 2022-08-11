@@ -260,6 +260,8 @@ function evaluate_include(
                 @info "Process was stopped by a terminal interrupt (CTRL+C)"
                 return e
             end
+            # Print a newline to be placed behind the ProgressMeter.
+            println()
             report_error(userexpr, e, callpath, block_number)
             return CapturedException(e, catch_backtrace())
         end
@@ -333,7 +335,8 @@ function gen(
     sleep(0.05)
     for i in 1:n
         path, userexpr, block_number = exprs[i]
-        callpath = string(chopprefix(path, "contents/"))::String
+        @assert startswith(path, "contents/")
+        callpath = string(path[10:end])::String
         showvalues = [
             (:path, callpath),
             (:block_number, block_number),
