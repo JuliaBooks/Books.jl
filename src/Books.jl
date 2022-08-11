@@ -34,7 +34,7 @@ include("ci.jl")
 include("sitemap.jl")
 include("html.jl")
 include("build.jl")
-export html, pdf, docx, build_all
+export html, pdf, build_all
 include("serve.jl")
 include("output.jl")
 export without_caption_label

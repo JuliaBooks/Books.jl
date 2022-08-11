@@ -357,30 +357,6 @@ function pdf(; project="default")
     return nothing
 end
 
-function docx(; project="default")
-    input_path = write_input_markdown(project; skip_index=true)
-    file = config(project, "output_filename")
-    output_filename = joinpath(BUILD_DIR, "$file.docx")
-    output = "--output=$output_filename"
-    metadata_path = combined_metadata_path(project)
-    metadata = "--metadata-file=$metadata_path"
-    input_files = ignore_homepage(project, inputs(project))
-
-    args = [
-        input_path;
-        crossref;
-        citeproc;
-        csl();
-        metadata;
-        output
-    ]
-    out = call_pandoc(args)
-    if !isnothing(out)
-        println("Built $output_filename")
-    end
-    nothing
-end
-
 """
     cleanup()
 
@@ -405,5 +381,5 @@ function build_all(; project="default", extra_head="", fail_on_error=false)
     html(; project, extra_head, fail_on_error, build_sitemap)
     write_extra_html_files(project)
     pdf(; project)
-    docx(; project)
+    return nothing
 end

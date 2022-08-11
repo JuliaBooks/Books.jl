@@ -8,9 +8,7 @@ function homepage_intro()
     This website introduces and demonstrates the package
     [Books.jl](https://books.huijzer.xyz){target="_blank"}
     at version $books_version and is available as
-    [**PDF**](/books.pdf){target="_blank"}
-    and
-    [docx](/books.docx){target="_blank"}.
+    [**PDF**](/books.pdf){target="_blank"}.
     These pages were built on $(today()) with Julia $VERSION.
     """
 end
