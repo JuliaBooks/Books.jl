@@ -188,7 +188,6 @@ function convert_image(
 
     file = image_filename(expr, path, "image")
 
-    println("Writing images for $file")
     png_filename = "$file.png"
     png_path = joinpath(im_dir, png_filename)
     # Explicit rm due to https://github.com/JuliaIO/FileIO.jl/issues/338.

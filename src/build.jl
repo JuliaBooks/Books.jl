@@ -345,12 +345,11 @@ function pdf(; project="default")
         output_tex_filename = joinpath(BUILD_DIR, "$file.tex")
         println("Wrote $output_tex_filename (for debugging purposes)")
         tex_output = "--output=$output_tex_filename"
-        call_pandoc([args; tex_output])
-    end
+        out = call_pandoc([args; tex_output])
 
-    out = call_pandoc([args; output])
-    if !isnothing(out)
-        println("Built $output_filename")
+        if !isnothing(out)
+            println("Built $output_filename")
+        end
     end
 
     return nothing

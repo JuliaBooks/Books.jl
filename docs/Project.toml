@@ -1,7 +1,6 @@
 name = "BooksDocs"
 uuid = "6b2b467d-d873-4a19-b33c-0abffd8470ba"
 authors = ["Rik Huijzer <t.h.huijzer@rug.nl>"]
-version = "0.1.0"
 
 [deps]
 Books = "939d5c6b-51ae-42e7-97ca-7564d0d4ad91"
@@ -20,5 +19,5 @@ TOML = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
 
 [compat]
 Latexify = "0.15"
-MCMCChains = "4.9"
+MCMCChains = "5"
 Reexport = "1.1"
