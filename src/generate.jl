@@ -256,12 +256,12 @@ function evaluate_include(
         try
             return evaluate_and_write(M, userexpr)
         catch e
+            # Newline to be placed behind the ProgressMeter output.
+            println()
             if e isa InterruptException
                 @info "Process was stopped by a terminal interrupt (CTRL+C)"
                 return e
             end
-            # Print a newline to be placed behind the ProgressMeter.
-            println()
             report_error(userexpr, e, callpath, block_number)
             return CapturedException(e, catch_backtrace())
         end
@@ -297,34 +297,41 @@ function _callpath(path)
     return string(path[10:end])::String
 end
 
-function show_progress(i, exprs)
+function show_progress(io::IO, i::Base.RefValue{Int64}, exprs)
     n = length(exprs)
     desc = "Current code block (out of $n blocks in total):"
     # Using ProgressUnknown because the ETA calculation is pointless.
-    p = ProgressMeter.ProgressUnknown(; dt=0.05)
-    previous_time = time()
+    dt = 0.0000001
+    p = ProgressMeter.ProgressUnknown(; dt)
+    p.output = io
     while true
-        index = n < i[] ? n : i[]
-        path, userexpr, block_number = exprs[index]
+        index = i[]
+        bound_index = n < index ? n : index
+        path, userexpr, block_number = exprs[bound_index]
         showvalues = [
             (:path, _callpath(path)),
-            (:block_number, "$block_number ($index / $n)"),
+            (:block_number, "$block_number ($bound_index / $n)"),
             (:expr, replace(userexpr.expr, '\n' => ' ')),
         ]
         p.counter = index
         ProgressMeter.update!(p; showvalues)
-        if n == index
+        if n == bound_index
             break
         end
-        tdiff = time() - previous_time
-        if tdiff < 1
-            sleep(1 - tdiff)
-        end
-        previous_time = time()
+        sleep(1)
     end
-    sleep(0.05)
     ProgressMeter.finish!(p)
     return nothing
+end
+show_progress(i, exprs) = show_progress(stderr, i, exprs)
+
+"Trigger show_progress to make things feel more snappy."
+function _trigger_show_progress()
+    exprs = [(; path="contents/lorem", userexpr=UserExpr("", 1), block_number=1)]
+    io = IOBuffer()
+    show_progress(io, Ref(1), exprs)
+    out = String(take!(io))
+    return contains(out, "Progress")
 end
 
 _interrupt_task(t::Nothing) = nothing
@@ -377,10 +384,13 @@ function gen(
 
     n = length(exprs)
     i = Ref(1)
+    _trigger_show_progress()
     t = (log_progress && !is_ci()) ? @task(show_progress(i, exprs)) : nothing
     !isnothing(t) && schedule(t)
     while i[] ≤ n
-        sleep(0.05)
+        # Gives the progress logger a chance to do their thing?
+        # It's probably compilation-related.
+        sleep(0.001)
         path, userexpr, block_number = exprs[i[]]
         callpath = _callpath(path)
         out = evaluate_include(userexpr, M, fail_on_error, callpath, block_number)

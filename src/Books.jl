@@ -21,6 +21,7 @@ using InteractiveUtils: gen_call_with_extracted_types
 using Markdown: MD
 using Memoize: @memoize
 using ProgressMeter: ProgressMeter
+using SnoopPrecompile: SnoopPrecompile, @precompile_setup, @precompile_all_calls
 using pandoc_crossref_jll: pandoc_crossref_path
 using pandoc_jll: pandoc
 using tectonic_jll: tectonic
@@ -49,5 +50,11 @@ export code_block, output_block
 export @sc, sc, CodeAndFunction, @sco, sco, scob
 export gen
 export serve
+
+@precompile_setup begin
+    @precompile_all_calls begin
+        _trigger_show_progress()
+    end
+end
 
 end # module
