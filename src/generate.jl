@@ -372,7 +372,7 @@ function gen(
 
     n = length(exprs)
     i = Ref(1)
-    t = log_progress ? @task(show_progress(i, exprs)) : nothing
+    t = log_progress && !is_ci() ? @task(show_progress(i, exprs)) : nothing
     !isnothing(t) && schedule(t)
     while i[] ≤ n
         path, userexpr, block_number = exprs[i[]]
