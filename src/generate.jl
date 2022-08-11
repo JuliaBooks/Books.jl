@@ -292,6 +292,44 @@ function _included_expressions(paths)
     return exprs
 end
 
+function _callpath(path)
+    @assert startswith(path, "contents/")
+    return string(path[10:end])::String
+end
+
+function show_progress(i, exprs)
+    n = length(exprs)
+    desc = "Current code block (out of $n blocks in total):"
+    # Using ProgressUnknown because the ETA calculation is pointless.
+    p = ProgressMeter.ProgressUnknown(; desc, dt=0.05)
+    while true
+        sleep(1)
+        path, userexpr, block_number = exprs[i[]]
+        showvalues = [
+            (:path, _callpath(path)),
+            (:block_number, block_number),
+            (:expr, replace(userexpr.expr, '\n' => ' ')),
+        ]
+        p.counter = i[]
+        ProgressMeter.update!(p; showvalues)
+        if i == n
+            break
+        end
+    end
+    sleep(0.05)
+    ProgressMeter.finish!(p)
+    return nothing
+end
+
+function _interrupt_task(t)
+    try
+        ex = InterruptException()
+        Base.throwto(t, ex)
+    catch e
+        @assert e isa InterruptException
+    end
+end
+
 """
     gen(
         paths::Vector{String};
@@ -329,22 +367,16 @@ function gen(
     end
 
     n = length(exprs)
-    desc = "Current code block (out of $n blocks in total):"
-    # Using ProgressUnknown because the ETA of the normal bar is very unreliable.
-    p = ProgressMeter.ProgressUnknown(; desc, dt=0.05)
-    sleep(0.05)
-    for i in 1:n
-        path, userexpr, block_number = exprs[i]
-        @assert startswith(path, "contents/")
-        callpath = string(path[10:end])::String
-        showvalues = [
-            (:path, callpath),
-            (:block_number, block_number),
-            (:expr, replace(userexpr.expr, '\n' => ' ')),
-        ]
-        ProgressMeter.next!(p; showvalues)
+    i = Ref(1)
+    t = @task show_progress(i, exprs)
+    schedule(t)
+    while i[] ≤ n
+        path, userexpr, block_number = exprs[i[]]
+        callpath = _callpath(path)
+        i[] % 5 == 1 && sleep(1)
         out = evaluate_include(userexpr, M, fail_on_error, callpath, block_number)
         if out isa CapturedException
+            _interrupt_task(t)
             filename, _ = splitext(callpath)
             @info """To re-run the code block that threw the error, use
                 gen("$filename", $block_number; kwargs...)
@@ -352,11 +384,12 @@ function gen(
             return nothing
         end
         if out isa InterruptException
+            _interrupt_task(t)
             return nothing
         end
+        i[] = i[] + 1
     end
-    sleep(0.06)
-    ProgressMeter.finish!(p)
+    wait(t)
     if call_html
         @info "Updating html"
         html(; project)
