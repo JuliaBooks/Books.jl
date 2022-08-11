@@ -26,7 +26,7 @@ jobs:
           - "1.6"
           - "1"
         os:
-          - buildjet-2vcpu-ubuntu-2004
+          - ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
