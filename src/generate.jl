@@ -301,27 +301,30 @@ function show_progress(i, exprs)
     n = length(exprs)
     desc = "Current code block (out of $n blocks in total):"
     # Using ProgressUnknown because the ETA calculation is pointless.
-    p = ProgressMeter.ProgressUnknown(; desc, dt=0.05)
+    p = ProgressMeter.ProgressUnknown(; dt=0.05)
     while true
-        sleep(1)
-        path, userexpr, block_number = exprs[i[]]
+        index = n < i[] ? n : i[]
+        path, userexpr, block_number = exprs[index]
         showvalues = [
             (:path, _callpath(path)),
-            (:block_number, block_number),
+            (:block_number, "$block_number ($index / $n)"),
             (:expr, replace(userexpr.expr, '\n' => ' ')),
         ]
-        p.counter = i[]
+        p.counter = index
         ProgressMeter.update!(p; showvalues)
-        if i == n
+        if n ≤ i[]
             break
         end
+        sleep(1)
     end
     sleep(0.05)
     ProgressMeter.finish!(p)
     return nothing
 end
 
-function _interrupt_task(t)
+_interrupt_task(t::Nothing) = nothing
+
+function _interrupt_task(t::Task)
     try
         ex = InterruptException()
         Base.throwto(t, ex)
@@ -352,6 +355,7 @@ function gen(
         block_number::Union{Nothing,Int}=nothing;
         M=Main,
         fail_on_error::Bool=false,
+        log_progress::Bool=true,
         project="default",
         call_html::Bool=true
     )
@@ -368,12 +372,11 @@ function gen(
 
     n = length(exprs)
     i = Ref(1)
-    t = @task show_progress(i, exprs)
-    schedule(t)
+    t = log_progress ? @task(show_progress(i, exprs)) : nothing
+    !isnothing(t) && schedule(t)
     while i[] ≤ n
         path, userexpr, block_number = exprs[i[]]
         callpath = _callpath(path)
-        i[] % 5 == 1 && sleep(1)
         out = evaluate_include(userexpr, M, fail_on_error, callpath, block_number)
         if out isa CapturedException
             _interrupt_task(t)
@@ -389,7 +392,7 @@ function gen(
         end
         i[] = i[] + 1
     end
-    wait(t)
+    !isnothing(t) && wait(t)
     if call_html
         @info "Updating html"
         html(; project)
@@ -397,7 +400,13 @@ function gen(
     return nothing
 end
 
-function gen(; M=Main, fail_on_error=false, project="default", call_html=true)
+function gen(;
+        M=Main,
+        call_html::Bool=true,
+        fail_on_error::Bool=false,
+        log_progress::Bool=false,
+        project="default"
+    )
     if !isfile("config.toml")
         error("Couldn't find `config.toml`. Is there a valid project in $(pwd())?")
     end

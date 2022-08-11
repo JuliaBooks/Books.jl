@@ -105,7 +105,7 @@ function markdown_gen_example()
     c = IOCapture.capture() do
         M = BooksDocs
         # Update html set to false to avoid Pandoc errors.
-        gen("index", call_html=false)
+        gen("index"; log_progress=false, call_html=false)
     end
 
     """
