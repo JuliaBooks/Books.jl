@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-and-deploy:
+  test:
     name: Test and deploy
     runs-on: ${{ matrix.os }}
     permissions: write-all
