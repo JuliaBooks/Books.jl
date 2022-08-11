@@ -20,7 +20,7 @@ using Dates: today
 using InteractiveUtils: gen_call_with_extracted_types
 using Markdown: MD
 using Memoize: @memoize
-using ProgressMeter: ProgressMeter, Progress
+using ProgressMeter: ProgressMeter
 using pandoc_crossref_jll: pandoc_crossref_path
 using pandoc_jll: pandoc
 using tectonic_jll: tectonic

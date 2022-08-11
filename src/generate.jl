@@ -307,7 +307,6 @@ Otherwise, specify another module `M`.
 After calling the methods, this method will also call `html()` to update the site when
 `call_html == true`.
 """
-
 function gen(
         paths::Vector{String},
         block_number::Union{Nothing,Int}=nothing;
@@ -327,20 +326,25 @@ function gen(
         filter!(e -> e.path == path && e.block_number == block_number, exprs)
     end
 
-    p = Progress(length(exprs))
-    for (path, userexpr, block_number) in exprs
+    n = length(exprs)
+    desc = "Progress out of $n code blocks in total:"
+    # Using ProgressUnknown because the ETA of the normal bar is very unreliable.
+    p = ProgressMeter.ProgressUnknown(; desc, dt=0.05)
+    sleep(0.05)
+    for i in 1:n
+        path, userexpr, block_number = exprs[i]
         callpath = string(chopprefix(path, "contents/"))::String
         showvalues = [
             (:path, callpath),
             (:block_number, block_number),
-            (:expr, userexpr.expr),
+            (:expr, replace(userexpr.expr, '\n' => ' ')),
         ]
         ProgressMeter.next!(p; showvalues)
         out = evaluate_include(userexpr, M, fail_on_error, callpath, block_number)
         if out isa CapturedException
             filename, _ = splitext(callpath)
             @info """To re-run the code block that threw the error, use
-                gen("$filename", $block_number; M, [...])
+                gen("$filename", $block_number; kwargs...)
                 """
             return nothing
         end
@@ -348,8 +352,10 @@ function gen(
             return nothing
         end
     end
+    sleep(0.06)
+    ProgressMeter.finish!(p)
     if call_html
-        println("Updating html")
+        @info "Updating html"
         html(; project)
     end
     return nothing
