@@ -22,6 +22,7 @@ using Markdown: MD
 using Memoize: @memoize
 using pandoc_crossref_jll: pandoc_crossref_path
 using pandoc_jll: pandoc
+using tectonic_jll: tectonic
 
 const GENERATED_DIR = "_gen"
 const DEFAULTS_DIR = joinpath(PKGDIR, "defaults")

@@ -11,24 +11,3 @@ git-tree-sha1 = "d5fae1aed2d6ce57083e5e9d61a6380c86e27d63"
     [[Highlight.download]]
     sha256 = "003e8a9216d38cca249933d3f65660437a87d1473490707d1c5da167ba9bb5b3"
     url = "https://github.com/highlightjs/cdn-release/archive/refs/tags/11.5.0.tar.gz"
-
-[[Tectonic]]
-lazy = true
-os = "linux"
-arch = "x86_64"
-git-tree-sha1 = "6476980862b8c80d4cd5dd03c3ccf0de2aa6d78c"
-
-    [[Tectonic.download]]
-    sha256 = "c75d5044b5d60392895f2dac2846d9573fb581f3871d9be84d734b9cb305377c"
-    url = "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.8.0/tectonic-0.8.0-x86_64-unknown-linux-musl.tar.gz"
-
-[[Tectonic]]
-lazy = true
-os = "macos"
-arch = "x86_64"
-git-tree-sha1 = "1fa5a6a617eb3345cb6baf67f288d9d935954a46"
-
-    [[Tectonic.download]]
-    sha256 = "2868c8a8e57671153734d4a5ab942ebdd3f0907a1782f2987baa58bbedcad1f2"
-    url = "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.8.0/tectonic-0.8.0-x86_64-apple-darwin.tar.gz"
-
