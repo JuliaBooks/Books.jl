@@ -229,7 +229,7 @@ julia> docs_dir = joinpath(pkgdir(Books), "docs");
 julia> cd(docs_dir) do
            Books.ci_url_prefix("default")
        end
-""
+"/Books.jl"
 
 julia> cd(docs_dir) do
            Books.ci_url_prefix("test")
