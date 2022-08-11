@@ -46,24 +46,3 @@ jobs:
         env:
           GKS_ENCODING: "utf8"
           GKSwstype: "100"
-
-      - name: Instantiate BooksDocs
-        run: julia --project=docs/ -e '
-          using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
-
-      - name: Build docs
-        run: |
-          cd docs
-          julia --project -e 'using BooksDocs; BooksDocs.build()'
-        env:
-          GKS_ENCODING: "utf8"
-          GKSwstype: "100"
-
-      - name: Deploy to secondary branch
-        if: ${{ ( github.event_name == 'push' || github.event_name == 'workflow_dispatch') && !startsWith(matrix.version, '1.6') }}
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          cname: books.huijzer.xyz
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          force_orphan: true
-          publish_dir: ./docs/_build/
