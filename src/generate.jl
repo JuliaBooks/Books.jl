@@ -449,7 +449,7 @@ precompile(gen, (String,))
     entr_gen(path::AbstractString, [block_number]; kwargs...)
 
 Execute `gen(path, [block_number]; M, kwargs...)` whenever files in `contents` or code in module `M` changes.
-This is a convenience function around `Revise.entr(() -> my_code(), ["contents"], [M])`.
+This is a convenience function around `Revise.entr(() -> gen(...), ["contents"], [M])`.
 """
 function entr_gen(path::AbstractString, block_number=nothing; M, kwargs...)
     entr(["contents"], [M]) do
