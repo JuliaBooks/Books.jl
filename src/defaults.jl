@@ -1,14 +1,12 @@
-const DEFAULT_METADATA_SET = Ref(false)
-const DEFAULT_METADATA = Ref(Dict())
+const DEFAULT_METADATA = Dict{String,Any}[]
 
 function default_metadata()
-    if !DEFAULT_METADATA_SET[]
+    if isempty(DEFAULT_METADATA)
         path = joinpath(DEFAULTS_DIR, "metadata.yml")
-        data = YAML.load_file(path)::Dict
-        DEFAULT_METADATA_SET[] = true
-        DEFAULT_METADATA[] = data
+        data = YAML.load_file(path)
+        push!(DEFAULT_METADATA, data)
     end
-    return DEFAULT_METADATA[]
+    return only(DEFAULT_METADATA)
 end
 
 """
@@ -58,7 +56,8 @@ end
 """
     project_info(path::String, project::AbstractString)
 
-Return project info for TOML file at `path` as raw text or `nothing` if `project` is not defined.
+Return project info for TOML file at `path` as raw text or `nothing` if the TOML
+doesn't contain an entry for `project`.
 """
 function project_info(path::String, project::AbstractString)
     text = read(path, String)
@@ -72,17 +71,15 @@ function project_info(path::String, project::AbstractString)
     end
 end
 
-const DEFAULT_CONFIG_SET = Ref(false)
-const DEFAULT_CONFIG = Ref(Dict())
+const DEFAULT_CONFIG = Union{Dict{String,Any},Nothing}[]
 
 function default_config(project::AbstractString)
-    if !DEFAULT_CONFIG_SET[]
+    if isempty(DEFAULT_CONFIG)
         path = joinpath(DEFAULTS_DIR, "config.toml")
         data = project_info(path, project)
-        DEFAULT_CONFIG_SET[] = true
-        DEFAULT_CONFIG[] = data
+        push!(DEFAULT_CONFIG, data)
     end
-    return DEFAULT_CONFIG[]
+    return only(DEFAULT_CONFIG)
 end
 
 function user_config(project::AbstractString)
@@ -148,6 +145,6 @@ function config(project::AbstractString, key::String)
         return c[key]
     else
         default = config("default")::Dict{String, Any}
-        return config("default")[key]
+        return default[key]
     end
 end
