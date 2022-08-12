@@ -8,9 +8,7 @@ function homepage_intro()
     This website introduces and demonstrates the package
     [Books.jl](https://books.huijzer.xyz){target="_blank"}
     at version $books_version and is available as
-    [**PDF**](/books.pdf){target="_blank"}
-    and
-    [docx](/books.docx){target="_blank"}.
+    [**PDF**](/books.pdf){target="_blank"}.
     These pages were built on $(today()) with Julia $VERSION.
     """
 end
@@ -107,7 +105,7 @@ function markdown_gen_example()
     c = IOCapture.capture() do
         M = BooksDocs
         # Update html set to false to avoid Pandoc errors.
-        gen("index", call_html=false)
+        gen("index"; log_progress=false, call_html=false)
     end
 
     """
@@ -149,28 +147,25 @@ module_example_definition() = code_block("""
 
 function example_plot()
     I = 1:30
-    df = (x=I, y=I.^2)
-    xy = data(df) * mapping(:x, :y)
-    fg = draw(xy)
+    plot(I, I.^2)
 end
 
 function multiple_example_plots()
     filenames = ["example_plot_$i" for i in 2:3]
     I = 1:30
-    df = (x=I, y=I.*2, z=I.^3)
     objects = [
-        draw(data(df) * mapping(:x, :y))
-        draw(data(df) * mapping(:x, :z))
+        plot(I, I.^2),
+        scatter(I, I.^3)
     ]
     return Options.(objects, filenames)
 end
 
 function image_options_plot()
-    I = 1:0.1:30
-    df = (x=I, y=sin.(I))
-    xy = data(df) * visual(Lines) * mapping(:x, :y)
-    axis = (width = 600, height = 140)
-    draw(xy; axis)
+    I = 1:30
+    fig = Figure(; resolution=(600, 140))
+    ax = Axis(fig[1, 1]; xlabel="x", ylabel="y")
+    scatterlines!(ax, I, 3 .* sin.(I))
+    return fig
 end
 
 function combined_options_plot()
@@ -196,7 +191,9 @@ function makiejl()
     Options(p; caption, label, link_attributes)
 end
 
-chain() = MCMCChains.Chains([1])
+fib(n) = n <= 1 ? n : fib(n - 1) + fib(n - 2)
+
+chain() = (fib(44); MCMCChains.Chains(rand(10, 1)))
 
 const BACKTICK = '`'
 export BACKTICK

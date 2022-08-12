@@ -1,9 +1,10 @@
 module Books
 
-const PROJECT_ROOT = string(pkgdir(Books))::String
+using RelocatableFolders: @path
+const PKGDIR = @path string(pkgdir(Books))::String
 
 let
-    path = joinpath(PROJECT_ROOT, "README.md")
+    path = joinpath(PKGDIR, "README.md")
     text = read(path, String)
     @doc text Books
 end
@@ -19,12 +20,14 @@ using Dates: today
 using InteractiveUtils: gen_call_with_extracted_types
 using Markdown: MD
 using Memoize: @memoize
-using Requires: @require
+using ProgressMeter: ProgressMeter
+using SnoopPrecompile: SnoopPrecompile, @precompile_setup, @precompile_all_calls
 using pandoc_crossref_jll: pandoc_crossref_path
 using pandoc_jll: pandoc
+using tectonic_jll: tectonic
 
 const GENERATED_DIR = "_gen"
-const DEFAULTS_DIR = joinpath(PROJECT_ROOT, "defaults")
+const DEFAULTS_DIR = joinpath(PKGDIR, "defaults")
 const BUILD_DIR = "_build"
 const JULIAMONO_VERSION = "0.045"
 mkpath(BUILD_DIR)
@@ -34,7 +37,7 @@ include("ci.jl")
 include("sitemap.jl")
 include("html.jl")
 include("build.jl")
-export html, pdf, docx, build_all
+export html, pdf, build_all
 include("serve.jl")
 include("output.jl")
 export without_caption_label
@@ -48,10 +51,10 @@ export @sc, sc, CodeAndFunction, @sco, sco, scob
 export gen
 export serve
 
-function __init__()
-    @require AlgebraOfGraphics="cbdf2221-f076-402e-a563-3d30da359d67" include("outputs/aog.jl")
-    @require Makie="ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a" include("outputs/makie.jl")
-    @require Plots="91a5bcdd-55d7-5caf-9e0b-520d859cae80" include("outputs/plots.jl")
+@precompile_setup begin
+    @precompile_all_calls begin
+        _trigger_show_progress()
+    end
 end
 
 end # module

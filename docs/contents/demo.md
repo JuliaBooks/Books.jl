@@ -313,17 +313,34 @@ If you are really sure, you can export all symbols in your module with something
 
 ## Plots {#sec:plots}
 
-An AlgebraOfGraphics plot is shown below in @fig:example_plot.
-For Plots.jl and Makie.jl see, respectively section @sec:jlplots and @sec:makie.
-This is actually a bit tricky, because we want to show vector graphics (SVG) on the web, but these are not supported (well) by LaTeX.
-Therefore, portable network graphics (PNG) images are also created and passed to LaTeX.
+For image types from libraries that `Books.jl` doesn't know about such as plotting types from `Plots.jl` and `Makie.jl`, it is required to extend two methods.
+First of all, extend `Books.is_image` so that it returns true for the figure type of the respective plotting library.
+For example for `Plots.jl` set
+
+```julia
+import Books
+
+Books.is_image(plot::Plots.Plot) = true
+```
+and extend `Books.svg` and `Books.png` too.
+For example, for `Plots.jl`:
+
+```jl
+@sc Books.svg("foo", plot(1:10))
+```
+
+Adding plots to books is actually a bit tricky, because we want to show vector graphics (SVG) on the web, but these are not supported (well) by LaTeX.
+Therefore, portable network graphics (PNG) images are also created and passed to LaTeX, so set `Books.png` too:
+
+```jl
+@sc Books.png("foo", plot(1:10))
+```
+
+Then, plotting works:
 
 ```jl
 @sco M.example_plot()
 ```
-
-If the output is a string instead of the output you expected, then check whether you load the related packages in time.
-For example, for this plot, you need to load AlgebraOfGraphics.jl together with Books.jl so that Requires.jl will load the code for handling AlgebraOfGraphics objects.
 
 For multiple images, use `Options.(objects, paths)`:
 
@@ -331,13 +348,13 @@ For multiple images, use `Options.(objects, paths)`:
 @sc M.multiple_example_plots()
 ```
 
-Resulting in @fig:example_plot_2 and @fig:example_plot_3:
+Resulting in one `Plots.jl` (@fig:example_plot_2) and one `CairoMakie.jl` (@fig:example_plot_3) plot:
 
 ```jl
 M.multiple_example_plots()
 ```
 
-For changing the size, use `axis` from AlgebraOfGraphics:
+To change the size, change the resolution of the image:
 
 ```jl
 @sco M.image_options_plot()
@@ -363,15 +380,11 @@ Options(p; caption="Label specified in Markdown.")
 
 \
 
-### Plots.jl {#sec:jlplots}
-
 ```jl
 @sco M.plotsjl()
 ```
 
-### Makie {#sec:makie}
-
-This time, we also pass `link_attributes` to Pandoc (@fig:makie):
+This time, we also pass `link_attributes` to Pandoc (@fig:makie) to shrink the image width on the page:
 
 ```jl
 @sco M.makiejl()
@@ -382,6 +395,8 @@ This time, we also pass `link_attributes` to Pandoc (@fig:makie):
 ### Multilingual books
 
 For an example of a multilingual book setup, say English and Chinese, see the book by [Jun Tian](https://github.com/LearnJuliaTheFunWay/LearnJuliaTheFunWay.jl).
+
+For an example of a multilingual book setup, say English and Chinese, see <https://juliadatascience.io>.
 
 ### Footnotes
 
@@ -417,7 +432,7 @@ To write note boxes, you can use
 
 > **_NOTE:_**  The note content.
 
-This way is fully supported by Pandoc, so it will be correctly converted to outputs such as PDF or DOCX.
+This way is fully supported by Pandoc, so it will be correctly converted to outputs such as PDF.
 
 ### Advanced `sco` options
 

@@ -1,0 +1,106 @@
+name: Docs
+
+on:
+  push:
+    branches:
+      - main
+    tags: '*'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  BuildAndDeploy:
+    name: Documentation
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: '1'
+
+      - run: julia --project=docs/ -e '
+          using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
+
+      - run: |
+          cd docs
+          julia --project -e 'using BooksDocs; BooksDocs.build()'
+        env:
+          GKS_ENCODING: "utf8"
+          GKSwstype: "100"
+
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          force_orphan: true
+          publish_dir: ./docs/_build/
+          publish_branch: docs-output
+
+  MonoDeploy:
+    needs: BuildAndDeploy
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'pull_request' }}
+    steps:
+      - name: Clone `docs-output` branch
+        uses: actions/checkout@v2
+        with:
+          ref: 'docs-output'
+
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      # Fixes CloudFlare Pages not redirecting `stable/`
+      # Also, this makes documentation fixes visible without releasing a new version.
+      - name: Default to `dev`
+        shell: julia --color=yes {0}
+        run: |
+          filename = "index.html"
+          if isfile(filename)
+              run(`sed --debug -i 's/stable/dev/g' $filename`)
+          end
+      - name: Deploy to https://huijzer.xyz/Books.jl
+        shell: julia --color=yes {0}
+        run: |
+          function generate_redirects(dir)
+              cd(dir) do
+                  redirects = String[]
+                  for (root, _, files) in walkdir(".")
+                    for file in files
+                        path = joinpath(root, file)
+                        if islink(path)
+                            url_root = lstrip(root, '.')
+                            from = joinpath(url_root, file)
+                            # End with forward slashes to get redirects to index.html
+                            to = joinpath(url_root, readlink(path) * '/')
+                            redirect = "$from $to 301"
+                            @info redirect
+                            push!(redirects, redirect)
+                        end
+                    end
+                  end
+                  text = join(redirects, '\n')
+                  write("_redirects", text)
+                  return nothing
+              end
+          end
+          from = "."
+          clone = mktempdir()
+          url = "git@github.com:rikhuijzer/huijzer.xyz.git"
+          run(`git clone --depth=1 $url $clone`)
+          to = joinpath(clone, "public", "Books.jl")
+          mkpath(to)
+          cp(from, to; force=true)
+          # To avoid Git submodules.
+          rm(joinpath(to, ".git"); recursive=true)
+          generate_redirects(joinpath(clone, "public"))
+          cd(clone) do
+              run(`git add .`)
+              run(`git config --global user.email 't.h.huijzer@rug.nl'`)
+              run(`git config --global user.name 'Bot'`)
+              run(`git commit --allow-empty -m 'Deploy from Books.jl'`)
+              run(`git push`)
+          end

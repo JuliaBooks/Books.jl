@@ -1,7 +1,3 @@
-using AlgebraOfGraphics
-using CairoMakie
-using DataFrames
-
 @testset "generate" begin
     @test code_block("lorem") == """
         ```language-julia
@@ -11,13 +7,11 @@ using DataFrames
 
     @test contains(B.convert_output(nothing, nothing, DataFrame(A = [1])), "---")
 
-    X = 1:30
-    df = (x=X, y=X.*2)
-    xy = data(df) * mapping(:x, :y)
-    fg = draw(xy)
+    I = 1:30
+    p = plot(I, I.^2)
 
     mktemp() do path, io
-        @test contains(B.convert_output("tmp", nothing, fg), ".png")
+        @test contains(B.convert_output("tmp", nothing, p), ".png")
     end
     im_dir = joinpath(B.BUILD_DIR, "im")
     rm(im_dir; force=true, recursive=true)
@@ -47,7 +41,7 @@ using DataFrames
     @test match(Books.CODEBLOCK_PATTERN, evaluated_block)[1] == "foo"
 
     function read_outcome(block::AbstractString)
-        cd(joinpath(Books.PROJECT_ROOT, "docs")) do
+        cd(joinpath(Books.PKGDIR, "docs")) do
             exprs = Books.extract_expr(block)
             userexpr = first(exprs)
             Books.evaluate_and_write(Main, userexpr)
@@ -79,6 +73,8 @@ using DataFrames
             ```
         """
     @test isempty(Books.extract_expr(not_evaluated_block))
+
+    @test Books._trigger_show_progress()
 end
 
 module Foo

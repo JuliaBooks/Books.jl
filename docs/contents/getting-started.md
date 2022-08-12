@@ -57,7 +57,7 @@ For example, the [Pandoc LaTeX template "default.latex"](https://github.com/jgm/
 In the template of this project, I tried to get the basics right and haven't spend hours on making it configurable.
 However, if you want to add options to the templates, feel free to open a pull request.
 If you want to configure the template completely by yourself, you can place "template.tex" in "pandoc/" at the root of your project[^selftemplate].
-This same holds for the HTML, CSS, and DOCX template.
+This same holds for the HTML and CSS template.
 
 [^selftemplate]: With LaTeX, be ready for hours of fiddling to get things right though.
     The current LaTeX template is adjusted to work with Tectonic, Julia syntax highlighting and the Tufte LaTeX class.
@@ -113,7 +113,7 @@ Note that the homepage is only added to the html output and not to pdf or other 
 ### Website landing page
 
 By default, Books.jl assumes that you will want a separate landing page for your book when you host it.
-This page is not added to the generated ouputs, like PDF or DOCX, so it's a nice place to put links to the generated outputs.
+This page is not added to the generated outputs, like PDF, so it's a nice place to put links to the generated outputs.
 You will need to create a `index.md` file in the `contents` directory.
 Then, using an top-level header from Markdown (e.g. "# Title"), give the file a title.
 Immediately after the title, you need to write `{-}` to avoid this chapter showing up in your HTML menu.

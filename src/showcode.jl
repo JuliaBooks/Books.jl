@@ -109,7 +109,7 @@ end
 the DataFrame will go through three stages:
 
 1. `pre` adds the label "l" to the object
-1. `process` is nothing, so `convert_output` will do its usual suff, namely converting
+1. `process` is nothing, so `convert_output` will do its usual stuff, namely converting
     the DataFrame object to Markdown.
 1. `post` converts the output to a string (even though this is already done by `convert_output` in this case).
 

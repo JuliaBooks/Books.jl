@@ -15,7 +15,7 @@ end
     rebuild_neccesary(file)::Bool
 
 Avoid rebuilds if possible.
-For example, calling Pandoc is not neccesary for svg images.
+For example, calling Pandoc is not necessary for svg images.
 """
 function rebuild_neccesary(file::AbstractString)::Bool
     _, extension = splitext(file)
@@ -51,6 +51,14 @@ end
 
 function serve(; simplewatcher=nothing, host::String="127.0.0.1",
         project="default", verbose=true, dir=BUILD_DIR)
+
+    if !isfile(joinpath("contents", "index.md"))
+        msg = """
+            Couldn't find `contents/index.md`.
+             Is the following current working directory correct: $(pwd())?
+            """
+        throw(AssertionError(msg))
+    end
 
     if isnothing(simplewatcher)
         extra_directories = config(project, "extra_directories")
