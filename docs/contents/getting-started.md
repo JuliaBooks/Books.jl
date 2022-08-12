@@ -12,9 +12,9 @@ M.serve_example()
 To generate all the Julia output (see @sec:embedding-output for more information) use
 
 ```
-$ julia --project -e  'using Books; using MyPackage; M = MyPackage'
+$ julia --project -e  'using Books; using MyPackage'
 
-julia> gen()
+julia> gen(; M)
 [...]
 Updating html
 ```

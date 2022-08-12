@@ -126,8 +126,6 @@ Refer to @tbl:my_table with
 @tbl:my_table
 ```
 
-> @tbl:my_table
-
 To show multiple objects, pass a `Vector`:
 
 ```jl
@@ -524,7 +522,7 @@ Ligatures from JuliaMono are disabled. For example, none of these symbols are co
 ### Long lines in code blocks
 
 ```language-plain
-When code or output is getting too long, a horizontal scrollbar is visible on the website to scroll horizontally.
+When code or output is getting too long, a horizontal scrollbar is visible on the website to scroll horizontally and a red arrow is visible in the PDF.
 ```
 
 ### Code blocks in lists

@@ -27,25 +27,25 @@ function docs_metadata()
     path = joinpath(pkgdir(BooksDocs), "metadata.yml")
     text = read(path, String)
     text = replace(text, '`' => "\\`")
-    code_block(text)
+    output_block(text)
 end
 
 function default_metadata()
     path = joinpath(Books.DEFAULTS_DIR, "metadata.yml")
     text = read(path, String)
-    code_block(text)
+    output_block(text)
 end
 
 function docs_config()
     path = joinpath(pkgdir(BooksDocs), "config.toml")
     text = read(path, String)
-    code_block(text)
+    output_block(text)
 end
 
 function default_config()
     path = joinpath(Books.DEFAULTS_DIR, "config.toml")
     text = read(path, String)
-    code_block(text)
+    output_block(text)
 end
 
 my_table() = DataFrame(U = [1, 2], V = [:a, :b], W = [3, 4])
