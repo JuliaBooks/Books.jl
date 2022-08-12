@@ -329,7 +329,8 @@ end
         call_html::Bool=true,
         fail_on_error::Bool=false,
         log_progress::Bool=true,
-        project="default"
+        project="default",
+        kwargs...
     )
 
 Populate the files in `$(Books.GENERATED_DIR)/` by calling the required methods.
@@ -337,6 +338,7 @@ These methods are specified by the filename and will output to that filename.
 This allows the user to easily link code blocks to code.
 After calling the methods, this method will also call `html()` to update the site when
 `call_html == true`.
+The `kwargs...` is meant to ignore `M` so that `entr_gen` is a drop-in replacement for `gen`.
 """
 function gen(
         paths::Vector{String},
@@ -344,7 +346,8 @@ function gen(
         call_html::Bool=true,
         fail_on_error::Bool=false,
         log_progress::Bool=true,
-        project="default"
+        project="default",
+        kwargs...
     )
 
     mkpath(GENERATED_DIR)
@@ -398,7 +401,8 @@ function gen(;
         call_html::Bool=true,
         fail_on_error::Bool=false,
         log_progress::Bool=false,
-        project="default"
+        project="default",
+        kwargs...
     )
     if !isfile("config.toml")
         error("Couldn't find `config.toml`. Is there a valid project in $(pwd())?")
@@ -428,6 +432,6 @@ This is a convenience function around `Revise.entr(() -> gen(...), ["contents"],
 """
 function entr_gen(path::AbstractString, block_number=nothing; M=[], kwargs...)
     entr(["contents"], M) do
-        gen(path, block_number; M, kwargs...)
+        gen(path, block_number; kwargs...)
     end
 end

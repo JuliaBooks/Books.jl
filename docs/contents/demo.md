@@ -74,7 +74,7 @@ Note that it doesn't matter where you define the function `julia_version`, as lo
 To save yourself some typing, and to allow yourself to get some coffee while Julia gets up to speed, you can start Julia for your package with
 
 ```
-$ julia --project -ie 'using Books; using MyPackage; M = MyPackage'
+$ julia --project -ie 'using MyPackage'
 ```
 
 which allows you to re-generate all the content by calling
@@ -83,31 +83,29 @@ which allows you to re-generate all the content by calling
 julia> gen()
 ```
 
-To run this method automatically when you make a change in your package, ensure that you loaded [Revise.jl](https://github.com/timholy/Revise.jl) before loading your package and run
+To run this method automatically when you make a change in your package, ensure that you loaded [`Revise.jl`](https://github.com/timholy/Revise.jl) before loading your package and run
 
 ```language-julia
-entr(gen, ["contents"], [M])
+entr(gen, ["contents"], [MyPackage])
 ```
 
-where M is the name of your module.
-Which will automatically run `gen()` whenever one of the files in `contents/` changes or any code in the module `M`.
+Which will automatically run `gen()` whenever one of the files in `contents/` changes or any code in the `MyPackage` module.
 To only run `gen` for one file, such as `contents/my_text.md`, use:
 
 ```language-julia
-entr(["contents"], [YourModule]) do
-    gen("my_text")
-end
+entr(() -> gen("my_text"), ["contents"], [MyPackage])
 ```
 
 Or, the equivalent helper function exported by `Books.jl`:
 
 ```language-julia
-entr_gen("my_text"; modules=YourModule)
+entr_gen("my_text"; M=[MyPackage])
 ```
 
 With this, `gen("my_text")` will be called every time something changes in one of the files in the contents folder or when something changes in `YourModule`.
-Note that you have to run this while `serve` is running in another terminal in the background.
-Then, your Julia code is executed and the website is automatically updated every time you change something in `content` or your module `M`.
+Note that you can run this while `serve` is running in another terminal in the background.
+Then, your Julia code is executed and the website is automatically updated every time you change something in `content` or `MyPackage`.
+Also note that `gen` is a drop-in replacement for `entr_gen`, so you can always add or remove `entr_` to run a block one time or multiple times.
 
 In the background, `gen` passes the methods through `convert_output(expr::String, path, out::T)` where `T` can, for example, be a DataFrame or a plot.
 To show that a DataFrame is converted to a Markdown table, we define a method

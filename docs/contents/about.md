@@ -40,7 +40,6 @@ In combination with Revise.jl, you can quickly update your code and see the upda
 Another reason why this package looks different than other packages is because this package has been aimed at a REPL workflow.
 Via the REPL, the package evaluates the code blocks inside `Main` by default.
 This provides easy access to the variables.
-As a side note, if you prefer to evaluate in your package module or a temporary module, then you can pass your prefered module via the `M` keyword argument.
 
 Finally, a big difference with this package and other packages is that you decide yourself what you want to show for a code block.
 For example, in R
