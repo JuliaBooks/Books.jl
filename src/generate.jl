@@ -318,12 +318,12 @@ function show_progress(io::IO, i::Base.RefValue{Int64}, exprs)
         if n == bound_index
             break
         end
-        sleep(1)
+        sleep(0.2)
     end
     ProgressMeter.finish!(p)
     return nothing
 end
-show_progress(i, exprs) = show_progress(stderr, i, exprs)
+show_progress(i, exprs) = show_progress(stdout, i, exprs)
 
 "Trigger show_progress to make things feel more snappy."
 function _trigger_show_progress()
@@ -389,8 +389,10 @@ function gen(
     !isnothing(t) && schedule(t)
     while i[] ≤ n
         # Gives the progress logger a chance to do their thing?
-        # It's probably compilation-related.
-        sleep(0.001)
+        # Due to this sleep, things actually **feel** faster because the meter gets time to do it's thing.
+        # This biggest problem however is that ProgressMeter blocks:
+        # https://github.com/timholy/ProgressMeter.jl/issues/248.
+        sleep(0.005)
         path, userexpr, block_number = exprs[i[]]
         callpath = _callpath(path)
         out = evaluate_include(userexpr, M, fail_on_error, callpath, block_number)
