@@ -101,27 +101,8 @@ code_example_table() = code("""
     DataFrame(A = [1, 2], B = [3, 4], C = [5, 6])
     """)
 
-function markdown_gen_example()
-    c = IOCapture.capture() do
-        M = BooksDocs
-        # Update html set to false to avoid Pandoc errors.
-        gen("index"; log_progress=false, call_html=false)
-    end
-
-    """
-    ```
-    gen("index")
-    ```
-
-    ```output
-    $(rstrip(c.output))
-    Updating html
-    ```
-    """
-end
-
 julia_version_example() = """
-```
+```output
 This book is built with Julia $VERSION.
 ```"""
 

@@ -177,7 +177,6 @@ function evaluate_and_write(M::Module, userexpr::UserExpr)
     ex = Meta.parse("begin $expr end")
     out = Core.eval(M, ex)
     converted = convert_output(expr, path, out)
-    print('\n', converted, '\n')
     markdown = string(converted)::String
     indent = userexpr.indentation
     if 0 < indent

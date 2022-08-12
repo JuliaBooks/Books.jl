@@ -32,8 +32,8 @@ M.julia_version() = "This book is built with Julia $VERSION."
 Next, ensure that you call `using Books; gen(; M)`, where `M = YourModule`.
 Alternatively, if you work on a large project and want to only generate the output for one or more Markdown files in `contents/`, such as `index.md`, use
 
-```jl
-M.markdown_gen_example()
+```language-julia
+gen("index")
 ```
 
 Calling `gen` will place the text
@@ -76,22 +76,29 @@ julia> gen()
 
 To run this method automatically when you make a change in your package, ensure that you loaded [Revise.jl](https://github.com/timholy/Revise.jl) before loading your package and run
 
-```
+```language-julia
 entr(gen, ["contents"], [M])
 ```
 
 where M is the name of your module.
 Which will automatically run `gen()` whenever one of the files in `contents/` changes or any code in the module `M`.
-To only run `gen` for one file, such as "contents/my_text.md", use:
+To only run `gen` for one file, such as `contents/my_text.md`, use:
 
-```
-mygen() = gen("my_text")
-entr(mygen, ["contents"], [M])
+```language-julia
+entr(["contents"], [M]) do
+    gen("my_text")
+end
 ```
 
-With this, `mygen` will be called every time something changes in one of the files in the contents folder or when something changes in your module `M`.
+Or, the equivalent helper function exported by `Books.jl`:
+
+```language-julia
+entr_gen("my_text")
+```
+
+With this, `gen("my_text")` will be called every time something changes in one of the files in the contents folder or when something changes in your module `M`.
 Note that you have to run this while `serve` is running in another terminal in the background.
-Then, your Julia code is executed and the website is automatically updated every time you change something in "content" or your module `M`.
+Then, your Julia code is executed and the website is automatically updated every time you change something in `content` or your module `M`.
 
 In the background, `gen` passes the methods through `convert_output(expr::String, path, out::T)` where `T` can, for example, be a DataFrame or a plot.
 To show that a DataFrame is converted to a Markdown table, we define a method
@@ -393,8 +400,6 @@ This time, we also pass `link_attributes` to Pandoc (@fig:makie) to shrink the i
 ## Other notes
 
 ### Multilingual books
-
-For an example of a multilingual book setup, say English and Chinese, see the book by [Jun Tian](https://github.com/LearnJuliaTheFunWay/LearnJuliaTheFunWay.jl).
 
 For an example of a multilingual book setup, say English and Chinese, see <https://juliadatascience.io>.
 
