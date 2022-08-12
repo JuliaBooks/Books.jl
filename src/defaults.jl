@@ -1,6 +1,14 @@
-@memoize function default_metadata()::Dict
-    path = joinpath(DEFAULTS_DIR, "metadata.yml")
-    data = YAML.load_file(path)
+const DEFAULT_METADATA_SET = Ref(false)
+const DEFAULT_METADATA = Ref(Dict())
+
+function default_metadata()
+    if !DEFAULT_METADATA_SET[]
+        path = joinpath(DEFAULTS_DIR, "metadata.yml")
+        data = YAML.load_file(path)::Dict
+        DEFAULT_METADATA_SET[] = true
+        DEFAULT_METADATA[] = data
+    end
+    return DEFAULT_METADATA[]
 end
 
 """
@@ -24,13 +32,15 @@ Dict{Symbol, Int64} with 3 entries:
 override(d1::Dict, d2::Dict) = Dict(d1..., d2...)
 
 """
-    combine_metadata(user_metadata_path="metadata.yml")
+    combine_metadata(; user_metadata_path="metadata.yml")
 
 Write `metadata.yml` for Pandoc to $(Books.GENERATED_DIR).
 The file is a combination of Books.jl default settings and the user-defined settings.
 """
-function combine_metadata(user_metadata_path="metadata.yml")
-    user_metadata = isfile(user_metadata_path) ? YAML.load_file(user_metadata_path) : error("Couldn't find metadata.yml")
+function combine_metadata(; user_metadata_path="metadata.yml")
+    user_metadata = isfile(user_metadata_path) ?
+        YAML.load_file(user_metadata_path) :
+        error("Couldn't find metadata.yml")
     default = default_metadata()
     combined = override(default, user_metadata)
     mkpath(GENERATED_DIR)
@@ -62,9 +72,17 @@ function project_info(path::String, project::AbstractString)
     end
 end
 
-@memoize function default_config(project::AbstractString)
-    path = joinpath(DEFAULTS_DIR, "config.toml")
-    project_info(path, project)
+const DEFAULT_CONFIG_SET = Ref(false)
+const DEFAULT_CONFIG = Ref(Dict())
+
+function default_config(project::AbstractString)
+    if !DEFAULT_CONFIG_SET[]
+        path = joinpath(DEFAULTS_DIR, "config.toml")
+        data = project_info(path, project)
+        DEFAULT_CONFIG_SET[] = true
+        DEFAULT_CONFIG[] = data
+    end
+    return DEFAULT_CONFIG[]
 end
 
 function user_config(project::AbstractString)

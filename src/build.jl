@@ -67,27 +67,37 @@ function copy_css()
     cp(css_path, joinpath(BUILD_DIR, filename); force=true)
 end
 
-@memoize function is_mousetrap_enabled()::Bool
-    meta = default_metadata()::Dict
-    if "mousetrap" in keys(meta)
-        meta["mousetrap"]::Bool
-    else
-        false
+const MOUSETRAP_ENABLED = Ref(-1)
+
+function is_mousetrap_enabled()::Bool
+    if MOUSETRAP_ENABLED[] == -1
+        meta = default_metadata()::Dict
+        value = get(meta, "mousetrap", false)::Bool ? 1 : 0
+        MOUSETRAP_ENABLED[] = value
     end
+    return MOUSETRAP_ENABLED[]
 end
 
-@memoize function copy_mousetrap()
-    if is_mousetrap_enabled()
+const COPIED_MOUSETRAP = Ref(false)
+
+function copy_mousetrap()
+    if is_mousetrap_enabled() && !COPIED_MOUSETRAP[]
         filename = "mousetrap.min.js"
         from = pandoc_file(filename)
         cp(from, joinpath(BUILD_DIR, filename); force=true)
+        COPIED_MOUSETRAP[] = true
     end
 end
 
-@memoize function copy_juliamono()
-    filename = "JuliaMono-Regular.woff2"
-    from_path = joinpath(juliamono_dir(), "webfonts", filename)
-    cp(from_path, joinpath(BUILD_DIR, filename); force=true)
+const COPIED_JULIAMONO = Ref(false)
+
+function copy_juliamono()
+    if !COPIED_JULIAMONO[]
+        filename = "JuliaMono-Regular.woff2"
+        from_path = joinpath(juliamono_dir(), "webfonts", filename)
+        cp(from_path, joinpath(BUILD_DIR, filename); force=true)
+        COPIED_JULIAMONO[] = true
+    end
 end
 
 function codeblock2output(s::AbstractString)
@@ -245,36 +255,44 @@ function ci_url_prefix(project)
     return user_setting
 end
 
-@memoize function highlight(url_prefix)
-    highlight_dir = joinpath(Artifacts.artifact"Highlight", "cdn-release-11.5.0")
+const HIGHLIGHT_HEADER = Ref("")
 
-    highlight_name = "highlight.min.js"
-    highlight_path = joinpath(highlight_dir, "build", highlight_name)
-    cp(highlight_path, joinpath(BUILD_DIR, highlight_name); force=true)
+function highlight(url_prefix)
+    if HIGHLIGHT_HEADER[] == ""
+        highlight_dir = joinpath(Artifacts.artifact"Highlight", "cdn-release-11.5.0")
 
-    julia_highlight_name = "julia.min.js"
-    julia_highlight_path = joinpath(highlight_dir, "build", "languages", julia_highlight_name)
-    cp(julia_highlight_path, joinpath(BUILD_DIR, julia_highlight_name); force=true)
+        highlight_name = "highlight.min.js"
+        highlight_path = joinpath(highlight_dir, "build", highlight_name)
+        cp(highlight_path, joinpath(BUILD_DIR, highlight_name); force=true)
 
-    style_name = "github.min.css"
-    style_path = joinpath(highlight_dir, "build", "styles", style_name)
-    cp(style_path, joinpath(BUILD_DIR, style_name); force=true)
+        julia_highlight_name = "julia.min.js"
+        julia_highlight_path = joinpath(highlight_dir, "build", "languages", julia_highlight_name)
+        cp(julia_highlight_path, joinpath(BUILD_DIR, julia_highlight_name); force=true)
 
-    # Don't add `url_prefix` to the stylesheet link. It will be handled by `fix_links`.
-    """
-    <link rel="stylesheet" href="/$style_name">
-    <script src="$url_prefix/$highlight_name"></script>
-    <script src="$url_prefix/$julia_highlight_name"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        document.querySelectorAll('pre').forEach((el) => {
-            if (!el.classList.contains('output')) {
-                hljs.highlightElement(el);
-            }
-        });
-    });
-    </script>
-    """
+        style_name = "github.min.css"
+        style_path = joinpath(highlight_dir, "build", "styles", style_name)
+        cp(style_path, joinpath(BUILD_DIR, style_name); force=true)
+
+        # Don't add `url_prefix` to the stylesheet link. It will be handled by `fix_links`.
+        header = """
+            <link rel="stylesheet" href="/$style_name">
+            <script src="$url_prefix/$highlight_name"></script>
+            <script src="$url_prefix/$julia_highlight_name"></script>
+            <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                document.querySelectorAll('pre').forEach((el) => {
+                    if (!el.classList.contains('output')) {
+                        hljs.highlightElement(el);
+                    }
+                });
+            });
+            </script>
+            """
+        HIGHLIGHT_HEADER[] = header
+        return header
+    else
+        return HIGHLIGHT_HEADER[]
+    end
 end
 
 function html(; project="default", extra_head="", fail_on_error=false, build_sitemap=false)

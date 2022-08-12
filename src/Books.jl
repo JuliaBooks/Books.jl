@@ -9,17 +9,16 @@ let
     @doc text Books
 end
 
-import Artifacts
 import CodeTracking
 import LazyArtifacts
 import LiveServer
 import TOML
 import YAML
 
+using Artifacts
 using Dates: today
 using InteractiveUtils: gen_call_with_extracted_types
 using Markdown: MD
-using Memoize: @memoize
 using ProgressMeter: ProgressMeter
 using Revise: entr
 using SnoopPrecompile: SnoopPrecompile, @precompile_setup, @precompile_all_calls
