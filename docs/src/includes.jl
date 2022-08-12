@@ -6,7 +6,7 @@ function homepage_intro()
     books_version = project_info["version"]
     text = """
     This website introduces and demonstrates the package
-    [Books.jl](https://books.huijzer.xyz){target="_blank"}
+    [`Books.jl`](https://github.com/JuliaBooks/Books.jl){target="_blank"}
     at version $books_version and is available as
     [**PDF**](/books.pdf){target="_blank"}.
     These pages were built on $(today()) with Julia $VERSION.
