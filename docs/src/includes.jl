@@ -105,7 +105,7 @@ function markdown_gen_example()
     c = IOCapture.capture() do
         M = BooksDocs
         # Update html set to false to avoid Pandoc errors.
-        gen("index", call_html=false)
+        gen("index"; log_progress=false, call_html=false)
     end
 
     """
@@ -191,7 +191,9 @@ function makiejl()
     Options(p; caption, label, link_attributes)
 end
 
-chain() = MCMCChains.Chains(rand(10, 1))
+fib(n) = n <= 1 ? n : fib(n - 1) + fib(n - 2)
+
+chain() = (fib(44); MCMCChains.Chains(rand(10, 1)))
 
 const BACKTICK = '`'
 export BACKTICK

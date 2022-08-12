@@ -256,12 +256,12 @@ function evaluate_include(
         try
             return evaluate_and_write(M, userexpr)
         catch e
+            # Newline to be placed behind the ProgressMeter output.
+            println()
             if e isa InterruptException
                 @info "Process was stopped by a terminal interrupt (CTRL+C)"
                 return e
             end
-            # Print a newline to be placed behind the ProgressMeter.
-            println()
             report_error(userexpr, e, callpath, block_number)
             return CapturedException(e, catch_backtrace())
         end
@@ -292,6 +292,59 @@ function _included_expressions(paths)
     return exprs
 end
 
+function _callpath(path)
+    @assert startswith(path, "contents/")
+    return string(path[10:end])::String
+end
+
+function show_progress(io::IO, i::Base.RefValue{Int64}, exprs)
+    n = length(exprs)
+    desc = "Current code block (out of $n blocks in total):"
+    # Using ProgressUnknown because the ETA calculation is pointless.
+    dt = 0.0000001
+    p = ProgressMeter.ProgressUnknown(; dt)
+    p.output = io
+    while true
+        index = i[]
+        bound_index = n < index ? n : index
+        path, userexpr, block_number = exprs[bound_index]
+        showvalues = [
+            (:path, _callpath(path)),
+            (:block_number, "$block_number ($bound_index / $n)"),
+            (:expr, replace(userexpr.expr, '\n' => ' ')),
+        ]
+        p.counter = index
+        ProgressMeter.update!(p; showvalues)
+        if n == bound_index
+            break
+        end
+        sleep(0.2)
+    end
+    ProgressMeter.finish!(p)
+    return nothing
+end
+show_progress(i, exprs) = show_progress(stdout, i, exprs)
+
+"Trigger show_progress to make things feel more snappy."
+function _trigger_show_progress()
+    exprs = [(; path="contents/lorem", userexpr=UserExpr("", 1), block_number=1)]
+    io = IOBuffer()
+    show_progress(io, Ref(1), exprs)
+    out = String(take!(io))
+    return contains(out, "Progress")
+end
+
+_interrupt_task(t::Nothing) = nothing
+
+function _interrupt_task(t::Task)
+    try
+        ex = InterruptException()
+        Base.throwto(t, ex)
+    catch e
+        @assert e isa InterruptException
+    end
+end
+
 """
     gen(
         paths::Vector{String};
@@ -314,6 +367,7 @@ function gen(
         block_number::Union{Nothing,Int}=nothing;
         M=Main,
         fail_on_error::Bool=false,
+        log_progress::Bool=true,
         project="default",
         call_html::Bool=true
     )
@@ -329,22 +383,21 @@ function gen(
     end
 
     n = length(exprs)
-    desc = "Current code block (out of $n blocks in total):"
-    # Using ProgressUnknown because the ETA of the normal bar is very unreliable.
-    p = ProgressMeter.ProgressUnknown(; desc, dt=0.05)
-    sleep(0.05)
-    for i in 1:n
-        path, userexpr, block_number = exprs[i]
-        @assert startswith(path, "contents/")
-        callpath = string(path[10:end])::String
-        showvalues = [
-            (:path, callpath),
-            (:block_number, block_number),
-            (:expr, replace(userexpr.expr, '\n' => ' ')),
-        ]
-        ProgressMeter.next!(p; showvalues)
+    i = Ref(1)
+    _trigger_show_progress()
+    t = (log_progress && !is_ci()) ? @task(show_progress(i, exprs)) : nothing
+    !isnothing(t) && schedule(t)
+    while i[] ≤ n
+        # Gives the progress logger a chance to do their thing?
+        # Due to this sleep, things actually **feel** faster because the meter gets time to do it's thing.
+        # This biggest problem however is that ProgressMeter blocks:
+        # https://github.com/timholy/ProgressMeter.jl/issues/248.
+        sleep(0.005)
+        path, userexpr, block_number = exprs[i[]]
+        callpath = _callpath(path)
         out = evaluate_include(userexpr, M, fail_on_error, callpath, block_number)
         if out isa CapturedException
+            _interrupt_task(t)
             filename, _ = splitext(callpath)
             @info """To re-run the code block that threw the error, use
                 gen("$filename", $block_number; kwargs...)
@@ -352,11 +405,12 @@ function gen(
             return nothing
         end
         if out isa InterruptException
+            _interrupt_task(t)
             return nothing
         end
+        i[] = i[] + 1
     end
-    sleep(0.06)
-    ProgressMeter.finish!(p)
+    !isnothing(t) && wait(t)
     if call_html
         @info "Updating html"
         html(; project)
@@ -364,7 +418,13 @@ function gen(
     return nothing
 end
 
-function gen(; M=Main, fail_on_error=false, project="default", call_html=true)
+function gen(;
+        M=Main,
+        call_html::Bool=true,
+        fail_on_error::Bool=false,
+        log_progress::Bool=false,
+        project="default"
+    )
     if !isfile("config.toml")
         error("Couldn't find `config.toml`. Is there a valid project in $(pwd())?")
     end
