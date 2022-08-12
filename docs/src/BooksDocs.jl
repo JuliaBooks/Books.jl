@@ -17,9 +17,6 @@ using Reexport
 plot = Plots.plot
 scatter = CairoMakie.scatter
 
-M = BooksDocs
-export M
-
 const MAKIE_PLOT_TYPES = Union{CairoMakie.Makie.Figure, CairoMakie.Makie.FigureAxisPlot}
 Books.is_image(plot::MAKIE_PLOT_TYPES) = true
 
