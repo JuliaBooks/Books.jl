@@ -12,17 +12,11 @@
     <a href="https://github.com/JuliaBooks/Books.jl/actions?query=workflow%3ACI+branch%3Amain">
         <img src="https://github.com/JuliaBooks/Books.jl/workflows/CI/badge.svg" alt="CI">
     </a>
-    <a href="https://books.huijzer.xyz">
+    <a href="https://huijzer.xyz/Books.jl/">
         <img src="https://img.shields.io/badge/Documentation-main-blue" alt="Documentation">
     </a>
     <a href="https://github.com/invenia/BlueStyle">
         <img src="https://img.shields.io/badge/Code%20Style-Blue-4495d1.svg" alt="Code Style Blue">
-    </a>
-    <a href="https://github.com/SciML/ColPrac">
-        <img src="https://img.shields.io/badge/ColPrac-Contributor's%20Guide-blueviolet" alt="Collaborative Practices for Community Packages">
-    </a>
-    <a href="https://books.pirsch.io">
-        <img src="https://img.shields.io/badge/Site-Analytics-blue" alt="Documentation analytics">
     </a>
 </p>
 
@@ -53,7 +47,7 @@ To install this package (Julia 1.6/1.7 on MacOS/Linux), use
 pkg> add Books
 ```
 
-See, the [documentation](https://books.huijzer.xyz) for more information.
+See, the [documentation](https://huijzer.xyz/Books.jl/) for more information.
 
 ### Windows
 

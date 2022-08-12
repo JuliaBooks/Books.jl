@@ -6,7 +6,7 @@ The easiest way to get started is to use the template repository at
 From this repository, you can serve your book via:
 
 ```jl
-M.serve_example()
+BooksDocs.serve_example()
 ```
 
 To generate all the Julia output (see @sec:embedding-output for more information) use
@@ -14,12 +14,15 @@ To generate all the Julia output (see @sec:embedding-output for more information
 ```
 $ julia --project -e  'using Books; using MyPackage'
 
-julia> gen(; M)
+julia> gen(; )
 [...]
 Updating html
 ```
 
 where `MyPackage` is the name of your package.
+This evaluates all the code from the code blocks inside your `Main` module.
+The benefit of this is that you can easy interact with and access variables defined inside code blocks.
+
 To avoid code duplication between projects, this package tries to have good defaults for many settings.
 For your project, you can override the default settings by creating `config.toml` and `metadata.yml` files.
 In summary, the `metadata.yml` file is read by Pandoc while generating the outputs.
@@ -43,13 +46,13 @@ You can override settings by placing a `metadata.yml` file at the root directory
 For example, the metadata for this project contains:
 
 ```jl
-M.docs_metadata()
+BooksDocs.docs_metadata()
 ```
 
 And, the following defaults are set by Books.jl.
 
 ```jl
-M.default_metadata()
+BooksDocs.default_metadata()
 ```
 
 Note that Pandoc has a great templating system.
@@ -81,13 +84,13 @@ The `pdf_filename` is used by `pdf()` and the `port` setting is used by `serve()
 For this documentation, the following config is used
 
 ```jl
-M.docs_config()
+BooksDocs.docs_config()
 ```
 
 Which overrides some settings from the following default settings
 
 ```jl
-M.default_config()
+BooksDocs.default_config()
 ```
 
 Here, the `extra_directories` allows you to specify directories which need to be moved into `_build`, which makes them available for the local server and online.

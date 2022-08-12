@@ -97,25 +97,7 @@ function extract_expr(s::AbstractString)::Vector
     return exprs
 end
 
-"""
-    caller_module()
-
-Walks up the stacktrace to find the first module which is not Books.
-Thanks to https://discourse.julialang.org/t/get-module-of-a-caller/11445/3
-"""
-function caller_module()
-    s = stacktrace()
-    for i in 1:10
-        try
-            M = s[i].linfo.linetable[1].module
-            return M
-        catch
-        end
-    end
-    throw(ErrorException("Couldn't determine the module of the caller"))
-end
-
-remove_modules(expr) = replace(expr, r"^[A-Z][a-zA-Z]*\." => "")
+_remove_modules(expr::AbstractString) = replace(expr, r"^[A-Z][a-zA-Z]*\." => "")
 
 """
     method_name(expr::String)
@@ -125,13 +107,13 @@ This is used for things like how to call an image file and a caption.
 
 # Examples
 ```jldoctest
-julia> Books.method_name("@some_macro(M.foo)")
+julia> Books.method_name("@some_macro(foo)")
 "foo"
 
-julia> Books.method_name("M.foo()")
+julia> Books.method_name("foo()")
 "foo"
 
-julia> Books.method_name("M.foo(3)")
+julia> Books.method_name("foo(3)")
 "foo_3"
 
 julia> Books.method_name("Options(foo(); caption='b')")
@@ -144,7 +126,7 @@ function method_name(expr::String)
     if startswith(expr, '(')
         expr = strip(expr, ['(', ')'])
     end
-    expr = remove_modules(expr)
+    expr = _remove_modules(expr)
     expr = replace(expr, '(' => '_')
     expr = replace(expr, ')' => "")
     expr = replace(expr, ';' => "_")
@@ -175,7 +157,7 @@ function evaluate_and_write(M::Module, userexpr::UserExpr)
     expr_info = replace(expr, '\n' => "\\n")
 
     ex = Meta.parse("begin $expr end")
-    out = Core.eval(M, ex)
+    out = Core.eval(Main, ex)
     converted = convert_output(expr, path, out)
     markdown = string(converted)::String
     indent = userexpr.indentation
@@ -235,26 +217,21 @@ function report_error(userexpr::UserExpr, e, callpath::String, block_number::Int
 end
 
 """
-    evaluate_include(expr::UserExpr, M, fail_on_error::Bool, callpath::String, block_number::Int)
+    evaluate_include(expr::UserExpr, fail_on_error::Bool, callpath::String, block_number::Int)
 
 For a `path` included in a Markdown file, run the corresponding function and write the output to `path`.
 """
 function evaluate_include(
         userexpr::UserExpr,
-        M,
         fail_on_error::Bool,
         callpath::String,
         block_number::Int
     )
-    if isnothing(M)
-        # This code isn't really working.
-        M = caller_module()
-    end
     if fail_on_error
-        evaluate_and_write(M, userexpr)
+        evaluate_and_write(Main, userexpr)
     else
         try
-            return evaluate_and_write(M, userexpr)
+            return evaluate_and_write(Main, userexpr)
         catch e
             # Newline to be placed behind the ProgressMeter output.
             println()
@@ -272,7 +249,7 @@ end
     expand_path(p)
 
 Expand path to allow an user to pass `index` instead of `contents/index.md` to `gen`.
-Not allowing `index.md` because that is confusing with entr(f, ["contents"], [M]).
+Not allowing `index.md` because that is confusing with entr(f, ["contents"], M).
 """
 function expand_path(p)
     joinpath("contents", "$p.md")
@@ -347,29 +324,30 @@ end
 
 """
     gen(
-        paths::Vector{String};
-        M=Main,
+        [paths::Vector{String}],
+        [block_number::Union{Nothing,Int}=nothing];
+        call_html::Bool=true,
         fail_on_error::Bool=false,
+        log_progress::Bool=true,
         project="default",
-        call_html::Bool=true
+        kwargs...
     )
 
 Populate the files in `$(Books.GENERATED_DIR)/` by calling the required methods.
 These methods are specified by the filename and will output to that filename.
 This allows the user to easily link code blocks to code.
-The methods are assumed to be in the module `M` of the caller.
-Otherwise, specify another module `M`.
 After calling the methods, this method will also call `html()` to update the site when
 `call_html == true`.
+The `kwargs...` is meant to ignore `M` so that `entr_gen` is a drop-in replacement for `gen`.
 """
 function gen(
         paths::Vector{String},
         block_number::Union{Nothing,Int}=nothing;
-        M=Main,
+        call_html::Bool=true,
         fail_on_error::Bool=false,
         log_progress::Bool=true,
         project="default",
-        call_html::Bool=true
+        kwargs...
     )
 
     mkpath(GENERATED_DIR)
@@ -384,6 +362,7 @@ function gen(
     end
 
     n = length(exprs)
+    n == 0 && return nothing
     i = Ref(1)
     _trigger_show_progress()
     t = (log_progress && !is_ci()) ? @task(show_progress(i, exprs)) : nothing
@@ -396,7 +375,7 @@ function gen(
         sleep(0.005)
         path, userexpr, block_number = exprs[i[]]
         callpath = _callpath(path)
-        out = evaluate_include(userexpr, M, fail_on_error, callpath, block_number)
+        out = evaluate_include(userexpr, fail_on_error, callpath, block_number)
         if out isa CapturedException
             _interrupt_task(t)
             filename, _ = splitext(callpath)
@@ -420,18 +399,18 @@ function gen(
 end
 
 function gen(;
-        M=Main,
         call_html::Bool=true,
         fail_on_error::Bool=false,
         log_progress::Bool=false,
-        project="default"
+        project="default",
+        kwargs...
     )
     if !isfile("config.toml")
         error("Couldn't find `config.toml`. Is there a valid project in $(pwd())?")
     end
     paths = inputs(project)
     first_file = first(paths)
-    gen(paths; M, fail_on_error, project, call_html)
+    gen(paths; fail_on_error, project, call_html)
 end
 
 """
@@ -446,13 +425,14 @@ end
 precompile(gen, (String,))
 
 """
-    entr_gen(path::AbstractString, [block_number]; kwargs...)
+    entr_gen(path::AbstractString, [block_number]; M=[], kwargs...)
 
-Execute `gen(path, [block_number]; M, kwargs...)` whenever files in `contents` or code in module `M` changes.
-This is a convenience function around `Revise.entr(() -> gen(...), ["contents"], [M])`.
+Execute `gen(path, [block_number]; M, kwargs...)` whenever files in `contents` or code in
+one of the modules `M` changes.
+This is a convenience function around `Revise.entr(() -> gen(...), ["contents"], M)`.
 """
-function entr_gen(path::AbstractString, block_number=nothing; M, kwargs...)
-    entr(["contents"], [M]) do
-        gen(path, block_number; M, kwargs...)
+function entr_gen(path::AbstractString, block_number=nothing; M=[], kwargs...)
+    entr(["contents"], M) do
+        gen(path, block_number; kwargs...)
     end
 end

@@ -8,6 +8,7 @@ For websites, this package allows for:
 - Cross-references from one web page to a section on another page.
 - Embedding dynamic output, while still allowing normal Julia package utilities, such as unit testing and live reloading (Revise.jl).
 - Showing code blocks as well as output.
+- Interacting with code from within the REPL.
 
 If you don't need to generate PDFs, then [Franklin.jl](https://github.com/tlienart/Franklin.jl){target="_blank"} is probably a better choice.
 To create single pages and PDFs containing code blocks, see [Weave.jl](https://github.com/JunoLab/Weave.jl){target="_blank"}.
@@ -16,7 +17,7 @@ One of the main differences with Franklin.jl, Weave.jl and knitr (Bookdown) is t
 The benefit of this is that you can spawn two separate processes, namely the one to serve your webpages:
 
 ```jl
-M.serve_example()
+BooksDocs.serve_example()
 ```
 
 and the one where you do the computations for your package:
@@ -35,6 +36,10 @@ Also, because the `serve` process does relatively few things, it almost never cr
 
 As another benefit, the decoupling allows you to have more flexibility in when you want to run what code.
 In combination with Revise.jl, you can quickly update your code and see the updated output.
+
+Another reason why this package looks different than other packages is because this package has been aimed at a REPL workflow.
+Via the REPL, the package evaluates the code blocks inside `Main` by default.
+This provides easy access to the variables.
 
 Finally, a big difference with this package and other packages is that you decide yourself what you want to show for a code block.
 For example, in R

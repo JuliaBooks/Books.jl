@@ -76,21 +76,3 @@
 
     @test Books._trigger_show_progress()
 end
-
-module Foo
-    using Books
-    using Test
-
-    B = Books
-
-    @test B.caller_module() == Main.Foo
-
-    foo() = "lorem"
-    fail_on_error = true
-    # Broken for some reason.
-    # B.evaluate_include("foo()", Foo, fail_on_error)
-    # path = joinpath(B.GENERATED_DIR, "foo-ob--cb-.md")
-    # mkpath(B.GENERATED_DIR)
-    # @test read(path, String) == "lorem"
-    # rm(dir; force=true, recursive=true)
-end
