@@ -362,6 +362,7 @@ function gen(
     end
 
     n = length(exprs)
+    n == 0 && return nothing
     i = Ref(1)
     _trigger_show_progress()
     t = (log_progress && !is_ci()) ? @task(show_progress(i, exprs)) : nothing
