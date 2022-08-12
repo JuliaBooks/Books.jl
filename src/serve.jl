@@ -8,7 +8,7 @@ ignored_folders = [
 
 function ignore(path)::Bool
     path_startswith(folder) = startswith(path, joinpath(".", folder)) || startswith(path, folder)
-    any(path_startswith.(ignored_folders)) || endswith(path, "metadata.yml")
+    return any(path_startswith.(ignored_folders)) || endswith(path, "metadata.yml")
 end
 
 """
@@ -19,7 +19,7 @@ For example, calling Pandoc is not necessary for svg images.
 """
 function rebuild_neccesary(file::AbstractString)::Bool
     _, extension = splitext(file)
-    lowercase(extension) != ".svg"
+    return lowercase(extension) != ".svg"
 end
 
 function custom_callback(file::AbstractString, project::AbstractString)
@@ -46,7 +46,7 @@ function custom_simplewatcher(project, extra_directories)
             end
         end
     end
-    sw
+    return sw
 end
 
 function serve(; simplewatcher=nothing, host::String="127.0.0.1",

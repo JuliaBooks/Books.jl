@@ -3,7 +3,6 @@ module BooksDocs
 import Books
 import IOCapture
 import Latexify
-import MCMCChains
 import Statistics
 import TOML
 

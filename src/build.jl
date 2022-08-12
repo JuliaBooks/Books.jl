@@ -268,7 +268,9 @@ end
     <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         document.querySelectorAll('pre').forEach((el) => {
-            hljs.highlightElement(el);
+            if (!el.classList.contains('output')) {
+                hljs.highlightElement(el);
+            }
         });
     });
     </script>
@@ -342,10 +344,13 @@ function pdf(; project="default")
             "--variable=build-info:$(today())";
             extra_args
         ]
+
         output_tex_filename = joinpath(BUILD_DIR, "$file.tex")
-        println("Wrote $output_tex_filename (for debugging purposes)")
         tex_output = "--output=$output_tex_filename"
-        out = call_pandoc([args; tex_output])
+        call_pandoc([args; tex_output])
+        @info "Wrote $output_tex_filename (for debugging purposes)"
+
+        out = call_pandoc([args; output])
 
         if !isnothing(out)
             println("Built $output_filename")

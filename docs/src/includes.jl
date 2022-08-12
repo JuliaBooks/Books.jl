@@ -27,25 +27,25 @@ function docs_metadata()
     path = joinpath(pkgdir(BooksDocs), "metadata.yml")
     text = read(path, String)
     text = replace(text, '`' => "\\`")
-    code_block(text)
+    output_block(text)
 end
 
 function default_metadata()
     path = joinpath(Books.DEFAULTS_DIR, "metadata.yml")
     text = read(path, String)
-    code_block(text)
+    output_block(text)
 end
 
 function docs_config()
     path = joinpath(pkgdir(BooksDocs), "config.toml")
     text = read(path, String)
-    code_block(text)
+    output_block(text)
 end
 
 function default_config()
     path = joinpath(Books.DEFAULTS_DIR, "config.toml")
     text = read(path, String)
-    code_block(text)
+    output_block(text)
 end
 
 my_table() = DataFrame(U = [1, 2], V = [:a, :b], W = [3, 4])
@@ -101,27 +101,8 @@ code_example_table() = code("""
     DataFrame(A = [1, 2], B = [3, 4], C = [5, 6])
     """)
 
-function markdown_gen_example()
-    c = IOCapture.capture() do
-        M = BooksDocs
-        # Update html set to false to avoid Pandoc errors.
-        gen("index"; log_progress=false, call_html=false)
-    end
-
-    """
-    ```
-    gen("index")
-    ```
-
-    ```output
-    $(rstrip(c.output))
-    Updating html
-    ```
-    """
-end
-
 julia_version_example() = """
-```
+```output
 This book is built with Julia $VERSION.
 ```"""
 
@@ -190,10 +171,6 @@ function makiejl()
     link_attributes = "width=70%"
     Options(p; caption, label, link_attributes)
 end
-
-fib(n) = n <= 1 ? n : fib(n - 1) + fib(n - 2)
-
-chain() = (fib(44); MCMCChains.Chains(rand(10, 1)))
 
 const BACKTICK = '`'
 export BACKTICK

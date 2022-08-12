@@ -21,6 +21,7 @@ using InteractiveUtils: gen_call_with_extracted_types
 using Markdown: MD
 using Memoize: @memoize
 using ProgressMeter: ProgressMeter
+using Revise: entr
 using SnoopPrecompile: SnoopPrecompile, @precompile_setup, @precompile_all_calls
 using pandoc_crossref_jll: pandoc_crossref_path
 using pandoc_jll: pandoc
@@ -48,7 +49,7 @@ export code, ImageOptions, Options
 
 export code_block, output_block
 export @sc, sc, CodeAndFunction, @sco, sco, scob
-export gen
+export gen, entr_gen
 export serve
 
 @precompile_setup begin
