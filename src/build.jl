@@ -245,7 +245,8 @@ function ci_url_prefix(project)
     return user_setting
 end
 
-@memoize function highlight(url_prefix)
+# @memoize
+function highlight(url_prefix)
     highlight_dir = joinpath(Artifacts.artifact"Highlight", "cdn-release-11.5.0")
 
     highlight_name = "highlight.min.js"
@@ -268,7 +269,9 @@ end
     <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         document.querySelectorAll('pre').forEach((el) => {
-            hljs.highlightElement(el);
+            if (!el.classList.contains('output')) {
+                hljs.highlightElement(el);
+            }
         });
     });
     </script>

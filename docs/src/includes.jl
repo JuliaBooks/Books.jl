@@ -191,9 +191,5 @@ function makiejl()
     Options(p; caption, label, link_attributes)
 end
 
-fib(n) = n <= 1 ? n : fib(n - 1) + fib(n - 2)
-
-chain() = (fib(44); MCMCChains.Chains(rand(10, 1)))
-
 const BACKTICK = '`'
 export BACKTICK

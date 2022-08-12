@@ -416,10 +416,10 @@ Some sentence[^foot].
 
 When your method returns an output type `T` which is unknown to Books.jl, it will be passed through `show(io::IO, ::MIME"text/plain", object::T)`.
 So, if the package that you're using has defined a new `show` method, this will be used.
-For example, for `MCMCChains`,
+For example, for a grouped DataFrame:
 
 ```jl
-@sco M.chain()
+sco("groupby(DataFrame(; A=[1]), :A)")
 ```
 
 ### Note box

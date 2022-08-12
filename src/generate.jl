@@ -177,6 +177,7 @@ function evaluate_and_write(M::Module, userexpr::UserExpr)
     ex = Meta.parse("begin $expr end")
     out = Core.eval(M, ex)
     converted = convert_output(expr, path, out)
+    print('\n', converted, '\n')
     markdown = string(converted)::String
     indent = userexpr.indentation
     if 0 < indent
@@ -379,7 +380,8 @@ function gen(
             @error "Expected length of `paths` to be 1 when using `block_number`."
         end
         path = only(paths)
-        filter!(e -> e.path == path && e.block_number == block_number, exprs)
+        _filename(path) = splitext(_callpath(path))[1]
+        filter!(e -> _filename(e.path) == path && e.block_number == block_number, exprs)
     end
 
     n = length(exprs)
@@ -440,6 +442,18 @@ Convenience method for passing `path::AbstractString` instead of `paths::Vector`
 """
 function gen(path::AbstractString, block_number::Union{Nothing,Int}=nothing; kwargs...)
     path = string(path)::String
-    gen([path]; kwargs...)
+    return gen([path], block_number; kwargs...)
 end
 precompile(gen, (String,))
+
+"""
+    entr_gen(path::AbstractString, [block_number]; kwargs...)
+
+Execute `gen(path, [block_number]; M, kwargs...)` whenever files in `contents` or code in module `M` changes.
+This is a convenience function around `Revise.entr(() -> my_code(), ["contents"], [M])`.
+"""
+function entr_gen(path::AbstractString, block_number=nothing; M, kwargs...)
+    entr(["contents"], [M]) do
+        gen(path, block_number; M, kwargs...)
+    end
+end
