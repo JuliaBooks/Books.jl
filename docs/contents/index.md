@@ -5,7 +5,7 @@ This file is only included on the website.
 ```
 
 ```jl
-M.homepage_intro()
+BooksDocs.homepage_intro()
 ```
 
 See @sec:about for more information about this package.

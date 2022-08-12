@@ -35,7 +35,6 @@ f(1)
 when calling `sco f(1)` and not only `f(x) = x`.
 """
 function add_method_call(fdef, fcall)
-    fcall = remove_modules(fcall)
     out = """
         $fdef
         $fcall
@@ -62,28 +61,30 @@ function apply_process_post(
 end
 
 """
-    eval_convert(expr::AbstractString, M,
+    eval_convert(
+        expr::AbstractString,
+        pre::Union{Nothing,Function}=identity,
         process::Union{Nothing,Function}=nothing,
-        post::Function=identity)
+        post::Union{Nothing,Function}=identity
+    )
 
-Evaluate `expr` in module `M` and convert the output.
+Evaluate `expr` in module `Main` and convert the output.
 """
-function eval_convert(expr::AbstractString,
-        M,
+function eval_convert(
+        expr::AbstractString,
         pre::Union{Nothing,Function}=identity,
         process::Union{Nothing,Function}=nothing,
         post::Union{Nothing,Function}=identity
     )
 
     ex = Meta.parse("begin $expr end")
-    out = Core.eval(M, ex)
+    out = Core.eval(Main, ex)
     out = apply_process_post(expr, out, pre, process, post)
 end
 
 """
     sco(
         expr::AbstractString;
-        M=Main,
         pre::Function=identity,
         process::Union{Nothing,Function}=nothing,
         post::Function=identity
@@ -98,6 +99,7 @@ Specifically,
 - `post` is applied after convert output
 
 For example, for
+
 ```julia
 let
     pre(out) = Options(out; label="l")
@@ -115,15 +117,15 @@ the DataFrame will go through three stages:
 
 So, to disable `convert_output`, pass `process=nothing` or `process=identity`.
 """
-function sco(expr::AbstractString;
-        M=Main,
+function sco(
+        expr::AbstractString;
         pre::Function=identity,
         process::Union{Nothing,Function}=nothing,
         post::Function=identity
     )
     code = remove_hide_comment(expr)
     code = code_block(strip(code))
-    out = eval_convert(expr, M, pre, process, post)
+    out = eval_convert(expr, pre, process, post)
     """
     $code
     $out
@@ -131,23 +133,23 @@ function sco(expr::AbstractString;
 end
 
 """
-    scob(expr::AbstractString; M=Main)
+    scob(expr::AbstractString)
 
 Show code and output in a block for `expr`.
 """
-function scob(expr::AbstractString; M=Main)
+function scob(expr::AbstractString)
     post = output_block
-    sco(expr; M, post)
+    sco(expr; post)
 end
 precompile(scob, (String,))
 
 """
-    sc(expr::AbstractString; M=Main)
+    sc(expr::AbstractString)
 
 Show only code for `expr`, that is, evaluate `expr` but hide the output.
 """
-function sc(expr::AbstractString; M=Main)
-    eval_convert(expr, M)
+function sc(expr::AbstractString)
+    eval_convert(expr)
     code = remove_hide_comment(expr)
     code = code_block(strip(code))
 end
@@ -156,7 +158,6 @@ precompile(sc, (String,))
 function sco_macro_helper(
         f::Function,
         types;
-        M=Main,
         pre::Function=identity,
         process::Union{Nothing,Function}=nothing,
         post::Function=identity,
@@ -168,7 +169,7 @@ function sco_macro_helper(
     code = add_method_call(fdef, fcall)
     # Also here, f and types do not contain all the required information.
     ex = Meta.parse(fcall)
-    out = Core.eval(M, ex)
+    out = Core.eval(Main, ex)
     path = escape_expr(fcall)
     out = apply_process_post(fcall, out, pre, process, post; path)
     """
@@ -183,7 +184,7 @@ end
 Extract function call before `gen_call_with_extracted_types_and_kwargs` throws this information away.
 """
 function extract_function_call(ex0)
-    fcall = ex0[end]  # Mandatory argument according to Julia source code.
+    fcall = ex0[end] # Mandatory argument according to Julia source code.
     return string(fcall)::String
 end
 

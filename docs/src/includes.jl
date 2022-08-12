@@ -12,6 +12,7 @@ function homepage_intro()
     These pages were built on $(today()) with Julia $VERSION.
     """
 end
+
 serve_example() = code_block(raw"""
     $ julia --project -e 'using Books; serve()'
     Watching ./pandoc/favicon.png
