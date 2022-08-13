@@ -47,12 +47,11 @@ For example, the metadata for this project contains:
 
 ```jl
 BooksDocs.docs_metadata()
-```
-
+``
 And, the following defaults are set by Books.jl.
 
 ```jl
-BooksDocs._default_metadata()
+BooksDocs.default_metadata()
 ```
 
 Note that Pandoc has a great templating system.
@@ -90,7 +89,7 @@ BooksDocs.docs_config()
 Which overrides some settings from the following default settings
 
 ```jl
-BooksDocs._default_config()
+BooksDocs.default_config()
 ```
 
 Here, the `extra_directories` allows you to specify directories which need to be moved into `_build`, which makes them available for the local server and online.
