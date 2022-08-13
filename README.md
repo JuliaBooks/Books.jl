@@ -60,4 +60,4 @@ I have to look into it a bit more to fix it, but it's not a priority for me.
 If you run into problems when using this package, feel free to open an issue here at GitHub or click [this](
 https://discourse.julialang.org/new-topic?title=Books.jl%20-%20Your%20question%20here&category=usage&tags=Books&body=You%20can%20write%20your%20question%20in%20this%20space.
 ) link to ask a question at Discourse.
-For short questions, feel free to send me a PM at <https://julialang.slack.com>.
+For short questions, feel free to send me a PM at <https://julialang.zulipchat.com/>.
