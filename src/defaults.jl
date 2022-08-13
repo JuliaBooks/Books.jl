@@ -1,12 +1,12 @@
-const DEFAULT_METADATA = Dict{String,Any}[]
+default_metadata = Dict{String,Any}[]
 
-function default_metadata()
-    if isempty(DEFAULT_METADATA)
+function _default_metadata()
+    if isempty(default_metadata::Vector)
         path = joinpath(DEFAULTS_DIR, "metadata.yml")
         data = YAML.load_file(path)
-        push!(DEFAULT_METADATA, data)
+        push!(default_metadata, data)
     end
-    return only(DEFAULT_METADATA)
+    return only(default_metadata)
 end
 
 """
@@ -39,7 +39,7 @@ function combine_metadata(; user_metadata_path="metadata.yml")
     user_metadata = isfile(user_metadata_path) ?
         YAML.load_file(user_metadata_path) :
         error("Couldn't find metadata.yml")
-    default = default_metadata()
+    default = _default_metadata()
     combined = override(default, user_metadata)
     mkpath(GENERATED_DIR)
     path = joinpath(GENERATED_DIR, "metadata.yml")
@@ -71,16 +71,17 @@ function project_info(path::String, project::AbstractString)
     end
 end
 
-const DEFAULT_CONFIG = Union{Dict{String,Any},Nothing}[]
+const default_config = Dict{String,Union{Nothing,Dict{String,Any}}}()
 
-function default_config(project::AbstractString)
-    if isempty(DEFAULT_CONFIG)
+function _default_config(project::String)
+    if !(project in keys(default_config))
         path = joinpath(DEFAULTS_DIR, "config.toml")
         data = project_info(path, project)
-        push!(DEFAULT_CONFIG, data)
+        default_config[project] = data
     end
-    return only(DEFAULT_CONFIG)
+    return default_config[project]
 end
+_default_config(project::AbstractString) = _default_config(string(project)::String)
 
 function user_config(project::AbstractString)
     path = "config.toml"
@@ -113,7 +114,7 @@ julia> c["port"]
 ```
 """
 function config(project::AbstractString)
-    default = default_config(project)
+    default = _default_config(project)
     user = user_config(project)
     combined =
         isnothing(user) && isnothing(default) ? error("Project $project not defined in config.toml") :

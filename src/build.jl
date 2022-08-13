@@ -67,36 +67,36 @@ function copy_css()
     cp(css_path, joinpath(BUILD_DIR, filename); force=true)
 end
 
-const MOUSETRAP_ENABLED = Ref(-1)
+mousetrap_enabled = -1
 
 function is_mousetrap_enabled()::Bool
-    if MOUSETRAP_ENABLED[] == -1
-        meta = default_metadata()::Dict
+    if mousetrap_enabled::Int == -1
+        meta = _default_metadata()::Dict
         value = get(meta, "mousetrap", false)::Bool ? 1 : 0
-        MOUSETRAP_ENABLED[] = value
+        mousetrap_enabled = value
     end
-    return MOUSETRAP_ENABLED[]
+    return mousetrap_enabled::Int
 end
 
-const COPIED_MOUSETRAP = Ref(false)
+copied_mousetrap = false
 
 function copy_mousetrap()
-    if is_mousetrap_enabled() && !COPIED_MOUSETRAP[]
+    if is_mousetrap_enabled() && !copied_mousetrap::Bool
         filename = "mousetrap.min.js"
         from = pandoc_file(filename)
         cp(from, joinpath(BUILD_DIR, filename); force=true)
-        COPIED_MOUSETRAP[] = true
+        copied_mousetrap = true
     end
 end
 
-const COPIED_JULIAMONO = Ref(false)
+copied_juliamono = false
 
 function copy_juliamono()
-    if !COPIED_JULIAMONO[]
+    if !copied_juliamono::Bool
         filename = "JuliaMono-Regular.woff2"
         from_path = joinpath(juliamono_dir(), "webfonts", filename)
         cp(from_path, joinpath(BUILD_DIR, filename); force=true)
-        COPIED_JULIAMONO[] = true
+        copied_juliamono = true
     end
 end
 
@@ -255,10 +255,10 @@ function ci_url_prefix(project)
     return user_setting
 end
 
-const HIGHLIGHT_HEADER = Ref("")
+const HIGHLIGHT_HEADER = Dict{String,String}()
 
-function highlight(url_prefix)
-    if HIGHLIGHT_HEADER[] == ""
+function highlight(url_prefix::String)
+    if !(url_prefix in keys(HIGHLIGHT_HEADER))
         highlight_dir = joinpath(Artifacts.artifact"Highlight", "cdn-release-11.5.0")
 
         highlight_name = "highlight.min.js"
@@ -288,11 +288,9 @@ function highlight(url_prefix)
             });
             </script>
             """
-        HIGHLIGHT_HEADER[] = header
-        return header
-    else
-        return HIGHLIGHT_HEADER[]
+        HIGHLIGHT_HEADER[url_prefix] = header
     end
+    return HIGHLIGHT_HEADER[url_prefix]
 end
 
 function html(; project="default", extra_head="", fail_on_error=false, build_sitemap=false)
