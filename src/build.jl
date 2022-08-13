@@ -70,6 +70,7 @@ end
 mousetrap_enabled = -1
 
 function is_mousetrap_enabled()::Bool
+    global mousetrap_enabled
     if mousetrap_enabled::Int == -1
         meta = _default_metadata()::Dict
         value = get(meta, "mousetrap", false)::Bool ? 1 : 0
@@ -81,6 +82,7 @@ end
 copied_mousetrap = false
 
 function copy_mousetrap()
+    global copied_mousetrap
     if is_mousetrap_enabled() && !copied_mousetrap::Bool
         filename = "mousetrap.min.js"
         from = pandoc_file(filename)
@@ -92,6 +94,7 @@ end
 copied_juliamono = false
 
 function copy_juliamono()
+    global copied_juliamono
     if !copied_juliamono::Bool
         filename = "JuliaMono-Regular.woff2"
         from_path = joinpath(juliamono_dir(), "webfonts", filename)

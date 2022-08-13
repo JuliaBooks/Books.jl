@@ -30,12 +30,12 @@ Dict{Symbol, Int64} with 3 entries:
 override(d1::Dict, d2::Dict) = Dict(d1..., d2...)
 
 """
-    combine_metadata(; user_metadata_path="metadata.yml")
+    combine_metadata(user_metadata_path="metadata.yml")
 
 Write `metadata.yml` for Pandoc to $(Books.GENERATED_DIR).
 The file is a combination of Books.jl default settings and the user-defined settings.
 """
-function combine_metadata(; user_metadata_path="metadata.yml")
+function combine_metadata(user_metadata_path="metadata.yml")
     user_metadata = isfile(user_metadata_path) ?
         YAML.load_file(user_metadata_path) :
         error("Couldn't find metadata.yml")
@@ -61,13 +61,13 @@ doesn't contain an entry for `project`.
 """
 function project_info(path::String, project::AbstractString)
     text = read(path, String)
-    dic = TOML.parse(text)::Dict{String, Any}
-    projects = dic["projects"]::Dict{String, Any}
+    dic = TOML.parse(text)::Dict{String,Any}
+    projects = dic["projects"]::Dict{String,Any}
     if project in keys(projects)
         project = string(project)::String
-        projects[project]::Dict{String, Any}
+        return projects[project]::Dict{String,Any}
     else
-        nothing
+        return nothing
     end
 end
 
