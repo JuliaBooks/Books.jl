@@ -47,7 +47,8 @@ For example, the metadata for this project contains:
 
 ```jl
 BooksDocs.docs_metadata()
-``
+```
+
 And, the following defaults are set by Books.jl.
 
 ```jl
