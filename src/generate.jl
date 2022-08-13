@@ -274,54 +274,6 @@ function _callpath(path)
     return string(path[10:end])::String
 end
 
-function show_progress(io::IO, i::Base.RefValue{Int64}, exprs)
-    n = length(exprs)
-    desc = "Current code block (out of $n blocks in total):"
-    # Using ProgressUnknown because the ETA calculation is pointless.
-    dt = 0.0000001
-    p = ProgressMeter.ProgressUnknown(; dt)
-    p.output = io
-    while true
-        index = i[]
-        bound_index = n < index ? n : index
-        path, userexpr, block_number = exprs[bound_index]
-        showvalues = [
-            (:path, _callpath(path)),
-            (:block_number, "$block_number ($bound_index / $n)"),
-            (:expr, replace(userexpr.expr, '\n' => ' ')),
-        ]
-        p.counter = index
-        ProgressMeter.update!(p; showvalues)
-        if n == bound_index
-            break
-        end
-        sleep(0.2)
-    end
-    ProgressMeter.finish!(p)
-    return nothing
-end
-show_progress(i, exprs) = show_progress(stdout, i, exprs)
-
-"Trigger show_progress to make things feel more snappy."
-function _trigger_show_progress()
-    exprs = [(; path="contents/lorem", userexpr=UserExpr("", 1), block_number=1)]
-    io = IOBuffer()
-    show_progress(io, Ref(1), exprs)
-    out = String(take!(io))
-    return contains(out, "Progress")
-end
-
-_interrupt_task(t::Nothing) = nothing
-
-function _interrupt_task(t::Task)
-    try
-        ex = InterruptException()
-        Base.throwto(t, ex)
-    catch e
-        @assert e isa InterruptException
-    end
-end
-
 """
     gen(
         [paths::Vector{String}],
@@ -363,21 +315,22 @@ function gen(
 
     n = length(exprs)
     n == 0 && return nothing
-    i = Ref(1)
-    _trigger_show_progress()
-    t = (log_progress && !is_ci()) ? @task(show_progress(i, exprs)) : nothing
-    !isnothing(t) && schedule(t)
-    while i[] ≤ n
-        # Gives the progress logger a chance to do their thing?
-        # Due to this sleep, things actually **feel** faster because the meter gets time to do it's thing.
-        # This biggest problem however is that ProgressMeter blocks:
-        # https://github.com/timholy/ProgressMeter.jl/issues/248.
-        sleep(0.005)
-        path, userexpr, block_number = exprs[i[]]
+    dt = 0.5
+    p = ProgressMeter.ProgressUnknown(; dt, output=stdout)
+    p.tlast = p.tlast - dt
+    for i in 1:n
+        path, userexpr, block_number = exprs[i]
         callpath = _callpath(path)
+        showvalues = [
+            (:path, callpath),
+            (:block_number, "$block_number ($i / $n)"),
+            (:expr, replace(userexpr.expr, '\n' => ' ')),
+        ]
+        # Using update to enforce seeing the progress at the first iteration.
+        p.counter = i
+        ProgressMeter.update!(p; showvalues)
         out = evaluate_include(userexpr, fail_on_error, callpath, block_number)
         if out isa CapturedException
-            _interrupt_task(t)
             filename, _ = splitext(callpath)
             @info """To re-run the code block that threw the error, use
                 gen("$filename", $block_number; kwargs...)
@@ -385,15 +338,21 @@ function gen(
             return nothing
         end
         if out isa InterruptException
-            _interrupt_task(t)
             return nothing
         end
-        i[] = i[] + 1
     end
-    !isnothing(t) && wait(t)
+    ProgressMeter.finish!(p)
     if call_html
         @info "Updating html"
-        html(; project)
+        try
+            html(; project)
+        catch e
+            if e isa InterruptException
+                return nothing
+            else
+                @error "Failed to update HTML" exception=(e, catch_backtrace())
+            end
+        end
     end
     return nothing
 end

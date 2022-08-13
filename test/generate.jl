@@ -73,6 +73,4 @@
             ```
         """
     @test isempty(Books.extract_expr(not_evaluated_block))
-
-    @test Books._trigger_show_progress()
 end

@@ -1,6 +1,6 @@
 @memoize function default_metadata()::Dict
     path = joinpath(DEFAULTS_DIR, "metadata.yml")
-    data = YAML.load_file(path)
+    return YAML.load_file(path)
 end
 
 """
@@ -30,13 +30,15 @@ Write `metadata.yml` for Pandoc to $(Books.GENERATED_DIR).
 The file is a combination of Books.jl default settings and the user-defined settings.
 """
 function combine_metadata(user_metadata_path="metadata.yml")
-    user_metadata = isfile(user_metadata_path) ? YAML.load_file(user_metadata_path) : error("Couldn't find metadata.yml")
+    user_metadata = isfile(user_metadata_path) ?
+        YAML.load_file(user_metadata_path) :
+        error("Couldn't find metadata.yml")
     default = default_metadata()
     combined = override(default, user_metadata)
     mkpath(GENERATED_DIR)
     path = joinpath(GENERATED_DIR, "metadata.yml")
     YAML.write_file(path, combined)
-    path
+    return path
 end
 
 function combined_metadata_path(project)
@@ -52,19 +54,19 @@ Return project info for TOML file at `path` as raw text or `nothing` if `project
 """
 function project_info(path::String, project::AbstractString)
     text = read(path, String)
-    dic = TOML.parse(text)::Dict{String, Any}
-    projects = dic["projects"]::Dict{String, Any}
+    dic = TOML.parse(text)::Dict{String,Any}
+    projects = dic["projects"]::Dict{String,Any}
     if project in keys(projects)
         project = string(project)::String
-        projects[project]::Dict{String, Any}
+        return projects[project]::Dict{String,Any}
     else
-        nothing
+        return nothing
     end
 end
 
 @memoize function default_config(project::AbstractString)
     path = joinpath(DEFAULTS_DIR, "config.toml")
-    project_info(path, project)
+    return project_info(path, project)
 end
 
 function user_config(project::AbstractString)
@@ -79,6 +81,7 @@ function user_config(project::AbstractString)
             (See $default_config_path for an example configuration.)
             """
         @warn msg
+        return nothing
     end
 end
 
@@ -102,9 +105,9 @@ function config(project::AbstractString)
     user = user_config(project)
     combined =
         isnothing(user) && isnothing(default) ? error("Project $project not defined in config.toml") :
-        isnothing(user) ? default :
-        isnothing(default) ? user :
-        override(default, user)::Dict{String, Any}
+            isnothing(user) ? default :
+            isnothing(default) ? user :
+            override(default, user)::Dict{String, Any}
 end
 
 """
@@ -130,6 +133,6 @@ function config(project::AbstractString, key::String)
         return c[key]
     else
         default = config("default")::Dict{String, Any}
-        return config("default")[key]
+        return default[key]
     end
 end
