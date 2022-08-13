@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "README.md"
+      - "LICENSE.md"
     tags: '*'
   pull_request:
   workflow_dispatch:
