@@ -42,7 +42,7 @@ This package is used to create the [Julia Data Science book](https://juliadatasc
 
 ## Usage
 
-To install this package (Julia 1.6/1.7 on MacOS/Linux), use
+To install this package (Julia 1.6/1.7/1.8 on MacOS/Linux), use
 ```
 pkg> add Books
 ```
