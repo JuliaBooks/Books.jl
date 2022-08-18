@@ -1,5 +1,9 @@
 module Books
 
+if isdefined(Base, :Experimental) && isdefined(Base.Experimental, Symbol("@max_methods"))
+    @eval Base.Experimental.@max_methods 1
+end
+
 using RelocatableFolders: @path
 const PKGDIR = @path string(pkgdir(Books))::String
 
