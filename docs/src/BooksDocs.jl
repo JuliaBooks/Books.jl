@@ -17,6 +17,7 @@ using Reexport
 @reexport using CodeTracking
 @reexport using DataFrames
 @reexport using Dates
+@reexport using FileIO: FileIO
 @reexport using Plots: Plot, plot, savefig
 
 using CairoMakie.Makie: Figure, FigureAxisPlot
@@ -24,12 +25,17 @@ using CairoMakie.Makie: Figure, FigureAxisPlot
 const MAKIE_PLOT_TYPES = Union{Figure, FigureAxisPlot}
 function _makie_save(path::String, p)
     try
-        # SVG will fail with GLMakie.
-        # It doesn't matter since Books.jl will only use SVG if available, otherwise PNG.
         FileIO.save(path, p; px_per_unit=3)
-    catch
+    catch e
         # Explicit rm due to https://github.com/JuliaIO/FileIO.jl/issues/338.
         rm(path; force=true)
+
+        file, ext = splitext(path)
+        # SVG will fail with GLMakie and that is okay.
+        # It doesn't matter since Books.jl will only use SVG if the file is available, otherwise PNG.
+        if ext != ".svg"
+            @error "Failed to save Makie image" exception=(e, catch_backtrace())
+        end
     end
 end
 
