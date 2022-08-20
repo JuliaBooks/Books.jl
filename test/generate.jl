@@ -62,8 +62,8 @@
     @test m[1] == "s = \"x = 1\"\n   sco(s)"
     @test m[2] == "   "
 
-    out = read_outcome(evaluated_block)
-    @test out == "   ```language-julia\n   x = 1\n   ```\n   \n   1\n   "
+    out = strip(read_outcome(evaluated_block))
+    @test out == "```language-julia\n   x = 1\n   ```\n   \n   \n   1"
 
     # Blocks with four indentations should not be evaluated.
     # This functionality is useful for the Books.jl documentation.

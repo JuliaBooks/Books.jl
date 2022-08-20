@@ -12,12 +12,12 @@ end
     @test s == code_block(fdef)
 
     s = sco("x = 3")
-    @test s == "```language-julia\nx = 3\n```\n\n3\n"
+    @test s == "```language-julia\nx = 3\n```\n\n\n3\n\n"
     s = sco("""
         y = 2 # hide
         x = 3
         """)
-    @test s == "```language-julia\nx = 3\n```\n\n3\n"
+    @test s == "```language-julia\nx = 3\n```\n\n\n3\n\n"
 
     s = sco(raw"""
         x = 3
@@ -31,7 +31,9 @@ end
         sc_test_function()
         ```
 
+
         1
+
         """
 
     s = @sco sc_test_function_with_comment()
@@ -43,7 +45,9 @@ end
         sc_test_function_with_comment()
         ```
 
+
         2
+
         """
 end
 
@@ -69,18 +73,20 @@ end
 @testset "@sco" begin
     pre(out) = Options(out; caption="caption")
     s = @sco pre=pre sco_test_dataframe()
-    @test strip(s) == strip("""
+    expected = """
         ```language-julia
         sco_test_dataframe() = DataFrame(; x = [1])
         sco_test_dataframe()
         ```
+
 
         |   x |
         | ---:|
         |   1 |
 
         : caption
-        """)
+        """
+    @test strip(s) == strip(expected)
 end
 
 module ShowcodeTestModule
