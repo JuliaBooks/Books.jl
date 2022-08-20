@@ -151,6 +151,14 @@ function escape_expr(expr::AbstractString)
     joinpath(GENERATED_DIR, "$escaped.md")
 end
 
+"""
+    newlines(out::AbstractString) -> String
+
+Add some extra newlines around the output.
+This is required by Pandoc in some cases to parse the output correctly.
+"""
+newlines(out::AbstractString) = string('\n', out, '\n')::String
+
 function evaluate_and_write(M::Module, userexpr::UserExpr)
     expr = userexpr.expr
     path = escape_expr(expr)
@@ -158,8 +166,7 @@ function evaluate_and_write(M::Module, userexpr::UserExpr)
 
     ex = Meta.parse("begin $expr end")
     out = Core.eval(Main, ex)
-    converted = convert_output(expr, path, out)
-    markdown = string(converted)::String
+    markdown = newlines(convert_output(expr, path, out))
     indent = userexpr.indentation
     if 0 < indent
         lines = split(markdown, '\n')
@@ -177,11 +184,9 @@ function evaluate_and_write(f::Function)
     path = escape_expr(expr)
     expr_info = replace(expr, '\n' => "\\n")
     out = f()
-    out = convert_output(expr, path, out)
-    out = string(out)::String
-    write(path, out)
-
-    nothing
+    converted = newlines(convert_output(expr, path, out))
+    write(path, converted)
+    return nothing
 end
 
 function clean_stacktrace(stacktrace::String)
@@ -280,7 +285,6 @@ end
         [block_number::Union{Nothing,Int}=nothing];
         call_html::Bool=true,
         fail_on_error::Bool=false,
-        log_progress::Bool=true,
         project="default",
         kwargs...
     )
@@ -297,7 +301,6 @@ function gen(
         block_number::Union{Nothing,Int}=nothing;
         call_html::Bool=true,
         fail_on_error::Bool=false,
-        log_progress::Bool=true,
         project="default",
         kwargs...
     )
@@ -360,7 +363,6 @@ end
 function gen(;
         call_html::Bool=true,
         fail_on_error::Bool=false,
-        log_progress::Bool=false,
         project="default",
         kwargs...
     )
@@ -368,7 +370,6 @@ function gen(;
         error("Couldn't find `config.toml`. Is there a valid project in $(pwd())?")
     end
     paths = inputs(project)
-    first_file = first(paths)
     gen(paths; fail_on_error, project, call_html)
 end
 

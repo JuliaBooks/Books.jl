@@ -36,7 +36,7 @@ end
 
 function convert_output(expr, path, outputs::AbstractVector{AbstractString})
     out = join(outputs, "\n")
-    out = output_block(out)
+    return output_block(out)
 end
 
 function convert_output(expr, path, outputs::AbstractVector)

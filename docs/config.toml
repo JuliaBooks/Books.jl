@@ -31,7 +31,8 @@
   # This project is only used when testing Books.jl.
   [projects.test]
   contents = [
-    "test"
+    "test",
+    "test2"
   ]
 
   online_url = "https://example.com"

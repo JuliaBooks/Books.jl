@@ -52,7 +52,7 @@ function apply_process_post(
     )
     out = pre(out)
     if isnothing(process)
-        out = convert_output(expr, path, out)
+        out = newlines(convert_output(expr, path, out))
     else
         out = process(out)
     end

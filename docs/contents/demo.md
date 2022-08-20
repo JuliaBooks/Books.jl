@@ -7,13 +7,26 @@ For example,
 See @sec:getting-started.
 ```
 
-> See @sec:getting-started.
+See @sec:getting-started.
+
+```language-plain
+We can refer to citations such as @orwell1945animal and
+[@orwell1949nineteen] or to equations such as @eq:example.
+```
 
 We can refer to citations such as @orwell1945animal and [@orwell1949nineteen] or to equations such as @eq:example.
 
+```language-tex
+$$ y = \frac{\sin{x}}{\cos{x}} $$ {#eq:example}
+```
+
 $$ y = \frac{\sin{x}}{\cos{x}} $$ {#eq:example}
 
-To show your TeX equations, surround them by double dollar signs (`e.g., $$ x = 3 $$`) for display math and by single dolor sign (e.g., `$x = 3$`) for inline math.
+```language-plain
+Use single dollar symbols for inline math: $x = 3$.
+```
+
+Use single dollar symbols for inline math: $x = 3$.
 
 ## Embedding output {#sec:embedding-output}
 
@@ -351,11 +364,9 @@ Therefore, portable network graphics (PNG) images are also created and passed to
 ```
 
 Then, plotting works:
-
 ```jl
 @sco BooksDocs.example_plot()
 ```
-
 For multiple images, use `Options.(objects, paths)`:
 
 ```jl

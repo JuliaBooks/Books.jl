@@ -24,7 +24,7 @@ function inputs(project)
     H = config(project, "homepage_contents")::String
     C = config(project, "contents")::Vector{String}
     names = [H; C]
-    [joinpath("contents", "$name.md") for name in names]
+    return [joinpath("contents", "$name.md") for name in names]
 end
 
 """
@@ -160,7 +160,8 @@ function write_input_markdown(project; skip_index=false)::String
     end
     texts = read.(files, String)
     texts = embed_output.(texts)
-    text = join(texts, '\n')
+    # Double newline to make parsing easier for Pandoc (Books issue #295).
+    text = join(texts, "\n\n")
     dir = Books.GENERATED_DIR
     if !isdir(dir)
         @warn "$(dir) directory doesn't exist. Did you run `gen()`?"

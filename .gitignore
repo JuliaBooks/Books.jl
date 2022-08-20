@@ -24,6 +24,7 @@ docs/_gen/
 docs/Manifest.toml
 test/Manifest.toml
 docs/contents/test.md
+docs/contents/test2.md
 
 **/.aux
 **/.log
