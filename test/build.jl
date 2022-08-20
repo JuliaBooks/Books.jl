@@ -1,41 +1,31 @@
 @testset "build" begin
     docs_dir = joinpath(Books.PKGDIR, "docs")
     url_prefix = ""
-    out1, out2 = cd(docs_dir) do
+    out = cd(docs_dir) do
         test_markdown_path = joinpath(docs_dir, "contents", "test.md")
         test_markdown = raw"""
             # Test {#sec:test}
 
             This test file is not included in the documentation.
+
             ```jl
             s = "x = 1 + 1"
             sco(s)
             ```
-            Suffix
             """
         write(test_markdown_path, test_markdown)
 
         mkpath(joinpath(Books.BUILD_DIR, "images"))
         gen("test"; project="test")
-        out1 = Books._pandoc_html("test", url_prefix)
-
-        # Test newlines added automatically.
-        test2_markdown_path = joinpath(docs_dir, "contents", "test2.md")
-        test_markdown2 = replace(test_markdown, "# Test" => "# Test2")
-        test_markdown2 = replace(test_markdown2, "1 + 1" => "2 + 2")
-        test_markdown2 = replace(test_markdown2, "{#sec:test}" => "{#sec:test2}")
-        write(test2_markdown_path, test_markdown2)
-        gen(["test", "test2"]; project="test")
-        out2 = Books._pandoc_html("test", url_prefix)
-
-        return (out1, out2)
+        out = Books._pandoc_html("test", url_prefix)
+        return out
     end
 
     sec = "<h1 data-number=\"1\" id=\"sec:test\">"
-    @test contains(out1, sec)
-    test_page_begin = first(findfirst(sec, out1))
-    test_page_end = first(findfirst("<!-- begin foot -->", out1)) - 1
-    test_page = SubString(out1, test_page_begin, test_page_end)
+    @test contains(out, sec)
+    test_page_begin = first(findfirst(sec, out))
+    test_page_end = first(findfirst("<!-- begin foot -->", out)) - 1
+    test_page = SubString(out, test_page_begin, test_page_end)
     lines = split(test_page, '\n')
     expected = [
         """<h1 data-number="1" id="sec:test"><span class="header-section-number">1</span> Test</h1>""",
@@ -46,8 +36,6 @@
     for (actual, exp) in zip(lines, expected)
         @test strip(actual) == strip(exp)
     end
-    @test contains(out2, "Test2</h1>")
-    @test contains(out2, "<p>4</p>")
 
     out = cd(docs_dir) do
         test_markdown_path = joinpath(docs_dir, "contents", "test.md")
