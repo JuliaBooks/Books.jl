@@ -13,6 +13,8 @@ We can refer to citations such as @orwell1945animal and [@orwell1949nineteen] or
 
 $$ y = \frac{\sin{x}}{\cos{x}} $$ {#eq:example}
 
+To show your TeX equations, surround them by double dollar signs (`e.g., $$ x = 3 $$`) for display math and by single dolor sign (e.g., `$x = 3$`) for inline math.
+
 ## Embedding output {#sec:embedding-output}
 
 For embedding code, you can use the `jl` inline code or code block.
