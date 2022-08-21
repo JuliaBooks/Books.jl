@@ -19,6 +19,10 @@ mousetrap: true
 #
 pdf-footer: ""
 
+# For example, to add extra packages.
+extra-pdf-header: |
+  \usepackage{cancel}
+
 # Avoid adding a blank page before each chapter.
 disable-cleardoublepage: true
 
