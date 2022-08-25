@@ -10,7 +10,7 @@
   output_filename = "books"
 
   # Full URL, required for the sitemap and robots.txt.
-  online_url = "https://huijzer.xyz/Books.jl/"
+  online_url = "https://huijzer.xyz"
   online_url_prefix = "/Books.jl"
 
   # Extra directories to be copied.
