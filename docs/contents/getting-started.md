@@ -12,7 +12,7 @@ BooksDocs.serve_example()
 To generate all the Julia output (see @sec:embedding-output for more information) use
 
 ```
-$ julia --project -e  'using Books; using MyPackage'
+$ julia --project -ie  'using Books; using MyPackage'
 
 julia> gen(; )
 [...]
