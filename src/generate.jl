@@ -257,7 +257,8 @@ Expand path to allow an user to pass `index` instead of `contents/index.md` to `
 Not allowing `index.md` because that is confusing with entr(f, ["contents"], M).
 """
 function expand_path(p)
-    joinpath("contents", "$p.md")
+    filename = endswith(p, ".md") ? p : "$p.md"
+    return joinpath("contents", filename)
 end
 
 function _included_expressions(paths)
@@ -382,16 +383,40 @@ function gen(path::AbstractString, block_number::Union{Nothing,Int}=nothing; kwa
     path = string(path)::String
     return gen([path], block_number; kwargs...)
 end
-precompile(gen, (String,))
+
+function gen(path::Regex, block_number::Union{Nothing,Int}=nothing; kwargs...)
+    paths = readdir("contents")
+    matches = filter(contains(path), paths)
+    return gen(matches, block_number; kwargs)
+end
 
 """
-    entr_gen(path::AbstractString, [block_number]; M=[], kwargs...)
+    entr_gen(
+        path::Union{AbstractString,Regex},
+        [block_number];
+        M=[],
+        kwargs...
+    )
 
 Execute `gen(path, [block_number]; M, kwargs...)` whenever files in `contents` or code in
 one of the modules `M` changes.
 This is a convenience function around `Revise.entr(() -> gen(...), ["contents"], M)`.
+
+# Example
+```
+julia> entr_gen("plots"; M=[MyModule])
+[...]
+
+julia> entr_gen(r"plot*"; M=[MyModule])
+[...]
+```
 """
-function entr_gen(path::AbstractString, block_number=nothing; M=[], kwargs...)
+function entr_gen(
+        path::Union{AbstractString,Regex},
+        block_number=nothing;
+        M=[],
+        kwargs...
+    )
     entr(["contents"], M) do
         gen(path, block_number; kwargs...)
     end
