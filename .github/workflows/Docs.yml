@@ -38,6 +38,7 @@ jobs:
           GKSwstype: "100"
 
       - uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           force_orphan: true
