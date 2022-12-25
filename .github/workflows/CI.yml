@@ -24,6 +24,9 @@ jobs:
           - "1"
         os:
           - ubuntu-latest
+        include:
+          - version: "1"
+            os: macos-latest
 
     steps:
       - uses: actions/checkout@v2
