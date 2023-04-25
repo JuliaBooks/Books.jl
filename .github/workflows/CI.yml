@@ -43,6 +43,8 @@ jobs:
         uses: julia-actions/julia-buildpkg@v1
 
       - uses: julia-actions/julia-runtest@v1
+        with:
+          coverage: false
         env:
           GKS_ENCODING: "utf8"
           GKSwstype: "100"
