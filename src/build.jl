@@ -209,6 +209,7 @@ function _pandoc_html(project::AbstractString, url_prefix::AbstractString; fail_
         extra_args;
         # The url_prefix is either "" or startswith '/'.
         "--variable=url-prefix:$url_prefix";
+        "--wrap=none";
         # output
     ]
     _, out = call_pandoc(args)
