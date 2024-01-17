@@ -144,7 +144,7 @@ end
 
 function image_options_plot()
     I = 1:30
-    fig = Figure(; resolution=(600, 140))
+    fig = Figure(; size=(600, 140))
     ax = Axis(fig[1, 1]; xlabel="x", ylabel="y")
     scatterlines!(ax, I, 3 .* sin.(I))
     return fig
