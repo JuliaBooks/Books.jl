@@ -118,11 +118,6 @@ For example, returns "about" or "getting-started".
 """
 function html_page_name(html)
     sections = section_infos(html)
-    if length(sections) == 0
-        println("Warning: No sections found in ($html).")
-        return SectionInfo("", "", "")
-    end
-
     id = first(sections).id
     if contains(id, ':')
         start = findfirst(':', id)::Int + 1
