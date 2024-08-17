@@ -21,11 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: julia-actions/setup-julia@v1
+      - uses: julia-actions/setup-julia@v2
         with:
           version: '1'
 
-      - uses: julia-actions/cache@v1
+      - uses: julia-actions/cache@v2
 
       - run: julia --project=docs/ -e '
           using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
@@ -37,7 +37,7 @@ jobs:
           GKS_ENCODING: "utf8"
           GKSwstype: "100"
 
-      - uses: peaceiris/actions-gh-pages@v3
+      - uses: peaceiris/actions-gh-pages@v4
         if: ${{ github.event_name != 'pull_request' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
