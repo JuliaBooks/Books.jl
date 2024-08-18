@@ -6,29 +6,9 @@ author:
 
 # Licenses; can be empty.
 html-license: <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
-tex-license: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+pdf-license: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
 
 pdf-footer: "\\url{https://github.com/johndoe/Book.jl}"
-
-geometry:
-  # Defaulting to large pages to be able to show 92 chars in code blocks.
-  - paperheight=10in # 25.4 cm.
-  - paperwidth=7in # 17.78 cm.
-  - marginparwidth=30mm
-  - marginparsep=2mm
-  - bindingoffset=10mm
-  - top=10mm
-  - inner=8mm
-  - outer=8mm
-  - bottom=16mm
-  - includehead
-  - includemp
-
-# A setting for the PDF. I don't know whether it is important.
-lang: en-US
-
-# Uncomment the following to enable a Chinese/Japanese/Korean (CJK) font.
-# CJKmainfont: Noto Serif CJK SC
 
 links-as-notes: true
 
@@ -53,6 +33,4 @@ secPrefix: Section
 
 # Keyboard shortcuts.
 mousetrap: true
-
-header-left: foobar
 ---
