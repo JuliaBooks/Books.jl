@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Rik Huijzer" />
+  <meta name="author" content="and contributors" />
+  <title>metadata.yml - Books.jl</title>
+  <link rel="shortcut icon" type="image/png" href="/Books.jl/favicon.png"/>
+  <link rel="stylesheet" href="/Books.jl/style.css"/>
+    <script src="/Books.jl/mousetrap.min.js"></script>
+    <style>
+  @font-face {
+    font-family: JuliaMono-Regular;
+    src: url("/Books.jl/JuliaMono-Regular.woff2");
+  }
+  </style>
+  <link rel="stylesheet" href="/Books.jl/files/style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="/Books.jl/github.min.css">
+<script src="/Books.jl/highlight.min.js"></script>
+<script src="/Books.jl/julia.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.querySelectorAll('pre').forEach((el) => {
+        if (!el.classList.contains('output')) {
+            hljs.highlightElement(el);
+        }
+    });
+});
+</script>
+ 
+</head>
+<body>
+<script>
+function click_next() {
+  var next = document.getElementById('nav-next');
+  next.firstElementChild.nextElementSibling.click();
+}
+function click_prev() {
+  var prev = document.getElementById('nav-prev');
+  prev.firstElementChild.click();
+}
+Mousetrap.bind('right', click_next);
+Mousetrap.bind('h', click_prev);
+Mousetrap.bind('left', click_prev);
+Mousetrap.bind('l', click_next);
+</script>
+
+<div class="books-container">
+<aside class="books-menu">
+<input type="checkbox" id="menu">
+<label for="menu">☰</label>
+<div class="books-title">
+<a href="/Books.jl/">Books.jl</a>
+</div><br />
+<span class="books-subtitle">
+Create books with Julia
+</span>
+<div class="books-menu-content">
+<li><a class="menu-level-1" href="/Books.jl/about"><b>1</b> About</a></li>
+<li><a class="menu-level-1" href="/Books.jl/getting-started"><b>2</b> Getting started</a></li>
+<li><a class="menu-level-2" href="/Books.jl/metadata"><b>2.1</b> metadata.yml</a></li>
+<li><a class="menu-level-2" href="/Books.jl/config"><b>2.2</b> config.toml</a></li>
+<li><a class="menu-level-2" href="/Books.jl/templates"><b>2.3</b> Templates</a></li>
+<li><a class="menu-level-1" href="/Books.jl/demo"><b>3</b> Demo</a></li>
+<li><a class="menu-level-2" href="/Books.jl/embedding-output"><b>3.1</b> Embedding output</a></li>
+<li><a class="menu-level-2" href="/Books.jl/labels-captions"><b>3.2</b> Labels and captions</a></li>
+<li><a class="menu-level-2" href="/Books.jl/function_code_blocks"><b>3.3</b> Obtaining function defin..</a></li>
+<li><a class="menu-level-2" href="/Books.jl/plots"><b>3.4</b> Plots</a></li>
+<li><a class="menu-level-2" href="/Books.jl/other-notes"><b>3.5</b> Other notes</a></li>
+<li><a class="menu-level-1" href="/Books.jl/references"><b></b> References</a></li>
+</div>
+</aside>
+
+<div class="books-content">
+<h2 data-number="2.1" id="sec:metadata"><span class="header-section-number">2.1</span> metadata.yml</h2>
+<p>The <code>metadata.yml</code> file is read by Pandoc. Settings in this file affect the behaviour of Pandoc and get inserted in the templates. For more info on templates, see Section <a href="/Books.jl/templates#sec:templates">2.3</a>. You can override settings by placing a <code>metadata.yml</code> file at the root directory of your project. For example, the metadata for this project contains:</p>
+<pre class="output"><code>---
+title: Books.jl
+subtitle: Create books with Julia
+author:
+  - Rik Huijzer
+  - and contributors
+
+# An example additional header include for html.
+# Note that the url will be updated by \`Books.fix_links\`.
+header-includes:
+- |
+  \`\`\`{=html}
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;/files/style.css&quot;/&gt;
+  \`\`\`
+mousetrap: true
+
+#
+# PDF only settings.
+#
+pdf-footer: &quot;&quot;
+
+# For example, to add extra packages.
+extra-pdf-header: |
+  \usepackage{cancel}
+
+# Avoid adding a blank page before each chapter.
+disable-cleardoublepage: true
+
+bibliography: bibliography.bib
+
+titlepage-top: &quot;&quot;
+
+titlepage-bottom: |
+  \`\`\`{=typst}
+  #link(&quot;https://huijzer.xyz/Books.jl/&quot;)
+  \`\`\`
+---
+</code></pre>
+<p>And, the following defaults are set by Books.jl.</p>
+<pre class="output"><code>---
+title: My book
+subtitle: My book subtitle
+author:
+  - John Doe
+
+# Licenses; can be empty.
+html-license: &lt;a href=&quot;http://creativecommons.org/licenses/by-nc-sa/4.0/&quot;&gt;CC BY-NC-SA 4.0&lt;/a&gt;
+pdf-license: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+
+pdf-footer: &quot;\\url{https://github.com/johndoe/Book.jl}&quot;
+
+links-as-notes: true
+
+tags: [pandoc, Books.jl, JuliaLang]
+number-sections: true
+
+code-block-font-size: \scriptsize
+
+titlepage: true
+linkReferences: true
+link-citations: true
+
+# These table of contents settings only affect the PDF.
+toc: true
+tocdepth: 1
+
+# Cross-reference prefixes.
+eqnPrefix: Equation
+figPrefix: Figure
+tblPrefix: Table
+secPrefix: Section
+
+# Keyboard shortcuts.
+mousetrap: true
+---
+</code></pre>
+<p>Note that Pandoc has a great templating system. In the template <code>default/template.typ</code> of this project, I tried to get the basics right and haven’t spend hours on making it configurable. However, if you want to add options to the templates, feel free to open a pull request. If you want to configure the template completely by yourself, you can place “template.typ” in “pandoc/” at the root of your project. This same holds for the HTML and CSS template.</p>
+
+
+<div class="bottom-nav">
+    <p id="nav-prev" style="text-align: left;">
+        <a class="menu-level-1" href="/Books.jl/getting-started"><b>2</b> Getting started</a> <kbd>←</kbd>
+        <span id="nav-next" style="float: right;">
+            <kbd>→</kbd> <a class="menu-level-2" href="/Books.jl/config"><b>2.2</b> config.toml</a>
+        </span>
+    </p>
+</div>
+
+
+<div class="license">
+    <br/>
+  <br/>
+  <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
+    Rik Huijzer, and contributors
+</div>
+</div>
+</div>
+</body>
+</html>

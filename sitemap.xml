@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+    <loc>https://huijzer.xyz/Books.jl/welcome</loc>
+    <lastmod>2024-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+</url>
+
+<url>
+    <loc>https://huijzer.xyz/Books.jl/about</loc>
+    <lastmod>2024-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+</url>
+
+<url>
+    <loc>https://huijzer.xyz/Books.jl/getting-started</loc>
+    <lastmod>2024-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+</url>
+
+<url>
+    <loc>https://huijzer.xyz/Books.jl/metadata</loc>
+    <lastmod>2024-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+</url>
+
+<url>
+    <loc>https://huijzer.xyz/Books.jl/config</loc>
+    <lastmod>2024-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+</url>
+
+<url>
+    <loc>https://huijzer.xyz/Books.jl/templates</loc>
+    <lastmod>2024-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+</url>
+
+<url>
+    <loc>https://huijzer.xyz/Books.jl/demo</loc>
+    <lastmod>2024-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+</url>
+
+<url>
+    <loc>https://huijzer.xyz/Books.jl/embedding-output</loc>
+    <lastmod>2024-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+</url>
+
+<url>
+    <loc>https://huijzer.xyz/Books.jl/labels-captions</loc>
+    <lastmod>2024-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+</url>
+
+<url>
+    <loc>https://huijzer.xyz/Books.jl/function_code_blocks</loc>
+    <lastmod>2024-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+</url>
+
+<url>
+    <loc>https://huijzer.xyz/Books.jl/plots</loc>
+    <lastmod>2024-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+</url>
+
+<url>
+    <loc>https://huijzer.xyz/Books.jl/other-notes</loc>
+    <lastmod>2024-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+</url>
+
+<url>
+    <loc>https://huijzer.xyz/Books.jl/references</loc>
+    <lastmod>2024-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+</url>
+
+</urlset>

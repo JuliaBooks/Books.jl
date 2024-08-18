@@ -1,0 +1,4 @@
+Sitemap: https://huijzer.xyz/Books.jl/sitemap.xml
+
+User-agent: *
+Disallow:
