@@ -334,6 +334,8 @@ function pdf(; project="default")
             citeproc;
             csl();
             metadata;
+            # To generate a file that can be processed with bibtex.
+            "--natbib";
             template;
             "--lua-filter=$output_block_filter";
             "--listings";
