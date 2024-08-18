@@ -325,8 +325,8 @@ function pdf(; project="default")
     listings_unicode_path = joinpath(PKGDIR, "defaults", "julia_listings_unicode.tex")
     listings_path = joinpath(PKGDIR, "defaults", "julia_listings.tex")
 
-    tectonic() do tectonic_bin
-        pdf_engine = "--pdf-engine=$tectonic_bin"
+    typst() do typst_bin
+        pdf_engine = "--pdf-engine=$typst_bin"
 
         args = [
             input_path;

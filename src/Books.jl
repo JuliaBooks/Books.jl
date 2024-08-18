@@ -28,7 +28,7 @@ using ProgressMeter: ProgressMeter
 using Revise: entr
 using pandoc_crossref_jll: pandoc_crossref_path
 using pandoc_jll: pandoc
-using tectonic_jll: tectonic
+using Typst_jll: typst
 
 const GENERATED_DIR = "_gen"
 const DEFAULTS_DIR = joinpath(PKGDIR, "defaults")
