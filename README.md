@@ -1,7 +1,3 @@
-<p align="center">
-  <img width="60%" src="https://user-images.githubusercontent.com/20724914/137941103-50f5d3a8-b447-4b09-807d-7161ceeadf34.png">
-</p>
-
 <h1 align="center">Books.jl</h1>
 
 <h3 align="center">
