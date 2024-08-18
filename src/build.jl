@@ -1,4 +1,11 @@
-const crossref_bin = string(pandoc_crossref_path)::String
+if !pandoc_jll.is_available()
+    throw(ErrorException("pandoc_jll.jl installation failed"))
+end
+if !pandoc_crossref_jll.is_available()
+    throw(ErrorException("pandoc_crossref_jll.jl installation failed"))
+end
+
+const crossref_bin = string(pandoc_crossref_jll.pandoc_crossref_path)::String
 const crossref = "--filter=$crossref_bin"
 const include_lua_filter = joinpath(PKGDIR, "src", "include-codeblocks.lua")
 const include_files = "--lua-filter=$include_lua_filter"
@@ -52,7 +59,7 @@ function copy_extra_directories(project)
 end
 
 function call_pandoc(args)::Tuple{Base.Process, String}
-    pandoc() do pandoc_bin
+    pandoc_jll.pandoc() do pandoc_bin
         cmd = `$pandoc_bin $args`
         stdout = IOBuffer()
         p = run(pipeline(cmd; stdout))
