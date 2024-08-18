@@ -528,7 +528,7 @@ which will show as:
 
 The code blocks default to JuliaMono in HTML and PDF.
 For the HTML, this package automatically handles JuliaMono.
-However, for the PDF, this just doesn't work out (see, e.g., [257](https://github.com/JuliaBooks/Books.jl/pull/257)).
+However, for the PDF, this just doesn't work out (see, e.g., [PR #257](https://github.com/JuliaBooks/Books.jl/pull/257)).
 To get JuliaMono to work with the PDF build, install it globally.
 See the instructions at the [JuliaMono site](https://juliamono.netlify.app/download/#installation).
 On Linux, you can use `Books.install_extra_fonts()`, but beware that it might override user settings.

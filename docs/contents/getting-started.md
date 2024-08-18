@@ -56,14 +56,10 @@ BooksDocs.default_metadata()
 ```
 
 Note that Pandoc has a great templating system.
-For example, the [Pandoc LaTeX template "default.latex"](https://github.com/jgm/pandoc) contains hundreds of options which can all be set via "metadata.yml".
-In the template of this project, I tried to get the basics right and haven't spend hours on making it configurable.
+In the template `default/template.typ` of this project, I tried to get the basics right and haven't spend hours on making it configurable.
 However, if you want to add options to the templates, feel free to open a pull request.
-If you want to configure the template completely by yourself, you can place "template.tex" in "pandoc/" at the root of your project[^selftemplate].
+If you want to configure the template completely by yourself, you can place "template.typ" in "pandoc/" at the root of your project.
 This same holds for the HTML and CSS template.
-
-[^selftemplate]: With LaTeX, be ready for hours of fiddling to get things right though.
-    The current LaTeX template is adjusted to work with Tectonic, Julia syntax highlighting and the Tufte LaTeX class.
 
 ## config.toml {#sec:config}
 

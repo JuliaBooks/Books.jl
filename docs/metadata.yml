@@ -28,14 +28,10 @@ disable-cleardoublepage: true
 
 bibliography: bibliography.bib
 
-titlepage-top: >
-  \begin{tabular}{l}
-  Rik Huijzer\\
-  University of Groningen\\
-  the Netherlands\\
-  t.h.huijzer@rug.nl\\
-  \end{tabular}
+titlepage-top: ""
 
-titlepage-bottom: >
-  \url{https://huijzer.xyz/Books.jl/}
+titlepage-bottom: |
+  ```{=typst}
+  #link("https://huijzer.xyz/Books.jl/")
+  ```
 ---

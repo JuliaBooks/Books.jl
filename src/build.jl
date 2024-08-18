@@ -153,10 +153,13 @@ end
 Combine all the `contents/` files and embed the outputs into one Markdown file.
 Return the path of the Markdown file.
 """
-function write_input_markdown(project; skip_index=false)::String
+function write_input_markdown(project; skip_index=false, skip_references=false)::String
     files = inputs(project)
     if skip_index
         files = files[2:end]
+    end
+    if skip_references
+        files = filter(x -> !endswith(x, "references.md"), files)
     end
     texts = read.(files, String)
     texts = embed_output.(texts)
@@ -311,10 +314,8 @@ function juliamono_dir()
 end
 
 function pdf(; project="default")
-    input_path = write_input_markdown(project; skip_index=true)
+    input_path = write_input_markdown(project; skip_index=true, skip_references=true)
     copy_extra_directories(project)
-    latex_template_path = pandoc_file("template.tex")
-    template = "--template=$latex_template_path"
     file = config(project, "output_filename")
     output_filename = joinpath(BUILD_DIR, "$file.pdf")
     output = "--output=$output_filename"
@@ -322,8 +323,7 @@ function pdf(; project="default")
     metadata = "--metadata-file=$metadata_path"
     output_block_filter = joinpath(PKGDIR, "src", "output-block.lua")
     input_files = ignore_homepage(project, inputs(project))
-    listings_unicode_path = joinpath(PKGDIR, "defaults", "julia_listings_unicode.tex")
-    listings_path = joinpath(PKGDIR, "defaults", "julia_listings.tex")
+    typst_template_path = pandoc_file("template.typ")
 
     typst() do typst_bin
         pdf_engine = "--pdf-engine=$typst_bin"
@@ -332,27 +332,18 @@ function pdf(; project="default")
             input_path;
             crossref;
             citeproc;
-            csl();
             metadata;
-            # To generate a file that can be processed with bibtex.
-            "--natbib";
-            template;
-            "--lua-filter=$output_block_filter";
-            "--listings";
+            "--template=$typst_template_path";
             pdf_engine;
-            # Print engine info. Extremely useful for debugging.
-            "--pdf-engine-opt=--print";
-            "--variable=listings-unicode-path:$listings_unicode_path";
-            "--variable=listings-path:$listings_path";
             "--variable=juliamono-dir:$(juliamono_dir())";
             "--variable=build-info:$(today())";
             extra_args
         ]
 
-        output_tex_filename = joinpath(BUILD_DIR, "$file.tex")
-        tex_output = "--output=$output_tex_filename"
+        output_filename = joinpath(BUILD_DIR, "$file.typ")
+        tex_output = "--output=$output_filename"
         call_pandoc([args; tex_output])
-        @info "Wrote $output_tex_filename (for debugging purposes)"
+        @info "Wrote $output_filename (for debugging purposes)"
 
         out = call_pandoc([args; output])
 
