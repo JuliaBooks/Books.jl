@@ -26,8 +26,8 @@ using Markdown: MD
 using Memoize: @memoize
 using ProgressMeter: ProgressMeter
 using Revise: entr
-using pandoc_crossref_jll: pandoc_crossref_path
-using pandoc_jll: pandoc
+using pandoc_crossref_jll: pandoc_crossref_jll
+using pandoc_jll: pandoc_jll
 using Typst_jll: typst
 
 const GENERATED_DIR = "_gen"
