@@ -31,11 +31,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: julia-actions/setup-julia@v1
+      - uses: julia-actions/setup-julia@v2
         with:
           version: ${{ matrix.version }}
 
-      - uses: julia-actions/cache@v1
+      - uses: julia-actions/cache@v2
 
       - name: Install Julia dependencies
         uses: julia-actions/julia-buildpkg@v1
