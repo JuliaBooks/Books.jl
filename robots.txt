@@ -1,0 +1,4 @@
+Sitemap: https://huijzer.xyz/sitemap.xml
+
+User-agent: *
+Disallow:
